@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "updated": "2026-10-18T09:00:00Z",
+  "product": {
+    "name": "Тёплый дом",
+    "summary": "Интернет-магазин домашнего текстиля с онлайн-оплатой через ЮKassa и доставкой. Тестовый стенд, организация вымышлена, ИНН и ОГРН владелец ещё не сообщил.",
+    "kinds": ["site"],
+    "urls": ["https://teply-dom.test"],
+    "stores": {
+      "app_store": null,
+      "google_play": null,
+      "rustore": null,
+      "appgallery": null
+    },
+    "repo": "."
+  },
+  "owner": {
+    "status": "ul",
+    "name": "ООО \"Тёплый дом-тест\"",
+    "inn": null,
+    "ogrn": null,
+    "country": "RU",
+    "address": "190000, г. Санкт-Петербург, ул. Тестовая, д. 2",
+    "email": "shop@teply-dom.test",
+    "phone": "+7 812 000-00-00",
+    "pd_officer": "Волкова Елена Андреевна, директор, privacy@teply-dom.test",
+    "withheld": []
+  },
+  "audience": {
+    "b2c": true,
+    "b2b": false,
+    "minors": "none",
+    "countries": ["RU"]
+  },
+  "business": {
+    "sectors": [],
+    "revenue_over_20m": false,
+    "rkn_notified": null
+  },
+  "decisions": {
+    "block_counters": true,
+    "apply_changes": true,
+    "commit_legal_dir": false,
+    "consent_at_forms": []
+  },
+  "document_facts": {}
+}

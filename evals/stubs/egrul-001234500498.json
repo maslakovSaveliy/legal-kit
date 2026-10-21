@@ -1,0 +1,9 @@
+{
+  "_comment": "Fictitious stub for offline evals (LEGAL_KIT_OFFLINE=1). A self-employed person without IP status is not in EGRUL/EGRIP.",
+  "status": "not_found",
+  "data": {
+    "key": "001234500498"
+  },
+  "url": "https://egrul.nalog.ru/",
+  "checked_at": "2026-10-18T09:00:00Z"
+}

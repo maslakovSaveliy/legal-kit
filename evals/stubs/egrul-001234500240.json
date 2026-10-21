@@ -1,0 +1,19 @@
+{
+  "_comment": "Fictitious stub for offline evals (LEGAL_KIT_OFFLINE=1). The organization does not exist.",
+  "status": "ok",
+  "data": {
+    "kind": "fl",
+    "name": "ИП Иванова Анна Тестовна",
+    "inn": "001234500240",
+    "ogrn": "322000000000023",
+    "registered": "2022-04-12",
+    "state": "active",
+    "address": "420000, г. Казань, ул. Тестовая, д. 4",
+    "okved_main": "62.01",
+    "okved_additional": [
+      "63.11"
+    ]
+  },
+  "url": "https://egrul.nalog.ru/",
+  "checked_at": "2026-10-18T09:00:00Z"
+}

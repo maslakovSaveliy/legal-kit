@@ -1,0 +1,19 @@
+{
+  "_comment": "Fictitious stub for offline evals (LEGAL_KIT_OFFLINE=1). The organization does not exist.",
+  "status": "ok",
+  "data": {
+    "kind": "ul",
+    "name": "ООО \"Ромашка-тест\"",
+    "inn": "0012345017",
+    "ogrn": "1220000000010",
+    "registered": "2022-03-15",
+    "state": "active",
+    "address": "119000, г. Москва, ул. Тестовая, д. 1",
+    "okved_main": "43.39",
+    "okved_additional": [
+      "41.20"
+    ]
+  },
+  "url": "https://egrul.nalog.ru/",
+  "checked_at": "2026-10-18T09:00:00Z"
+}

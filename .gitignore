@@ -1,0 +1,6 @@
+.superpowers/
+__pycache__/
+.pytest_cache/
+evals/workspace/
+.DS_Store
+.venv/

@@ -1,0 +1,249 @@
+{
+  "version": 1,
+  "generated": "2026-10-18",
+  "lang": "en",
+  "product": {
+    "name": "Oblako personal assistant",
+    "kinds": [
+      "webapp"
+    ],
+    "urls": [
+      "https://oblako.test"
+    ]
+  },
+  "mode": "repo-only",
+  "rows": [
+    {
+      "req": "ru:avtospisaniya-po-podpiskam",
+      "title": "Scheduled charges ignore a customer's refusal to keep using the saved card",
+      "status": "missing",
+      "evidence": [
+        {
+          "file": "backend/src/billing/billing.service.ts",
+          "line": 21
+        },
+        {
+          "file": "backend/src/billing/billing.service.ts",
+          "line": 27
+        }
+      ],
+      "norm": "ЗоЗПП ст. 16.1 п. 4.2",
+      "level": "conditional",
+      "confidence": "high",
+      "effective_from": "2026-03-01",
+      "source": "base",
+      "sources": [
+        "http://publication.pravo.gov.ru/document/0001202510150009"
+      ],
+      "bucket": "owner",
+      "element": null,
+      "basis": "norm"
+    },
+    {
+      "req": null,
+      "title": "Trial turns into a paid subscription automatically; no special norm exists, general consumer rules by interpretation",
+      "status": "partial",
+      "evidence": [
+        {
+          "file": "frontend/src/pages/Pricing.tsx",
+          "line": 7
+        },
+        {
+          "file": "backend/src/billing/billing.service.ts",
+          "line": 16
+        }
+      ],
+      "norm": "ЗоЗПП ст. 10 п. 2 (interpretation)",
+      "level": "interpretation",
+      "confidence": "low",
+      "effective_from": null,
+      "source": "base",
+      "sources": [
+        "http://pravo.gov.ru/proxy/ips/?docbody=&nd=102014512"
+      ],
+      "bucket": "disputed",
+      "element": null,
+      "basis": "interpretation"
+    },
+    {
+      "req": "ru:obyazannosti-servisa-generativnogo-ii-243-fz",
+      "title": "AI chat on a hosted model: notice about rights to results applies from 2027-03-01 if the model has 1 billion parameters or more",
+      "status": "not_visible",
+      "evidence": [
+        {
+          "file": "backend/src/chat/chat.service.ts",
+          "line": 12
+        }
+      ],
+      "norm": "243-ФЗ ст. 10 ч. 1",
+      "level": "conditional",
+      "confidence": "medium",
+      "effective_from": "2027-03-01",
+      "source": "base",
+      "sources": [
+        "http://publication.pravo.gov.ru/document/0001202607260003"
+      ],
+      "bucket": "roadmap",
+      "element": null,
+      "basis": "norm"
+    },
+    {
+      "req": "ru:politika-obrabotki-pdn",
+      "title": "No privacy policy is published or linked from the sign-up form",
+      "status": "missing",
+      "evidence": [
+        {
+          "file": "frontend/src/pages/Register.tsx",
+          "line": 19
+        }
+      ],
+      "norm": "152-ФЗ ст. 18.1 ч. 2",
+      "level": "mandatory",
+      "confidence": "high",
+      "effective_from": "2022-09-01",
+      "source": "base",
+      "sources": [
+        "http://pravo.gov.ru/proxy/ips/?docbody=&nd=102108261"
+      ],
+      "bucket": "owner",
+      "element": "politika-obrabotki-pdn:А1",
+      "basis": "norm"
+    },
+    {
+      "req": "ru:soglasie-na-obrabotku-pdn",
+      "title": "The sign-up form has no separate consent to personal data processing",
+      "status": "missing",
+      "evidence": [
+        {
+          "file": "frontend/src/pages/Register.tsx",
+          "line": 19
+        },
+        {
+          "file": "frontend/src/pages/Register.tsx",
+          "line": 24
+        }
+      ],
+      "norm": "152-ФЗ ст. 9 ч. 1–4, 6–8",
+      "level": "conditional",
+      "confidence": "high",
+      "effective_from": null,
+      "source": "base",
+      "sources": [
+        "http://pravo.gov.ru/proxy/ips/?docbody=&nd=102108261"
+      ],
+      "bucket": "owner",
+      "element": null,
+      "basis": "norm"
+    },
+    {
+      "req": "ru:akcept-polzovatelskogo-soglasheniya",
+      "title": "Registration does not record acceptance of the offer for the subscription",
+      "status": "missing",
+      "evidence": [
+        {
+          "file": "frontend/src/pages/Register.tsx",
+          "line": 23
+        }
+      ],
+      "norm": "ГК РФ ст. 160 п. 1",
+      "level": "conditional",
+      "confidence": "medium",
+      "effective_from": null,
+      "source": "base",
+      "sources": [
+        "http://pravo.gov.ru/proxy/ips/?docbody=&nd=102033239"
+      ],
+      "bucket": "owner",
+      "element": null,
+      "basis": "norm"
+    },
+    {
+      "req": "ru:otkaz-ot-uslug-i-cifrovyh-podpisok",
+      "title": "No subscription terms say how the customer withdraws from the service",
+      "status": "missing",
+      "evidence": [
+        {
+          "file": "frontend/src/pages/Pricing.tsx",
+          "line": 7
+        }
+      ],
+      "norm": "ЗоЗПП ст. 32",
+      "level": "conditional",
+      "confidence": "medium",
+      "effective_from": null,
+      "source": "base",
+      "sources": [
+        "https://vsrf.ru/documents/all/33038/"
+      ],
+      "bucket": "owner",
+      "element": null,
+      "basis": "norm"
+    },
+    {
+      "req": "ru:soglasie-na-analitiku-i-cookies",
+      "title": "The Metrica counter starts before the visitor chooses",
+      "status": "missing",
+      "evidence": [
+        {
+          "file": "frontend/index.html",
+          "line": 13
+        }
+      ],
+      "norm": "152-ФЗ ст. 6 ч. 1 п. 1; ст. 9 ч. 1, 3 (cookie-баннер нормой не предписан)",
+      "level": "conditional",
+      "confidence": "medium",
+      "effective_from": null,
+      "source": "base",
+      "sources": [
+        "http://pravo.gov.ru/proxy/ips/?docbody=&nd=102108261"
+      ],
+      "bucket": "owner",
+      "element": null,
+      "basis": "norm"
+    },
+    {
+      "req": null,
+      "title": "Holding the counter until consent (engineering practice: a norm prescribes no cookie banner)",
+      "status": "missing",
+      "evidence": [
+        {
+          "file": "frontend/index.html",
+          "line": 13
+        }
+      ],
+      "norm": "инженерная практика",
+      "level": "recommended",
+      "confidence": "medium",
+      "effective_from": null,
+      "source": "base",
+      "sources": [],
+      "bucket": "owner",
+      "element": null,
+      "basis": "practice"
+    }
+  ],
+  "registries": [
+    {
+      "name": "egrul",
+      "status": "ok",
+      "url": "https://egrul.nalog.ru/",
+      "note": "INN 0012345024: entry found, the name matches the owner's answers (checked 2026-10-18)"
+    },
+    {
+      "name": "whois",
+      "status": "ok",
+      "url": "whois.tcinet.ru:43",
+      "note": "oblako.test: registered, paid until 2027-05-25 (checked 2026-10-18)"
+    },
+    {
+      "name": "rkn-operators",
+      "status": "manual",
+      "url": "https://pd.rkn.gov.ru/operators-registry/operators-list/",
+      "note": "Open the registry from a Russian IP, search INN 0012345024 and paste back the entry number and date."
+    }
+  ],
+  "not_checked": [
+    "Parameter count of the hosted model (decides whether the AI norm applies)",
+    "Contracts with the payment and model providers"
+  ]
+}

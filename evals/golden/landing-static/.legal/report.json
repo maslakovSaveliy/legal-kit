@@ -1,0 +1,284 @@
+{
+  "version": 1,
+  "generated": "2026-10-18",
+  "lang": "ru",
+  "product": {
+    "name": "Ромашка — ремонт квартир",
+    "kinds": [
+      "site"
+    ],
+    "urls": [
+      "https://romashka.test"
+    ]
+  },
+  "mode": "repo+prod",
+  "rows": [
+    {
+      "req": "ru:politika-obrabotki-pdn",
+      "title": "Политика обработки ПДн не опубликована и не связана с формой заявки",
+      "status": "missing",
+      "evidence": [
+        {
+          "file": "index.html",
+          "line": 50
+        },
+        {
+          "file": "index.html",
+          "line": 68
+        }
+      ],
+      "norm": "152-ФЗ ст. 18.1 ч. 2",
+      "level": "mandatory",
+      "confidence": "high",
+      "effective_from": "2022-09-01",
+      "source": "base",
+      "sources": [
+        "http://pravo.gov.ru/proxy/ips/?docbody=&nd=102108261"
+      ],
+      "bucket": "owner",
+      "element": "politika-obrabotki-pdn:А1",
+      "basis": "norm"
+    },
+    {
+      "req": "ru:soglasie-na-obrabotku-pdn",
+      "title": "У формы заявки нет отдельного согласия на обработку ПДн",
+      "status": "missing",
+      "evidence": [
+        {
+          "file": "index.html",
+          "line": 50
+        },
+        {
+          "file": "index.html",
+          "line": 56
+        }
+      ],
+      "norm": "152-ФЗ ст. 9 ч. 1–4, 6–8",
+      "level": "conditional",
+      "confidence": "high",
+      "effective_from": null,
+      "source": "base",
+      "sources": [
+        "http://pravo.gov.ru/proxy/ips/?docbody=&nd=102108261"
+      ],
+      "bucket": "owner",
+      "element": null,
+      "basis": "norm"
+    },
+    {
+      "req": "ru:soglasie-na-analitiku-i-cookies",
+      "title": "Счётчик Яндекс Метрики стартует до выбора посетителя",
+      "status": "missing",
+      "evidence": [
+        {
+          "file": "index.html",
+          "line": 15
+        },
+        {
+          "file": "index.html",
+          "line": 17
+        }
+      ],
+      "norm": "152-ФЗ ст. 6 ч. 1 п. 1; ст. 9 ч. 1, 3 (cookie-баннер нормой не предписан)",
+      "level": "conditional",
+      "confidence": "medium",
+      "effective_from": null,
+      "source": "base",
+      "sources": [
+        "http://pravo.gov.ru/proxy/ips/?docbody=&nd=102108261"
+      ],
+      "bucket": "owner",
+      "element": null,
+      "basis": "norm"
+    },
+    {
+      "req": null,
+      "title": "Блокировка счётчика до согласия (инженерная практика, в норме cookie-баннер не предусмотрен)",
+      "status": "missing",
+      "evidence": [
+        {
+          "file": "index.html",
+          "line": 15
+        },
+        {
+          "file": "index.html",
+          "line": 17
+        }
+      ],
+      "norm": "инженерная практика",
+      "level": "recommended",
+      "confidence": "medium",
+      "effective_from": null,
+      "source": "base",
+      "sources": [],
+      "bucket": "owner",
+      "element": null,
+      "basis": "practice"
+    },
+    {
+      "req": "ru:cookies-i-identifikatory-kak-pdn",
+      "title": "Данные счётчика могут быть ПДн: статический разбор не показывает cookies",
+      "status": "partial",
+      "evidence": [
+        {
+          "file": "index.html",
+          "line": 19
+        }
+      ],
+      "norm": "152-ФЗ ст. 3 п. 1; позиция судов 2022–2025",
+      "level": "interpretation",
+      "confidence": "medium",
+      "effective_from": null,
+      "source": "base",
+      "sources": [
+        "http://pravo.gov.ru/proxy/ips/?docbody=&nd=102108261"
+      ],
+      "bucket": "disputed",
+      "element": null,
+      "basis": "interpretation"
+    },
+    {
+      "req": "ru:postavshchiki-analitiki-i-sdk",
+      "title": "Поручение обработки поставщику счётчика по договору не видно в репозитории",
+      "status": "not_visible",
+      "evidence": [
+        {
+          "file": "index.html",
+          "line": 15
+        }
+      ],
+      "norm": "152-ФЗ ст. 6 ч. 3",
+      "level": "conditional",
+      "confidence": "medium",
+      "effective_from": null,
+      "source": "base",
+      "sources": [
+        "http://pravo.gov.ru/proxy/ips/?docbody=&nd=102108261"
+      ],
+      "bucket": "owner",
+      "element": null,
+      "basis": "norm"
+    },
+    {
+      "req": "ru:lokalizaciya-pdn",
+      "title": "Виджет входа Telegram собирает данные посетителя: применимость локализации — трактовка",
+      "status": "not_visible",
+      "evidence": [
+        {
+          "file": "index.html",
+          "line": 62
+        }
+      ],
+      "norm": "152-ФЗ ст. 18 ч. 5 (применение к виджету — трактовка)",
+      "level": "interpretation",
+      "confidence": "medium",
+      "effective_from": "2025-07-01",
+      "source": "base",
+      "sources": [
+        "http://pravo.gov.ru/proxy/ips/?docbody=&nd=102108261"
+      ],
+      "bucket": "disputed",
+      "element": null,
+      "basis": "interpretation"
+    },
+    {
+      "req": "ru:svedeniya-o-vladelce-sayta",
+      "title": "В футере нет наименования владельца, адреса и e-mail для заявлений",
+      "status": "missing",
+      "evidence": [
+        {
+          "file": "index.html",
+          "line": 68
+        },
+        {
+          "file": "index.html",
+          "line": 70
+        }
+      ],
+      "norm": "149-ФЗ ст. 10 ч. 2",
+      "level": "mandatory",
+      "confidence": "high",
+      "effective_from": "2015-05-01",
+      "source": "base",
+      "sources": [
+        "http://pravo.gov.ru/proxy/ips/?docbody=&nd=102108264"
+      ],
+      "bucket": "owner",
+      "element": "svedeniya-o-prodavce-i-vladelce-sayta:А1",
+      "basis": "norm"
+    },
+    {
+      "req": "ru:uvedomlenie-rkn-ob-obrabotke-pdn",
+      "title": "Запись в реестре операторов ПДн не проверена: реестр РКН недоступен, проверка передана владельцу",
+      "status": "not_visible",
+      "evidence": [
+        {
+          "url": "https://pd.rkn.gov.ru/operators-registry/operators-list/"
+        }
+      ],
+      "norm": "152-ФЗ ст. 22 ч. 1",
+      "level": "mandatory",
+      "confidence": "high",
+      "effective_from": null,
+      "source": "base",
+      "sources": [
+        "http://pravo.gov.ru/proxy/ips/?docbody=&nd=102108261"
+      ],
+      "bucket": "owner",
+      "element": "politika-obrabotki-pdn:Б14",
+      "basis": "norm"
+    },
+    {
+      "req": "ru:publichnaya-oferta-i-podtverzhdenie-zakaza",
+      "title": "Сайт ничего не продаёт: оферта не требуется",
+      "status": "n_a",
+      "evidence": [],
+      "norm": "ПП РФ от 30.05.2026 № 657, Правила пп. 15–20, 23",
+      "level": "conditional",
+      "confidence": "high",
+      "effective_from": null,
+      "source": "base",
+      "sources": [
+        "http://publication.pravo.gov.ru/document/0001202606010077"
+      ],
+      "bucket": "done",
+      "element": null,
+      "basis": "norm"
+    },
+    {
+      "req": "ru:vozvrat-tovara-pri-distancionnoy-prodazhe",
+      "title": "Товары не продаются: условия возврата не требуются",
+      "status": "n_a",
+      "evidence": [],
+      "norm": "ЗоЗПП ст. 26.1 п. 3–5",
+      "level": "conditional",
+      "confidence": "high",
+      "effective_from": null,
+      "source": "base",
+      "sources": [
+        "http://pravo.gov.ru/proxy/ips/?docbody=&nd=102014512"
+      ],
+      "bucket": "done",
+      "element": null,
+      "basis": "norm"
+    }
+  ],
+  "registries": [
+    {
+      "name": "egrul",
+      "status": "ok",
+      "url": "https://egrul.nalog.ru/",
+      "note": "ИНН 0012345017: запись найдена, наименование совпадает с ответами владельца (проверено 2026-10-18)"
+    },
+    {
+      "name": "rkn-operators",
+      "status": "manual",
+      "url": "https://pd.rkn.gov.ru/operators-registry/operators-list/",
+      "note": "Откройте реестр с российского IP, найдите ИНН 0012345017 и пришлите номер записи, дату, цели, отметку о трансграничной передаче и место БД."
+    }
+  ],
+  "not_checked": [
+    "Cookies и запросы до согласия: JS не выполнялся",
+    "Договор с поставщиком счётчика и настройки кабинета Метрики"
+  ]
+}

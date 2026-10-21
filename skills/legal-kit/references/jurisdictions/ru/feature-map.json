@@ -1,0 +1,1144 @@
+{
+  "_doc": "Requirement map of the RU pack (hand-written; tools/seed_feature_map.py only seeds a draft). Candidate set = always + features[f] for every catalog feature f found by scan_repo.py or scan_url.py + owner_facts[k] for every owner fact k + sectoral[g].requirements for every CONFIRMED group g; select.py then drops a candidate whose subjects, models or products do not fit the product, and moves norms with a future date to the roadmap (future norms are mapped like current ones). Owner fact keys and their source in .legal/answers.json (owner-questions.md, section «Схема answers.json»): subject:ul, subject:ip, subject:npd, subject:foreign <- owner.status; b2c <- audience.b2c is true; minors <- audience.minors is 14-18 or under-14; revenue_over_20m <- business.revenue_over_20m is true; domain_ru <- a host in product.urls ends in .ru, .xn--p1ai (.рф) or .su. No other owner fact keys are allowed. features: a feature maps to the requirements its function really triggers. sector.* features and chat.messenger_links are evidence only: they may map to an empty list, and sector.* serve as evidence for the sectoral groups; the one exception is sector.education_courses, which also marks the sale of courses (a consumer service contract and the licence question). sectoral: requirements of regulated sectors and owner statuses; a group applies only after its evidence (catalog feature, OKVED code, licence, registry entry, another confirmed group) is found AND the owner confirms it, never from a keyword feature alone. Every key of sectoral is a valid value of business.sectors: medical, finance, education, gambling, alcohol-tobacco, gov and taxi-tourism are sectors; telecom, kii, social-services, media, social-network, classifieds, aggregator, intermediary-platform, news-aggregator, av-service, search-engine and vpn are owner statuses confirmed the same way. Requirements with obligation=sectoral appear only in sectoral. not_detectable: id -> why neither the scanners nor answers.json establish the trigger, and what to ask the owner (the owner checklist); when the id is also in another bucket the entry says what still needs the owner's confirmation. notes: id -> the sub-status or indirect condition the report states next to the requirement (for example \"only a bank\"). platform_rules: store-policy requirements (App Store, Google Play, RuStore, AppGallery rules); label them as platform rules, never as law. templates and documents: name -> {features, facts, always}; select.py offers a template or document spec when it is always needed, any listed feature was found or any listed fact (owner fact or confirmed group) is true.",
+  "always": [
+    "ru:antipiratskie-mery-i-blokirovka-po-sudu",
+    "ru:celi-i-osnovaniya-obrabotki-pdn",
+    "ru:hosting-i-identifikaciya-vladelca",
+    "ru:incidenty-s-pdn",
+    "ru:informirovanie-pri-sbore-pdn",
+    "ru:kompensaciya-za-narushenie-isklyuchitelnyh-prav",
+    "ru:lokalizaciya-pdn",
+    "ru:ocenka-vreda-subektam-pdn",
+    "ru:operator-pdn-po-statusu-vladelca",
+    "ru:politika-obrabotki-pdn",
+    "ru:prava-na-kontent-i-po-vladelca",
+    "ru:prekrashchenie-i-unichtozhenie-pdn",
+    "ru:sankcii-za-narusheniya-v-oblasti-pdn",
+    "ru:sankcii-za-neudalenie-informacii-13-41",
+    "ru:svedeniya-o-vladelce-sayta",
+    "ru:udalenie-informacii-po-uvedomleniyam-rkn",
+    "ru:uvedomlenie-rkn-ob-obrabotke-pdn",
+    "ru:vnutrennie-mery-operatora-pdn",
+    "ru:zaprosy-subektov-pdn",
+    "ru:zashchita-pdn-urovni-i-mery"
+  ],
+  "features": {
+    "ads.own_site_promo": [
+      "ru:chto-schitaetsya-reklamoy-na-svoem-resurse",
+      "ru:identifikator-reklamy-erid",
+      "ru:otchisleniya-3-s-internet-reklamy",
+      "ru:peredacha-svedeniy-ob-internet-reklame-v-erir",
+      "ru:pometka-reklama-i-svedeniya-o-reklamodatele",
+      "ru:pravila-storov-push-i-marketing",
+      "ru:reklama-inoagentov-i-lic-236-fz",
+      "ru:svedeniya-o-prodavce-v-reklame",
+      "ru:trebovaniya-k-soderzhaniyu-reklamy",
+      "ru:vozrastnaya-kategoriya-v-reklame",
+      "ru:zapret-reklamy-sredstv-obhoda-blokirovok"
+    ],
+    "ads.pixels": [
+      "ru:cookies-i-identifikatory-kak-pdn",
+      "ru:identifikator-reklamy-erid",
+      "ru:peredacha-svedeniy-ob-internet-reklame-v-erir",
+      "ru:postavshchiki-analitiki-i-sdk",
+      "ru:reklama-inoagentov-i-lic-236-fz",
+      "ru:soglasie-na-analitiku-i-cookies",
+      "ru:soglasie-na-obrabotku-pdn",
+      "ru:svedeniya-o-prodavce-v-reklame",
+      "ru:trebovaniya-k-soderzhaniyu-reklamy"
+    ],
+    "ads.pixels_foreign": [
+      "ru:cookies-i-identifikatory-kak-pdn",
+      "ru:identifikator-reklamy-erid",
+      "ru:peredacha-svedeniy-ob-internet-reklame-v-erir",
+      "ru:posledstviya-mer-236-fz-dlya-rossiyskih-vladelcev",
+      "ru:postavshchiki-analitiki-i-sdk",
+      "ru:reklama-inoagentov-i-lic-236-fz",
+      "ru:soglasie-na-analitiku-i-cookies",
+      "ru:soglasie-na-obrabotku-pdn",
+      "ru:svedeniya-o-prodavce-v-reklame",
+      "ru:transgranichnaya-peredacha-pdn",
+      "ru:trebovaniya-k-soderzhaniyu-reklamy",
+      "ru:zapret-reklamy-na-ogranichennyh-resursah"
+    ],
+    "analytics.mobile_sdk": [
+      "ru:cookies-i-identifikatory-kak-pdn",
+      "ru:postavshchiki-analitiki-i-sdk",
+      "ru:pravila-storov-trekking-i-raskrytie-dannyh",
+      "ru:soglasie-na-analitiku-i-cookies",
+      "ru:soglasie-na-obrabotku-pdn"
+    ],
+    "analytics.session_replay": [
+      "ru:cookies-i-identifikatory-kak-pdn",
+      "ru:poruchenie-obrabotki-pdn",
+      "ru:postavshchiki-analitiki-i-sdk",
+      "ru:soglasie-na-analitiku-i-cookies",
+      "ru:soglasie-na-obrabotku-pdn"
+    ],
+    "analytics.tag_manager": [
+      "ru:cookies-i-identifikatory-kak-pdn",
+      "ru:postavshchiki-analitiki-i-sdk",
+      "ru:soglasie-na-analitiku-i-cookies"
+    ],
+    "analytics.web_counter": [
+      "ru:cookies-i-identifikatory-kak-pdn",
+      "ru:postavshchiki-analitiki-i-sdk",
+      "ru:soglasie-na-analitiku-i-cookies",
+      "ru:soglasie-na-obrabotku-pdn"
+    ],
+    "audience.adult_18": [
+      "ru:klassifikaciya-informacionnoy-produkcii-436-fz",
+      "ru:pravila-storov-deti-i-vozrastnoy-reyting",
+      "ru:prodazha-informacionnoy-produkcii-18-nesovershennoletnim"
+    ],
+    "audience.kids": [
+      "ru:klassifikaciya-informacionnoy-produkcii-436-fz",
+      "ru:nesovershennoletnie-polzovateli",
+      "ru:pravila-storov-deti-i-vozrastnoy-reyting"
+    ],
+    "auth.apple": [
+      "ru:pravila-storov-akkaunty-i-vhod",
+      "ru:sposoby-avtorizacii-polzovateley"
+    ],
+    "auth.facebook": [
+      "ru:postavshchiki-analitiki-i-sdk",
+      "ru:pravila-storov-akkaunty-i-vhod",
+      "ru:simvolika-meta-i-upominaniya-ekstremistskih-organizaciy",
+      "ru:sposoby-avtorizacii-polzovateley",
+      "ru:transgranichnaya-peredacha-pdn"
+    ],
+    "auth.google": [
+      "ru:pravila-storov-akkaunty-i-vhod",
+      "ru:sposoby-avtorizacii-polzovateley"
+    ],
+    "auth.gosuslugi": [
+      "ru:peredacha-informacii-iz-gis-v-chastnye-is",
+      "ru:pravila-storov-akkaunty-i-vhod",
+      "ru:sposoby-avtorizacii-polzovateley"
+    ],
+    "auth.sms_otp": [
+      "ru:poruchenie-obrabotki-pdn",
+      "ru:pravila-storov-akkaunty-i-vhod",
+      "ru:sms-rassylki-126-fz",
+      "ru:sposoby-avtorizacii-polzovateley"
+    ],
+    "auth.telegram": [
+      "ru:poruchenie-obrabotki-pdn",
+      "ru:pravila-storov-akkaunty-i-vhod",
+      "ru:sposoby-avtorizacii-polzovateley"
+    ],
+    "auth.vk_id": [
+      "ru:pravila-storov-akkaunty-i-vhod",
+      "ru:sposoby-avtorizacii-polzovateley"
+    ],
+    "auth.yandex_id": [
+      "ru:pravila-storov-akkaunty-i-vhod",
+      "ru:sposoby-avtorizacii-polzovateley"
+    ],
+    "captcha.smartcaptcha": [
+      "ru:postavshchiki-analitiki-i-sdk"
+    ],
+    "chat.messenger_links": [],
+    "chat.widget": [
+      "ru:poruchenie-obrabotki-pdn",
+      "ru:soglasie-na-obrabotku-pdn"
+    ],
+    "commerce.cart_physical": [
+      "ru:akcept-polzovatelskogo-soglasheniya",
+      "ru:cena-v-rublyah-i-polnaya-summa",
+      "ru:informaciya-o-tovare-pri-distancionnoy-prodazhe",
+      "ru:nedostatki-i-garantiya-tovara",
+      "ru:onlayn-kkt-i-elektronnyy-chek",
+      "ru:poryadok-pretenziy-potrebiteley",
+      "ru:predpisanie-o-priostanovke-realizacii-produkcii",
+      "ru:publichnaya-oferta-i-podtverzhdenie-zakaza",
+      "ru:soglasie-na-platnye-dopolnitelnye-uslugi",
+      "ru:sposob-vozvrata-distancionno-kuplennogo-tovara",
+      "ru:srok-peredachi-predoplachennogo-tovara",
+      "ru:svedeniya-o-prodavce-pri-distancionnoy-prodazhe",
+      "ru:vozvrat-tovara-pri-distancionnoy-prodazhe",
+      "ru:zapret-navyazyvaniya-uslug",
+      "ru:zapret-predlozheniy-zapreshchennyh-tovarov"
+    ],
+    "commerce.checkout": [
+      "ru:akcept-polzovatelskogo-soglasheniya",
+      "ru:cena-v-rublyah-i-polnaya-summa",
+      "ru:onlayn-kkt-i-elektronnyy-chek",
+      "ru:soglasie-na-platnye-dopolnitelnye-uslugi",
+      "ru:svedeniya-o-prodavce-pri-distancionnoy-prodazhe",
+      "ru:zapret-navyazyvaniya-uslug"
+    ],
+    "commerce.digital_content": [
+      "ru:akcept-polzovatelskogo-soglasheniya",
+      "ru:cena-v-rublyah-i-polnaya-summa",
+      "ru:cifrovoy-kontent-i-prava-potrebitelya",
+      "ru:klassifikaciya-informacionnoy-produkcii-436-fz",
+      "ru:licenzionnoe-soglashenie-s-polzovatelem-eula",
+      "ru:onlayn-kkt-i-elektronnyy-chek",
+      "ru:pravila-storov-oplata-i-podpiski",
+      "ru:svedeniya-o-prodavce-pri-distancionnoy-prodazhe",
+      "ru:tekhnicheskie-sredstva-zashchity-avtorskih-prav"
+    ],
+    "commerce.gift_cards": [
+      "ru:onlayn-kkt-i-elektronnyy-chek",
+      "ru:publichnaya-oferta-i-podtverzhdenie-zakaza"
+    ],
+    "commerce.loyalty_points": [
+      "ru:programmy-loyalnosti-i-bonusnye-bally"
+    ],
+    "commerce.marked_goods": [
+      "ru:markirovannye-tovary-pri-distancionnoy-prodazhe",
+      "ru:onlayn-kkt-i-elektronnyy-chek",
+      "ru:zapret-predlozheniy-zapreshchennyh-tovarov",
+      "ru:zapret-prodazhi-markirovannyh-tovarov-po-dannym-gis-mt"
+    ],
+    "commerce.prepayment": [
+      "ru:onlayn-kkt-i-elektronnyy-chek"
+    ],
+    "commerce.promo_codes": [
+      "ru:edinaya-cena-nezavisimo-ot-sposoba-oplaty"
+    ],
+    "commerce.services_booking": [
+      "ru:akcept-polzovatelskogo-soglasheniya",
+      "ru:cena-v-rublyah-i-polnaya-summa",
+      "ru:dogovor-uslug-informaciya-sroki-nedostatki",
+      "ru:otkaz-ot-uslug-i-cifrovyh-podpisok",
+      "ru:soglasie-na-platnye-dopolnitelnye-uslugi",
+      "ru:svedeniya-o-prodavce-pri-distancionnoy-prodazhe",
+      "ru:zapret-navyazyvaniya-uslug"
+    ],
+    "commerce.subscription": [
+      "ru:akcept-polzovatelskogo-soglasheniya",
+      "ru:avtospisaniya-po-podpiskam",
+      "ru:cena-v-rublyah-i-polnaya-summa",
+      "ru:licenzionnoe-soglashenie-s-polzovatelem-eula",
+      "ru:onlayn-kkt-i-elektronnyy-chek",
+      "ru:otkaz-ot-uslug-i-cifrovyh-podpisok",
+      "ru:pravila-storov-oplata-i-podpiski",
+      "ru:svedeniya-o-prodavce-pri-distancionnoy-prodazhe"
+    ],
+    "commerce.trial": [
+      "ru:avtospisaniya-po-podpiskam",
+      "ru:pravila-storov-oplata-i-podpiski"
+    ],
+    "comms.calls_calltracking": [
+      "ru:cookies-i-identifikatory-kak-pdn",
+      "ru:poruchenie-obrabotki-pdn",
+      "ru:soglasie-na-analitiku-i-cookies"
+    ],
+    "comms.email_marketing": [
+      "ru:poruchenie-obrabotki-pdn",
+      "ru:soglasie-na-obrabotku-pdn",
+      "ru:soglasie-na-prodvizhenie-tovarov-pdn",
+      "ru:soglasie-na-reklamu-po-setyam-elektrosvyazi",
+      "ru:trebovaniya-k-soderzhaniyu-reklamy",
+      "ru:zapret-avtomaticheskogo-nabora-i-rassylki-reklamy"
+    ],
+    "comms.push": [
+      "ru:pravila-storov-push-i-marketing",
+      "ru:reklamnye-push-uvedomleniya"
+    ],
+    "comms.sms": [
+      "ru:poruchenie-obrabotki-pdn",
+      "ru:sms-rassylki-126-fz",
+      "ru:soglasie-na-prodvizhenie-tovarov-pdn",
+      "ru:soglasie-na-reklamu-po-setyam-elektrosvyazi",
+      "ru:zapret-avtomaticheskogo-nabora-i-rassylki-reklamy"
+    ],
+    "content.meta_symbols": [
+      "ru:simvolika-meta-i-upominaniya-ekstremistskih-organizaciy",
+      "ru:zapret-reklamy-na-ogranichennyh-resursah"
+    ],
+    "content.vpn_mentions": [
+      "ru:sredstva-obhoda-blokirovok",
+      "ru:zapret-reklamy-sredstv-obhoda-blokirovok"
+    ],
+    "content.webinars": [
+      "ru:izobrazhenie-grazhdanina-v-kontente"
+    ],
+    "foreign.captcha": [
+      "ru:cookies-i-identifikatory-kak-pdn",
+      "ru:posledstviya-mer-236-fz-dlya-rossiyskih-vladelcev",
+      "ru:postavshchiki-analitiki-i-sdk"
+    ],
+    "foreign.cdn_hosting": [
+      "ru:nds-na-elektronnye-uslugi-inostrancev",
+      "ru:poruchenie-obrabotki-pdn",
+      "ru:posledstviya-mer-236-fz-dlya-rossiyskih-vladelcev",
+      "ru:transgranichnaya-peredacha-pdn"
+    ],
+    "foreign.data_processors": [
+      "ru:poruchenie-obrabotki-pdn",
+      "ru:posledstviya-mer-236-fz-dlya-rossiyskih-vladelcev",
+      "ru:postavshchiki-analitiki-i-sdk",
+      "ru:transgranichnaya-peredacha-pdn"
+    ],
+    "foreign.embeds": [
+      "ru:poruchenie-obrabotki-pdn",
+      "ru:posledstviya-mer-236-fz-dlya-rossiyskih-vladelcev",
+      "ru:postavshchiki-analitiki-i-sdk",
+      "ru:transgranichnaya-peredacha-pdn"
+    ],
+    "foreign.fonts": [
+      "ru:posledstviya-mer-236-fz-dlya-rossiyskih-vladelcev",
+      "ru:postavshchiki-analitiki-i-sdk"
+    ],
+    "foreign.static_cdn": [
+      "ru:posledstviya-mer-236-fz-dlya-rossiyskih-vladelcev",
+      "ru:postavshchiki-analitiki-i-sdk"
+    ],
+    "forms.contact": [
+      "ru:soglasie-na-obrabotku-pdn"
+    ],
+    "forms.generic": [
+      "ru:soglasie-na-obrabotku-pdn"
+    ],
+    "forms.registration": [
+      "ru:akcept-polzovatelskogo-soglasheniya",
+      "ru:pravila-storov-akkaunty-i-vhod",
+      "ru:soglasie-na-obrabotku-pdn",
+      "ru:sposoby-avtorizacii-polzovateley"
+    ],
+    "i18n.foreign_language_ui": [
+      "ru:normy-yazyka-i-inostrannye-slova",
+      "ru:russkiy-yazyk-informacii-dlya-potrebiteley",
+      "ru:russkiy-yazyk-publichnoy-informacii-st-10-1"
+    ],
+    "marketing.giveaways": [
+      "ru:loterei-v-internete-i-vozrast-uchastnika",
+      "ru:soglasie-na-rasprostranenie-pdn",
+      "ru:stimuliruyushchie-meropriyatiya-v-reklame",
+      "ru:trebovaniya-k-soderzhaniyu-reklamy"
+    ],
+    "mobile.app": [
+      "ru:licenzionnoe-soglashenie-s-polzovatelem-eula",
+      "ru:pravila-storov-deti-i-vozrastnoy-reyting",
+      "ru:pravila-storov-trekking-i-raskrytie-dannyh"
+    ],
+    "mobile.att": [
+      "ru:cookies-i-identifikatory-kak-pdn",
+      "ru:postavshchiki-analitiki-i-sdk",
+      "ru:pravila-storov-trekking-i-raskrytie-dannyh",
+      "ru:soglasie-na-analitiku-i-cookies"
+    ],
+    "mobile.iap": [
+      "ru:cena-v-rublyah-i-polnaya-summa",
+      "ru:cheki-pri-prodazhe-cherez-agentov-i-story",
+      "ru:cifrovoy-kontent-i-prava-potrebitelya",
+      "ru:pravila-storov-oplata-i-podpiski",
+      "ru:svedeniya-o-prodavce-pri-distancionnoy-prodazhe"
+    ],
+    "mobile.rustore": [
+      "ru:edinyy-magazin-prilozheniy"
+    ],
+    "payments.bnpl": [
+      "ru:cena-v-rublyah-i-polnaya-summa",
+      "ru:edinaya-cena-nezavisimo-ot-sposoba-oplaty",
+      "ru:onlayn-kkt-i-elektronnyy-chek",
+      "ru:servis-rassrochki-na-sayte-prodavca",
+      "ru:svedeniya-o-prodavce-pri-distancionnoy-prodazhe"
+    ],
+    "payments.cloudpayments": [
+      "ru:cena-v-rublyah-i-polnaya-summa",
+      "ru:cheki-pri-prodazhe-cherez-agentov-i-story",
+      "ru:edinaya-cena-nezavisimo-ot-sposoba-oplaty",
+      "ru:onlayn-kkt-i-elektronnyy-chek",
+      "ru:svedeniya-o-prodavce-pri-distancionnoy-prodazhe"
+    ],
+    "payments.paddle": [
+      "ru:cena-v-rublyah-i-polnaya-summa",
+      "ru:cheki-pri-prodazhe-cherez-agentov-i-story",
+      "ru:posledstviya-mer-236-fz-dlya-rossiyskih-vladelcev",
+      "ru:svedeniya-o-prodavce-pri-distancionnoy-prodazhe",
+      "ru:transgranichnaya-peredacha-pdn"
+    ],
+    "payments.receipts_kkt": [
+      "ru:cena-v-rublyah-i-polnaya-summa",
+      "ru:cheki-pri-prodazhe-cherez-agentov-i-story",
+      "ru:onlayn-kkt-i-elektronnyy-chek",
+      "ru:svedeniya-o-prodavce-pri-distancionnoy-prodazhe"
+    ],
+    "payments.robokassa": [
+      "ru:cena-v-rublyah-i-polnaya-summa",
+      "ru:cheki-pri-prodazhe-cherez-agentov-i-story",
+      "ru:edinaya-cena-nezavisimo-ot-sposoba-oplaty",
+      "ru:onlayn-kkt-i-elektronnyy-chek",
+      "ru:svedeniya-o-prodavce-pri-distancionnoy-prodazhe"
+    ],
+    "payments.sbp": [
+      "ru:cena-v-rublyah-i-polnaya-summa",
+      "ru:edinaya-cena-nezavisimo-ot-sposoba-oplaty",
+      "ru:onlayn-kkt-i-elektronnyy-chek",
+      "ru:svedeniya-o-prodavce-pri-distancionnoy-prodazhe"
+    ],
+    "payments.stripe": [
+      "ru:cena-v-rublyah-i-polnaya-summa",
+      "ru:edinaya-cena-nezavisimo-ot-sposoba-oplaty",
+      "ru:onlayn-kkt-i-elektronnyy-chek",
+      "ru:posledstviya-mer-236-fz-dlya-rossiyskih-vladelcev",
+      "ru:svedeniya-o-prodavce-pri-distancionnoy-prodazhe",
+      "ru:transgranichnaya-peredacha-pdn"
+    ],
+    "payments.tbank": [
+      "ru:cena-v-rublyah-i-polnaya-summa",
+      "ru:cheki-pri-prodazhe-cherez-agentov-i-story",
+      "ru:edinaya-cena-nezavisimo-ot-sposoba-oplaty",
+      "ru:onlayn-kkt-i-elektronnyy-chek",
+      "ru:svedeniya-o-prodavce-pri-distancionnoy-prodazhe"
+    ],
+    "payments.yookassa": [
+      "ru:cena-v-rublyah-i-polnaya-summa",
+      "ru:cheki-pri-prodazhe-cherez-agentov-i-story",
+      "ru:edinaya-cena-nezavisimo-ot-sposoba-oplaty",
+      "ru:onlayn-kkt-i-elektronnyy-chek",
+      "ru:svedeniya-o-prodavce-pri-distancionnoy-prodazhe"
+    ],
+    "platform.marketplace": [
+      "ru:akcept-polzovatelskogo-soglasheniya",
+      "ru:cena-v-rublyah-i-polnaya-summa",
+      "ru:cheki-pri-prodazhe-cherez-agentov-i-story",
+      "ru:informaciya-o-tovare-pri-distancionnoy-prodazhe",
+      "ru:obyazannosti-vladelca-agregatora",
+      "ru:otvetstvennost-informacionnogo-posrednika",
+      "ru:otzyvy-reytingi-i-beydzhi",
+      "ru:poryadok-pretenziy-potrebiteley",
+      "ru:publichnaya-oferta-i-podtverzhdenie-zakaza",
+      "ru:soglasie-na-platnye-dopolnitelnye-uslugi",
+      "ru:srok-peredachi-predoplachennogo-tovara",
+      "ru:svedeniya-o-prodavce-pri-distancionnoy-prodazhe",
+      "ru:vladelec-cifrovoy-platformy-289-fz",
+      "ru:zapret-informacii-dlya-dostupa-k-sistemam-finorganizaciy",
+      "ru:zapret-navyazyvaniya-uslug",
+      "ru:zapret-predlozheniy-zapreshchennyh-tovarov"
+    ],
+    "sector.alcohol_tobacco": [],
+    "sector.education_courses": [
+      "ru:dogovor-uslug-informaciya-sroki-nedostatki",
+      "ru:onlayn-obuchenie-licenziya-i-prosveshchenie",
+      "ru:otkaz-ot-uslug-i-cifrovyh-podpisok"
+    ],
+    "sector.finance": [],
+    "sector.gambling": [],
+    "sector.gov": [],
+    "sector.medical": [],
+    "sector.taxi_tourism": [],
+    "tech.generative_ai": [
+      "ru:obyazannosti-servisa-generativnogo-ii-243-fz",
+      "ru:poruchenie-obrabotki-pdn",
+      "ru:pravila-storov-generativnyy-ii",
+      "ru:pravila-storov-trekking-i-raskrytie-dannyh"
+    ],
+    "tech.generative_ai_foreign": [
+      "ru:poruchenie-obrabotki-pdn",
+      "ru:posledstviya-mer-236-fz-dlya-rossiyskih-vladelcev",
+      "ru:transgranichnaya-peredacha-pdn"
+    ],
+    "tech.recommendations": [
+      "ru:rekomendatelnye-tekhnologii"
+    ],
+    "ugc.image_uploads": [
+      "ru:izobrazhenie-grazhdanina-v-kontente"
+    ],
+    "ugc.public_profiles": [
+      "ru:otvetstvennost-informacionnogo-posrednika",
+      "ru:pravila-storov-polzovatelskiy-kontent",
+      "ru:soglasie-na-obrabotku-pdn",
+      "ru:soglasie-na-rasprostranenie-pdn",
+      "ru:zapret-informacii-dlya-dostupa-k-sistemam-finorganizaciy"
+    ],
+    "ugc.reviews": [
+      "ru:izobrazhenie-grazhdanina-v-kontente",
+      "ru:otvetstvennost-informacionnogo-posrednika",
+      "ru:otzyvy-reytingi-i-beydzhi",
+      "ru:pravila-storov-polzovatelskiy-kontent",
+      "ru:soglasie-na-rasprostranenie-pdn",
+      "ru:zapret-informacii-dlya-dostupa-k-sistemam-finorganizaciy"
+    ],
+    "ugc.uploads": [
+      "ru:otvetstvennost-informacionnogo-posrednika",
+      "ru:pravila-storov-polzovatelskiy-kontent",
+      "ru:zapret-informacii-dlya-dostupa-k-sistemam-finorganizaciy"
+    ],
+    "ugc.user_messaging": [
+      "ru:identifikaciya-v-messendzherah",
+      "ru:obyazatelnoe-razmeshchenie-v-edinom-magazine",
+      "ru:organizator-rasprostraneniya-informacii",
+      "ru:ori-hranenie-i-peredacha-svedeniy",
+      "ru:pravila-storov-polzovatelskiy-kontent"
+    ]
+  },
+  "owner_facts": {
+    "b2c": [
+      "ru:nedopustimye-usloviya-oferty",
+      "ru:normy-yazyka-i-inostrannye-slova",
+      "ru:russkiy-yazyk-informacii-dlya-potrebiteley",
+      "ru:zapret-otkaza-potrebitelyu-bez-pdn"
+    ],
+    "domain_ru": [
+      "ru:registraciya-domena-cherez-esia"
+    ],
+    "minors": [
+      "ru:klassifikaciya-informacionnoy-produkcii-436-fz",
+      "ru:nesovershennoletnie-polzovateli",
+      "ru:pravila-storov-deti-i-vozrastnoy-reyting"
+    ],
+    "revenue_over_20m": [
+      "ru:oplata-cifrovymi-rublyami",
+      "ru:prinyatie-nacionalnyh-platezhnyh-instrumentov"
+    ],
+    "subject:foreign": [
+      "ru:ekstraterritorialnost-152-fz",
+      "ru:inostrannyy-vladelec-b2c-pravo-i-podsudnost",
+      "ru:nds-na-elektronnye-uslugi-inostrancev"
+    ],
+    "subject:npd": [
+      "ru:cheki-samozanyatogo-npd",
+      "ru:ogranicheniya-npd-dlya-cifrovogo-produkta",
+      "ru:zozpp-i-samozanyatye"
+    ],
+    "subject:ul": [
+      "ru:dostupnost-dlya-invalidov-obshchie-normy-181-fz"
+    ]
+  },
+  "sectoral": {
+    "aggregator": {
+      "evidence": [
+        "feature:platform.marketplace",
+        "owner_confirms: потребитель на площадке знакомится с предложением продавца, заключает договор и вносит предоплату"
+      ],
+      "requirements": [
+        "ru:esia-identifikaciya-na-ploshchadkah",
+        "ru:obyazannosti-vladelca-agregatora",
+        "ru:zapret-inostrannyh-messendzherov-dlya-informirovaniya"
+      ]
+    },
+    "alcohol-tobacco": {
+      "evidence": [
+        "feature:sector.alcohol_tobacco",
+        "licence:розничная продажа алкогольной продукции",
+        "okved:47.25",
+        "okved:47.26",
+        "owner_confirms"
+      ],
+      "requirements": [
+        "ru:pravila-storov-reguliruemye-otrasli",
+        "ru:prodazha-tovarov-s-vozrastnym-ogranicheniem-onlayn",
+        "ru:reklama-otdelnyh-vidov-tovarov",
+        "ru:zapret-distancionnoy-prodazhi-alkogolya",
+        "ru:zapret-distancionnoy-torgovli-tabakom-i-nikotinom"
+      ]
+    },
+    "av-service": {
+      "evidence": [
+        "owner_confirms: каталог фильмов и видео за плату или с рекламой, суточная аудитория выше порога ru:audiovizualnyy-servis",
+        "registry:РКН: реестр аудиовизуальных сервисов"
+      ],
+      "requirements": [
+        "ru:audiovizualnyy-servis",
+        "ru:demonstraciya-tabaka-v-audiovizualnyh-proizvedeniyah",
+        "ru:issledovanie-obema-auditorii",
+        "ru:obyazatelnoe-razmeshchenie-v-edinom-magazine"
+      ]
+    },
+    "classifieds": {
+      "evidence": [
+        "feature:platform.marketplace",
+        "owner_confirms: объявления пользователей и суточная аудитория из РФ выше порога ru:servis-razmeshcheniya-obyavleniy",
+        "registry:РКН: реестр сервисов размещения объявлений"
+      ],
+      "requirements": [
+        "ru:esia-identifikaciya-na-ploshchadkah",
+        "ru:servis-razmeshcheniya-obyavleniy",
+        "ru:zapret-inostrannyh-messendzherov-dlya-informirovaniya"
+      ]
+    },
+    "education": {
+      "evidence": [
+        "feature:sector.education_courses",
+        "licence:образовательная деятельность (Рособрнадзор: лицензии)",
+        "okved:85",
+        "owner_confirms"
+      ],
+      "requirements": [
+        "ru:dokumenty-ob-obuchenii-po-itogam-kursa",
+        "ru:elektronnoe-obuchenie-i-dot",
+        "ru:onlayn-obuchenie-licenziya-i-prosveshchenie",
+        "ru:sayt-obrazovatelnoy-organizacii"
+      ]
+    },
+    "finance": {
+      "evidence": [
+        "feature:sector.finance",
+        "okved:64",
+        "okved:65",
+        "okved:66",
+        "owner_confirms",
+        "registry:Банк России: операторы сервиса рассрочки",
+        "registry:Банк России: участники финансового рынка"
+      ],
+      "requirements": [
+        "ru:avtomatizirovannye-resheniya-pdn",
+        "ru:cifrovye-valyuty-nekvalificirovannye-investory",
+        "ru:ib-bankovskih-prilozheniy-851-p",
+        "ru:ib-prilozheniy-nfo-757-p",
+        "ru:identifikaciya-klientov-115-fz",
+        "ru:investicionnoe-konsultirovanie-na-sayte",
+        "ru:kii-subekty-i-kategorirovanie",
+        "ru:mikrofinansovye-organizacii-onlayn",
+        "ru:obyazatelnoe-razmeshchenie-v-edinom-magazine",
+        "ru:operator-finansovoy-platformy-211-fz",
+        "ru:operator-investicionnoy-platformy-259-fz",
+        "ru:perevody-bez-soglasiya-klienta-161-fz",
+        "ru:period-ohlazhdeniya-po-kreditam",
+        "ru:postavshchik-platezhnogo-prilozheniya",
+        "ru:potrebitelskiy-kredit-onlayn",
+        "ru:pravila-storov-reguliruemye-otrasli",
+        "ru:reklama-cifrovyh-valyut-i-cfa",
+        "ru:reklama-finansovyh-uslug-i-kreditov",
+        "ru:servis-rassrochki-operator",
+        "ru:upolnomochennoe-lico-v-bankovskom-prilozhenii",
+        "ru:zapret-inostrannyh-messendzherov-dlya-informirovaniya",
+        "ru:zapret-inostrannyh-messendzherov-dlya-platezhnyh-dokumentov",
+        "ru:zapret-oplaty-cifrovoy-valyutoy"
+      ]
+    },
+    "gambling": {
+      "evidence": [
+        "feature:sector.gambling",
+        "licence:организатор азартных игр (букмекер, тотализатор)",
+        "okved:92",
+        "owner_confirms"
+      ],
+      "requirements": [
+        "ru:azartnye-igry-v-internete-zapret",
+        "ru:loterei-v-internete-i-vozrast-uchastnika",
+        "ru:pravila-storov-reguliruemye-otrasli",
+        "ru:reklama-azartnyh-igr-i-bukmekerov",
+        "ru:samoogranichenie-azartnye-igry",
+        "ru:sayt-bukmekera-informaciya-o-riskah"
+      ]
+    },
+    "gov": {
+      "evidence": [
+        "feature:sector.gov",
+        "okved:84",
+        "owner_confirms: госорган, орган МСУ, подведомственная организация, ГУП, МУП, госучреждение, госкомпания или общество с госучастием, оператор или подрядчик ГИС"
+      ],
+      "requirements": [
+        "ru:dostupnost-oficialnyh-saytov-gosorganov",
+        "ru:gossopka-dlya-kompaniy-s-gosuchastiem",
+        "ru:gossopka-dlya-operatorov-gis",
+        "ru:gost-r-52872-dostupnost",
+        "ru:obyazatelnoe-razmeshchenie-v-edinom-magazine",
+        "ru:oficialnye-sayty-i-stranicy-gosorganov",
+        "ru:peredacha-informacii-iz-gis-v-chastnye-is",
+        "ru:podryadchik-operatora-gis",
+        "ru:skzi-v-gis",
+        "ru:ukaz-250-dopolnitelnye-mery-ib",
+        "ru:zapret-inostrannogo-po-v-gossektore",
+        "ru:zapret-inostrannyh-messendzherov-dlya-informirovaniya",
+        "ru:zapret-inostrannyh-messendzherov-dlya-platezhnyh-dokumentov",
+        "ru:zashchita-informacii-v-gis"
+      ]
+    },
+    "intermediary-platform": {
+      "evidence": [
+        "feature:platform.marketplace",
+        "owner_confirms",
+        "registry:Минэкономразвития: реестр посреднических цифровых платформ"
+      ],
+      "requirements": [
+        "ru:esia-identifikaciya-na-ploshchadkah",
+        "ru:obyazannosti-vladelca-agregatora",
+        "ru:operator-posrednicheskoy-platformy-289-fz",
+        "ru:otzyvy-reytingi-i-beydzhi",
+        "ru:poryadok-pretenziy-potrebiteley",
+        "ru:prizemlenie-inostrannyh-lic-236-fz"
+      ]
+    },
+    "kii": {
+      "evidence": [
+        "owner_confirms: российское юрлицо, системы которого работают в сферах КИИ (ru:kii-subekty-i-kategorirovanie); сведения о категорировании",
+        "sector:finance",
+        "sector:medical",
+        "sector:telecom"
+      ],
+      "requirements": [
+        "ru:kii-informirovanie-nkcki",
+        "ru:kii-subekty-i-kategorirovanie",
+        "ru:kii-znachimye-obekty-po-i-pak",
+        "ru:sankcii-v-oblasti-kii",
+        "ru:ukaz-250-dopolnitelnye-mery-ib"
+      ]
+    },
+    "media": {
+      "evidence": [
+        "owner_confirms: сайт зарегистрирован как сетевое издание",
+        "registry:РКН: СМИ"
+      ],
+      "requirements": [
+        "ru:setevoe-izdanie-registraciya-i-svedeniya",
+        "ru:znak-informacionnoy-produkcii-smi"
+      ]
+    },
+    "medical": {
+      "evidence": [
+        "feature:sector.medical",
+        "licence:медицинская деятельность (Росздравнадзор: лицензии)",
+        "licence:фармацевтическая деятельность",
+        "okved:86",
+        "owner_confirms"
+      ],
+      "requirements": [
+        "ru:agregator-lekarstvennyh-preparatov",
+        "ru:distancionnaya-prodazha-lekarstv",
+        "ru:inye-informacionnye-sistemy-v-zdravoohranenii",
+        "ru:kii-subekty-i-kategorirovanie",
+        "ru:platnye-medicinskie-uslugi-onlayn",
+        "ru:po-kak-medicinskoe-izdelie",
+        "ru:pravila-storov-reguliruemye-otrasli",
+        "ru:reklama-otdelnyh-vidov-tovarov",
+        "ru:sayt-medicinskoy-organizacii",
+        "ru:specialnye-kategorii-pdn",
+        "ru:telemedicina-informaciya-dlya-pacienta",
+        "ru:telemedicina-usloviya-okazaniya",
+        "ru:vrachebnaya-tayna-v-medicinskih-servisah"
+      ]
+    },
+    "news-aggregator": {
+      "evidence": [
+        "owner_confirms: новостная лента и суточная аудитория выше порога ru:novostnoy-agregator",
+        "registry:РКН: реестр новостных агрегаторов"
+      ],
+      "requirements": [
+        "ru:issledovanie-obema-auditorii",
+        "ru:novostnoy-agregator",
+        "ru:obyazatelnoe-razmeshchenie-v-edinom-magazine",
+        "ru:socialnaya-reklama-na-krupnyh-resursah"
+      ]
+    },
+    "search-engine": {
+      "evidence": [
+        "owner_confirms: продукт ищет информацию на сайтах иных лиц и выдаёт ссылки на неё"
+      ],
+      "requirements": [
+        "ru:operator-poiskovoy-sistemy",
+        "ru:sredstva-obhoda-blokirovok"
+      ]
+    },
+    "social-network": {
+      "evidence": [
+        "feature:ugc.public_profiles",
+        "owner_confirms: персональные страницы пользователей и суточная аудитория из РФ выше порога ru:vladelec-socialnoy-seti",
+        "registry:РКН: реестр социальных сетей"
+      ],
+      "requirements": [
+        "ru:obyazatelnoe-razmeshchenie-v-edinom-magazine",
+        "ru:preduprezhdenie-o-primenenii-ii-na-platformah",
+        "ru:prizemlenie-inostrannyh-lic-236-fz",
+        "ru:socialnaya-reklama-na-krupnyh-resursah",
+        "ru:socset-monitoring-i-moderaciya",
+        "ru:socset-perechen-blogerov-obyazannosti-platformy",
+        "ru:vladelec-socialnoy-seti",
+        "ru:zapret-inostrannyh-messendzherov-dlya-informirovaniya"
+      ]
+    },
+    "social-services": {
+      "evidence": [
+        "okved:87",
+        "okved:88",
+        "owner_confirms",
+        "registry:реестр поставщиков социальных услуг субъекта РФ"
+      ],
+      "requirements": [
+        "ru:sayt-postavshchika-socialnyh-uslug"
+      ]
+    },
+    "taxi-tourism": {
+      "evidence": [
+        "feature:sector.taxi_tourism",
+        "okved:49.32",
+        "okved:55",
+        "okved:79",
+        "owner_confirms",
+        "registry:региональный реестр служб заказа легкового такси",
+        "registry:реестр классифицированных средств размещения",
+        "registry:реестр туроператоров"
+      ],
+      "requirements": [
+        "ru:agregatory-sredstv-razmeshcheniya-reestr-klassifikacii",
+        "ru:dostupnost-obektov-turizma-informaciya-na-sayte",
+        "ru:sayt-turoperatora-i-turagenta",
+        "ru:sluzhba-zakaza-legkovogo-taksi"
+      ]
+    },
+    "telecom": {
+      "evidence": [
+        "licence:услуги связи (Роскомнадзор)",
+        "okved:61",
+        "owner_confirms"
+      ],
+      "requirements": [
+        "ru:dostupnost-saytov-operatorov-svyazi",
+        "ru:gost-r-52872-dostupnost",
+        "ru:kii-subekty-i-kategorirovanie",
+        "ru:obyazatelnoe-razmeshchenie-v-edinom-magazine",
+        "ru:zapret-inostrannyh-messendzherov-dlya-informirovaniya"
+      ]
+    },
+    "vpn": {
+      "evidence": [
+        "feature:content.vpn_mentions",
+        "owner_confirms: продукт даёт доступ к ресурсам через VPN, прокси или иное средство обхода блокировок"
+      ],
+      "requirements": [
+        "ru:hosting-i-identifikaciya-vladelca",
+        "ru:licenzirovanie-shifrovalnoy-deyatelnosti",
+        "ru:pravila-storov-reguliruemye-otrasli",
+        "ru:sredstva-obhoda-blokirovok",
+        "ru:zapret-reklamy-sredstv-obhoda-blokirovok"
+      ]
+    }
+  },
+  "not_detectable": {
+    "ru:avtomatizirovannye-resheniya-pdn": "Принимает ли продукт решения с юридическими последствиями только автоматически (скоринг, блокировка антифрод-системой, автомодерация с санкциями), из кода и страниц не видно; спросить владельца. Для подтверждённого сектора finance требование уже входит в группу.",
+    "ru:biometriya-pri-autentifikacii": "В каталоге нет признака биометрической верификации (сверка селфи с документом, голос); Face ID и Touch ID на устройстве биометрию владельцу не передают. Спросить владельца о входе и верификации по лицу или голосу.",
+    "ru:demonstraciya-tabaka-v-audiovizualnyh-proizvedeniyah": "Норма касается и небольших видеосервисов вне статуса аудиовизуального сервиса, а признака видеокаталога в каталоге нет; спросить владельца сервиса с фильмами или видео.",
+    "ru:eksperimentalnyy-pravovoy-rezhim-258-fz": "Статус субъекта или участника экспериментального правового режима — факт владельца, в продукте не виден; спросить владельца.",
+    "ru:firmennoe-naimenovanie-i-kommercheskoe-oboznachenie": "Чек-лист владельца: сигнала в коде нет, признак есть почти у любого продукта; проверить, что наименование в подвале, оферте и карточке стора совпадает с ЕГРЮЛ, а бренд не повторяет чужие обозначения.",
+    "ru:interfeys-programmy-kak-promyshlennyy-obrazec-296-fz": "Касается решения запатентовать интерфейс и сходства с чужим зарегистрированным образцом; из кода не видно, нужен патентный поиск. Спросить владельца.",
+    "ru:ispolzovanie-kontenta-dlya-obucheniya-ii-243-fz": "Справочно: норма не создаёт обязанностей владельца, а ограничивает его права на открытый контент сайта (дата — в карточке). Упомянуть в дорожной карте, если владельцу важна защита контента от сбора.",
+    "ru:issledovanie-obema-auditorii": "Включение ресурса в реестр для исследования объёма аудитории из кода не видно; для подтверждённых групп news-aggregator и av-service требование уже входит в группу. Спросить владельца крупного ресурса.",
+    "ru:licenzirovanie-shifrovalnoy-deyatelnosti": "Шифрование данных клиентов как услуга, сквозное шифрование, выпуск ключей и сертификатов из сигналов каталога не следуют; для подтверждённой группы vpn требование уже входит в группу. Спросить владельца.",
+    "ru:markirovka-ishodyashchih-zvonkov": "Исходящие звонки организации на мобильные номера — факт работы продаж и поддержки, в коде не виден; коллтрекинг и обратный звонок сами обязанностей владельца сайта не создают. Спросить владельца.",
+    "ru:massovye-avtomaticheskie-zvonki": "Массовые и автоматические обзвоны заказываются у операторов связи вне продукта; признак comms.calls_calltracking их не доказывает. Спросить владельца.",
+    "ru:mnogofunkcionalnyy-servis-razresheniya": "Норма даёт право, а не обязанность: уведомлять граждан через национальный мессенджер — решение владельца, признака в каталоге нет. Упомянуть как возможность, если продукт шлёт обязательные уведомления.",
+    "ru:obezlichivanie-pdn": "Обезличивает ли владелец ПДн (вместо уничтожения, для аналитики и обучения моделей, по требованию Минцифры), из кода не следует; спросить владельца.",
+    "ru:obyazatelnoe-primenenie-suverennyh-modeley-ii": "Случаи обязательного применения суверенных моделей ИИ определит акт Правительства, которого ещё нет; для систем, работающих на дату вступления закона, — не ранее срока из карточки. Из кода не следует; упомянуть в дорожной карте для продуктов с ИИ.",
+    "ru:otkrytye-licenzii-i-open-source": "Чек-лист владельца: сигнала в коде нет, признак есть почти у любого продукта; проверить лицензии сторонних библиотек, шрифтов и медиа и условия публикации собственного кода.",
+    "ru:prava-na-rezultaty-podryadchikov-i-frilanserov": "Кто создал код, дизайн и тексты (подрядчики, фрилансеры), — факт договоров, а не кода; спросить владельца вместе с ru:prava-na-kontent-i-po-vladelca.",
+    "ru:pravo-izgotovitelya-bazy-dannyh": "Существенные затраты на собственную базу данных и извлечение данных из чужих баз (парсинг, импорт) из кода надёжно не определить; спросить владельца.",
+    "ru:predustanovka-programm": "Заявка в перечень предустановки — решение правообладателя, в продукте не видна; спросить владельца.",
+    "ru:prizemlenie-inostrannyh-lic-236-fz": "Суточная аудитория из РФ и условия «приземления» из кода не видны; проверить перечень РКН по 236-ФЗ (registries.md). Для иностранного владельца в группах social-network и intermediary-platform требование уже входит в группу.",
+    "ru:prodazha-tovarov-s-vozrastnym-ogranicheniem-onlayn": "Есть ли в ассортименте энергетические напитки или газосодержащие товары из перечня Правительства, — факт владельца, признаки каталога этого не различают. Спросить продуктовые и хозяйственные магазины и сервисы доставки.",
+    "ru:prostaya-elektronnaya-podpis": "Подписание юридически значимых документов в личном кабинете по коду не отличить от обычного акцепта оферты; спросить владельца.",
+    "ru:razrabotchik-suverennoy-nacionalnoy-modeli-ii": "Статус разработчика суверенной или национальной модели ИИ присваивается в порядке Правительства; использование чужого API (tech.generative_ai) его не создаёт. Спросить владельца, если он сам разрабатывает модель.",
+    "ru:reestr-rossiyskogo-po-i-lgota-nds": "Включение ПО в реестр российского ПО — решение правообладателя; проверить запись в реестре и спросить владельца.",
+    "ru:registraciya-programm-i-baz-dannyh": "Регистрация программы или базы данных — решение правообладателя, в продукте не видна; спросить владельца.",
+    "ru:reklama-u-blogerov-vne-perechnya-rkn": "Закупка рекламы у блогеров идёт вне продукта и в коде не видна; спросить владельца о рекламных интеграциях.",
+    "ru:sluzhebnye-proizvedeniya-kod-i-dizayn": "Созданы ли код и дизайн работниками в рамках трудовых обязанностей, — факт трудовых договоров; спросить владельца вместе с ru:prava-na-kontent-i-po-vladelca.",
+    "ru:socialnaya-reklama-na-krupnyh-resursah": "Порог суточной аудитории из кода и страниц не виден; для подтверждённых групп social-network и news-aggregator требование уже входит в группу. Спросить владельца ресурса с рекламными местами, маркетплейса или доски объявлений об аудитории.",
+    "ru:specialnye-kategorii-pdn": "Сведения о здоровье, убеждениях, национальности и т. п. собирают и немедицинские продукты (трекеры, анкеты, дейтинг, HR); поля и свободный текст сканер не классифицирует. Спросить владельца; для подтверждённой группы medical требование уже входит в группу.",
+    "ru:svobodnoe-ispolzovanie-i-citirovanie": "Чужие произведения в собственном контенте (цитаты, иллюстрации, подборки) сканер не отличает от своих; проверить блог и статьи вручную или спросить владельца.",
+    "ru:tovarnye-znaki-domen-i-nazvanie-prilozheniya": "Чек-лист владельца: сигнала в коде нет, признак есть почти у любого продукта; проверить название продукта, приложения, логотип и домен по реестру товарных знаков.",
+    "ru:zapret-prodazhi-radioelektronnyh-sredstv-sputnikovoy-svyazi": "Есть ли в ассортименте спутниковые терминалы и иное оборудование спутниковой связи, — факт владельца; признак commerce.cart_physical ассортимент не различает. Спросить интернет-магазины электроники и продавцов на маркетплейсах.",
+    "ru:zashchita-detey-v-mestah-dostupa-k-internetu": "Касается тех, кто организует доступ к интернету в местах, доступных детям (гостевой Wi-Fi, captive portal); признака в каталоге нет. Спросить владельца ПО гостевых сетей."
+  },
+  "notes": {
+    "ru:agregator-lekarstvennyh-preparatov": "Только юрлицо — владелец агрегатора с договором с аптекой.",
+    "ru:agregatory-sredstv-razmeshcheniya-reestr-klassifikacii": "Владелец средства размещения, агрегатор или сервис объявлений с предложениями размещения.",
+    "ru:cifrovye-valyuty-nekvalificirovannye-investory": "Только лицо, организующее обращение цифровых валют: брокер, управляющий, цифровой депозитарий, организация обмена.",
+    "ru:distancionnaya-prodazha-lekarstv": "Только аптечная организация (юрлицо) с лицензией и разрешением на дистанционную торговлю.",
+    "ru:dokumenty-ob-obuchenii-po-itogam-kursa": "Только если курс — образовательная программа и по её итогам выдаётся документ об обучении.",
+    "ru:dostupnost-obektov-turizma-informaciya-na-sayte": "Только классифицируемый объект туризма: гостиница или иное средство размещения, пляж, горнолыжная трасса.",
+    "ru:dostupnost-oficialnyh-saytov-gosorganov": "Только официальный сайт госоргана, органа МСУ или подведомственной организации.",
+    "ru:dostupnost-saytov-operatorov-svyazi": "Только оператор связи с лицензией.",
+    "ru:elektronnoe-obuchenie-i-dot": "Только организация или ИП, реализующие образовательные программы по лицензии.",
+    "ru:gossopka-dlya-kompaniy-s-gosuchastiem": "Только госорганизации и компании под контролем РФ или субъекта РФ (доля голосов — по карточке).",
+    "ru:gossopka-dlya-operatorov-gis": "Только оператор ГИС, иной ИС госоргана, ГУП или госучреждения.",
+    "ru:hosting-i-identifikaciya-vladelca": "Обязанность провайдера хостинга; для владельца она косвенная: пройти идентификацию у провайдера и пользоваться хостингом из реестра РКН.",
+    "ru:ib-bankovskih-prilozheniy-851-p": "Только кредитная организация (банк) или филиал иностранного банка.",
+    "ru:ib-prilozheniy-nfo-757-p": "Только некредитная финансовая организация; уровень защиты зависит от её вида.",
+    "ru:identifikaciya-klientov-115-fz": "Только организации и ИП из перечня обязанных лиц 115-ФЗ (банки, НФО, операторы платформ и др.).",
+    "ru:investicionnoe-konsultirovanie-na-sayte": "Только при индивидуальных инвестиционных рекомендациях; советник — юрлицо или ИП из реестра.",
+    "ru:inye-informacionnye-sistemy-v-zdravoohranenii": "Только система, взаимодействующая с ЕГИСЗ, ГИС в сфере здравоохранения или МИС медорганизации.",
+    "ru:kii-znachimye-obekty-po-i-pak": "Только владелец значимого объекта КИИ (объект с категорией в реестре).",
+    "ru:loterei-v-internete-i-vozrast-uchastnika": "Запрет — для любого, кто проводит лотерею онлайн; возраст и публикация — для оператора и распространителя по договору с оператором.",
+    "ru:mikrofinansovye-organizacii-onlayn": "Только МФО (МФК или МКК) из реестра Банка России.",
+    "ru:oficialnye-sayty-i-stranicy-gosorganov": "Только госорган, орган МСУ или подведомственная им организация.",
+    "ru:operator-finansovoy-platformy-211-fz": "Только оператор финансовой платформы из реестра Банка России.",
+    "ru:operator-investicionnoy-platformy-259-fz": "Только оператор инвестиционной платформы из реестра Банка России.",
+    "ru:perevody-bez-soglasiya-klienta-161-fz": "Только оператор по переводу денежных средств (банк), оператор платёжной системы или электронной платформы; продавцы и маркетплейсы не обязаны.",
+    "ru:period-ohlazhdeniya-po-kreditam": "Только банк или МФО, выдающие потребительский кредит или заём.",
+    "ru:platnye-medicinskie-uslugi-onlayn": "Только исполнитель платных медицинских услуг с лицензией.",
+    "ru:po-kak-medicinskoe-izdelie": "Только ПО, которому производитель заявил медицинское назначение.",
+    "ru:podryadchik-operatora-gis": "Только подрядчик с доступом к ГИС или ИС госоргана, ГУП, госучреждения.",
+    "ru:postavshchik-platezhnogo-prilozheniya": "Только поставщик платёжного приложения, выпущенного по договору с банком.",
+    "ru:potrebitelskiy-kredit-onlayn": "Только кредитор по потребительскому кредиту или займу: банк, МФО, ломбард и иные профессиональные кредиторы.",
+    "ru:prodazha-tovarov-s-vozrastnym-ogranicheniem-onlayn": "Только при энергетических напитках или газосодержащих товарах из перечня в ассортименте.",
+    "ru:samoogranichenie-azartnye-igry": "Организатор азартных игр; запрет рекламы касается и лиц, действующих в его интересах.",
+    "ru:sayt-bukmekera-informaciya-o-riskah": "Только букмекер или тотализатор, принимающий интерактивные ставки.",
+    "ru:sayt-medicinskoy-organizacii": "Только медицинская организация или ИП с медицинской лицензией.",
+    "ru:sayt-obrazovatelnoy-organizacii": "Только образовательная организация (некоммерческая, с лицензией).",
+    "ru:sayt-turoperatora-i-turagenta": "Только туроператор или турагент из реестров.",
+    "ru:servis-rassrochki-operator": "Только оператор сервиса рассрочки из реестра Банка России; продавцу с кнопкой «оплатить частями» — ru:servis-rassrochki-na-sayte-prodavca.",
+    "ru:skzi-v-gis": "Только оператор ГИС, иной ИС госоргана, ГУП или госучреждения.",
+    "ru:sluzhba-zakaza-legkovogo-taksi": "Только служба заказа легкового такси из регионального реестра.",
+    "ru:telemedicina-informaciya-dlya-pacienta": "Консультирующая медорганизация или оператор иной ИС, через которую идут телемедицинские консультации.",
+    "ru:telemedicina-usloviya-okazaniya": "Только медорганизация или ИП с лицензией, оказывающие медпомощь с телемедицинскими технологиями.",
+    "ru:ukaz-250-dopolnitelnye-mery-ib": "Только субъекты КИИ, стратегические и системообразующие организации, госкорпорации.",
+    "ru:upolnomochennoe-lico-v-bankovskom-prilozhenii": "Только банк, у которого есть клиенты-физлица.",
+    "ru:vrachebnaya-tayna-v-medicinskih-servisah": "Медорганизации и лица, получившие сведения при исполнении обязанностей; любому оператору данных о здоровье — ru:specialnye-kategorii-pdn.",
+    "ru:zapret-inostrannogo-po-v-gossektore": "Только операторы ГИС, МИС и ИС ГУП, МУП, государственных и муниципальных учреждений, а также иных ИС госорганов (с даты из карточки).",
+    "ru:zapret-inostrannyh-messendzherov-dlya-informirovaniya": "Только лица из перечня карточки: госорганы и госкомпании, банки и НФО, операторы связи, владельцы агрегаторов, крупных соцсетей и сервисов объявлений.",
+    "ru:zapret-inostrannyh-messendzherov-dlya-platezhnyh-dokumentov": "Только банки, НФО, субъекты национальной платёжной системы, госорганы, госучреждения и госкомпании.",
+    "ru:zashchita-informacii-v-gis": "Только оператор ГИС, иной ИС госоргана, ГУП или госучреждения; подрядчику — ru:podryadchik-operatora-gis."
+  },
+  "platform_rules": [
+    "ru:pravila-storov-akkaunty-i-vhod",
+    "ru:pravila-storov-deti-i-vozrastnoy-reyting",
+    "ru:pravila-storov-generativnyy-ii",
+    "ru:pravila-storov-oplata-i-podpiski",
+    "ru:pravila-storov-polzovatelskiy-kontent",
+    "ru:pravila-storov-push-i-marketing",
+    "ru:pravila-storov-reguliruemye-otrasli",
+    "ru:pravila-storov-trekking-i-raskrytie-dannyh"
+  ],
+  "templates": {
+    "politika-obrabotki-pdn": {
+      "features": [],
+      "facts": [],
+      "always": true
+    },
+    "svedeniya-o-prodavce-i-vladelce-sayta": {
+      "features": [],
+      "facts": [],
+      "always": true
+    },
+    "soglasie-na-obrabotku-pdn": {
+      "features": [
+        "auth.apple",
+        "auth.facebook",
+        "auth.google",
+        "auth.gosuslugi",
+        "auth.sms_otp",
+        "auth.telegram",
+        "auth.vk_id",
+        "auth.yandex_id",
+        "chat.widget",
+        "commerce.cart_physical",
+        "commerce.checkout",
+        "commerce.services_booking",
+        "forms.contact",
+        "forms.generic",
+        "forms.registration",
+        "ugc.image_uploads",
+        "ugc.public_profiles",
+        "ugc.reviews",
+        "ugc.uploads",
+        "ugc.user_messaging"
+      ],
+      "facts": [],
+      "always": false
+    },
+    "cookie-banner-i-uvedomlenie": {
+      "features": [
+        "ads.own_site_promo",
+        "ads.pixels",
+        "ads.pixels_foreign",
+        "analytics.mobile_sdk",
+        "analytics.session_replay",
+        "analytics.tag_manager",
+        "analytics.web_counter",
+        "chat.widget",
+        "comms.calls_calltracking",
+        "foreign.captcha",
+        "foreign.data_processors",
+        "foreign.embeds",
+        "mobile.att"
+      ],
+      "facts": [],
+      "always": false
+    },
+    "soglasie-na-rassylku": {
+      "features": [
+        "comms.email_marketing",
+        "comms.push",
+        "comms.sms"
+      ],
+      "facts": [],
+      "always": false
+    },
+    "soglasie-na-rasprostranenie-pdn": {
+      "features": [
+        "marketing.giveaways",
+        "ugc.public_profiles",
+        "ugc.reviews"
+      ],
+      "facts": [],
+      "always": false
+    },
+    "publichnaya-oferta-tovary": {
+      "features": [
+        "commerce.cart_physical",
+        "commerce.gift_cards",
+        "commerce.marked_goods"
+      ],
+      "facts": [],
+      "always": false
+    },
+    "usloviya-vozvrata-i-obmena": {
+      "features": [
+        "commerce.cart_physical",
+        "commerce.marked_goods"
+      ],
+      "facts": [],
+      "always": false
+    },
+    "oferta-uslugi-i-podpiska": {
+      "features": [
+        "commerce.digital_content",
+        "commerce.services_booking",
+        "commerce.subscription",
+        "commerce.trial",
+        "content.webinars",
+        "mobile.app",
+        "mobile.iap",
+        "sector.education_courses"
+      ],
+      "facts": [],
+      "always": false
+    }
+  },
+  "documents": {
+    "rkn-notification": {
+      "features": [],
+      "facts": [],
+      "always": true
+    },
+    "incident-reglament": {
+      "features": [],
+      "facts": [],
+      "always": true
+    },
+    "subject-requests": {
+      "features": [],
+      "facts": [],
+      "always": true
+    },
+    "lokalnye-akty": {
+      "features": [],
+      "facts": [],
+      "always": true
+    },
+    "prikaz-otvetstvennyy": {
+      "features": [],
+      "facts": [
+        "subject:ul"
+      ],
+      "always": false
+    },
+    "poruchenie": {
+      "features": [
+        "analytics.mobile_sdk",
+        "analytics.session_replay",
+        "analytics.web_counter",
+        "auth.sms_otp",
+        "auth.telegram",
+        "chat.widget",
+        "comms.calls_calltracking",
+        "comms.email_marketing",
+        "comms.push",
+        "comms.sms",
+        "foreign.cdn_hosting",
+        "foreign.data_processors",
+        "foreign.embeds",
+        "tech.generative_ai",
+        "tech.generative_ai_foreign"
+      ],
+      "facts": [],
+      "always": false
+    },
+    "cross-border-notification": {
+      "features": [
+        "ads.pixels_foreign",
+        "auth.facebook",
+        "foreign.cdn_hosting",
+        "foreign.data_processors",
+        "foreign.embeds",
+        "payments.paddle",
+        "payments.stripe",
+        "tech.generative_ai_foreign"
+      ],
+      "facts": [],
+      "always": false
+    },
+    "kkt-checklist": {
+      "features": [
+        "commerce.cart_physical",
+        "commerce.checkout",
+        "commerce.digital_content",
+        "commerce.gift_cards",
+        "commerce.prepayment",
+        "commerce.subscription",
+        "mobile.iap",
+        "payments.bnpl",
+        "payments.cloudpayments",
+        "payments.paddle",
+        "payments.receipts_kkt",
+        "payments.robokassa",
+        "payments.sbp",
+        "payments.stripe",
+        "payments.tbank",
+        "payments.yookassa"
+      ],
+      "facts": [
+        "subject:npd"
+      ],
+      "always": false
+    },
+    "ord-erir-checklist": {
+      "features": [
+        "ads.own_site_promo",
+        "ads.pixels",
+        "ads.pixels_foreign"
+      ],
+      "facts": [],
+      "always": false
+    },
+    "image-consent": {
+      "features": [
+        "content.webinars",
+        "ugc.image_uploads",
+        "ugc.public_profiles"
+      ],
+      "facts": [],
+      "always": false
+    },
+    "user-agreement": {
+      "features": [
+        "auth.apple",
+        "auth.facebook",
+        "auth.google",
+        "auth.gosuslugi",
+        "auth.sms_otp",
+        "auth.telegram",
+        "auth.vk_id",
+        "auth.yandex_id",
+        "forms.registration",
+        "mobile.app",
+        "ugc.public_profiles",
+        "ugc.uploads",
+        "ugc.user_messaging"
+      ],
+      "facts": [],
+      "always": false
+    },
+    "gift-cards": {
+      "features": [
+        "commerce.gift_cards"
+      ],
+      "facts": [],
+      "always": false
+    },
+    "promo-rules": {
+      "features": [
+        "commerce.loyalty_points",
+        "commerce.promo_codes",
+        "marketing.giveaways"
+      ],
+      "facts": [],
+      "always": false
+    }
+  }
+}

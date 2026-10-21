@@ -1,0 +1,8 @@
+:root {
+  --color-bg: #fafaf7;
+  --color-text: #222;
+  --space: 16px;
+}
+body { margin: 0; padding: var(--space); font-family: Georgia, serif; color: var(--color-text); background: var(--color-bg); }
+main { max-width: 640px; margin: 0 auto; }
+footer { max-width: 640px; margin: var(--space) auto 0; font-size: 14px; }

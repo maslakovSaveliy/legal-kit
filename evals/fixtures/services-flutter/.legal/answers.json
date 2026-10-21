@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "updated": "2026-10-18T09:00:00Z",
+  "product": {
+    "name": "Запись.Мастер",
+    "summary": "Мобильное приложение записи к мастерам салона красоты: онлайн-запись, предоплата 30% через ЮKassa, публичные отзывы клиентов с именем и фото. Тестовый стенд, владелец и реквизиты вымышлены.",
+    "kinds": ["ios", "android"],
+    "urls": [],
+    "stores": {
+      "app_store": null,
+      "google_play": null,
+      "rustore": null,
+      "appgallery": null
+    },
+    "repo": "."
+  },
+  "owner": {
+    "status": "ip",
+    "name": "ИП Сидорова Мария Тестовна",
+    "inn": "001234500314",
+    "ogrn": "322000000000034",
+    "country": "RU",
+    "address": "443000, г. Самара, ул. Тестовая, д. 6",
+    "email": "hello@zapis.test",
+    "phone": "+7 846 000-00-00",
+    "pd_officer": null,
+    "withheld": []
+  },
+  "audience": {
+    "b2c": true,
+    "b2b": false,
+    "minors": "none",
+    "countries": ["RU"]
+  },
+  "business": {
+    "sectors": [],
+    "revenue_over_20m": false,
+    "rkn_notified": null
+  },
+  "decisions": {
+    "block_counters": true,
+    "apply_changes": true,
+    "commit_legal_dir": false,
+    "consent_at_forms": []
+  },
+  "document_facts": {}
+}

@@ -1,0 +1,6 @@
+Django==5.1
+yookassa==3.3.0
+openai==1.40.0
+stripe==10.0.0
+django-allauth==64.0
+django-recaptcha==4.0.0

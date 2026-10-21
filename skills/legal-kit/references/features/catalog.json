@@ -1,0 +1,2552 @@
+[
+  {
+    "id": "forms.contact",
+    "title_ru": "Форма заявки и обратной связи",
+    "title_en": "Contact or lead request form",
+    "deps": [],
+    "code": [
+      "\\b(?:Contact|Feedback|Callback|Lead|Inquiry|Enquiry|RequestCall)(?:Us)?Form\\b",
+      "(?i)\\b(?:contact|feedback|callback|lead|inquiry|enquiry)[-_](?:form|us)\\b",
+      "(?i)\\b(?:Оставить\\s+заявку|Заказать\\s+(?:обратный\\s+)?звонок|Обратная\\s+связь|Свяжитесь\\s+с\\s+нами|Перезвоните\\s+мне|Получить\\s+консультацию)"
+    ],
+    "hosts": [],
+    "dom": [
+      "(?is)<form\\b(?:(?!</form>).){0,3000}?(?:type=[\"']tel[\"']|name=[\"'](?:phone|tel|telephone|mobile)[\"'])",
+      "(?is)<form\\b(?:(?!</form>).){0,4000}?<textarea\\b",
+      "(?i)\\b(?:Оставить\\s+заявку|Заказать\\s+(?:обратный\\s+)?звонок|Обратная\\s+связь|Свяжитесь\\s+с\\s+нами|Перезвоните\\s+мне|Получить\\s+консультацию)",
+      "(?i)<form\\b[^>]{0,300}class=[\"'][^\"']*\\bt-form\\b"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Heuristic: a form with a phone or e-mail field plus a message, or request wording. Field lists, the consent checkbox and its pre-checked state come from the form scan, not from this entry. Callback wording also appears under comms.calls_calltracking."
+  },
+  {
+    "id": "forms.registration",
+    "title_ru": "Регистрация и личные аккаунты",
+    "title_en": "Registration and user accounts",
+    "deps": [
+      "django-allauth",
+      "djoser",
+      "dj-rest-auth",
+      "fastapi-users",
+      "next-auth",
+      "@auth/core",
+      "better-auth",
+      "@clerk/nextjs",
+      "@clerk/clerk-react",
+      "@supabase/ssr",
+      "@supabase/auth-helpers-nextjs",
+      "@auth0/nextjs-auth0",
+      "@auth0/auth0-react",
+      "passport-local",
+      "@nestjs/passport",
+      "@firebase/auth",
+      "@react-native-firebase/auth",
+      "firebase_auth",
+      "FirebaseAuth",
+      "com.google.firebase:firebase-auth"
+    ],
+    "code": [
+      "\\b(?:SignUp|Signup|Register|Registration|CreateAccount)(?:Form|Page|Screen|View|Modal)\\b",
+      "\\bcreateUserWithEmailAndPassword\\b",
+      "\\.auth\\.signUp\\(",
+      "\\bUserCreationForm\\b",
+      "\\bAuth\\.auth\\(\\)\\.createUser\\(",
+      "[\"'`]/(?:api/)?(?:v\\d+/)?(?:auth/)?(?:sign[-_]?up|register|registration)\\b",
+      "(?:path|re_path|url)\\(\\s*r?[\"']\\^?(?:accounts/)?(?:sign[-_]?up|register|registration)\\b"
+    ],
+    "hosts": [],
+    "dom": [
+      "(?i)autocomplete=[\"']new-password[\"']",
+      "(?is)<input\\b[^>]{0,300}type=[\"']password[\"'][^>]{0,300}>(?:(?!</form>).){0,2000}?<input\\b[^>]{0,300}type=[\"']password[\"']",
+      "(?i)\\b(?:Зарегистрироваться|Создать\\s+аккаунт|Sign\\s+up|Create\\s+(?:an\\s+)?account)\\b"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Detects sign-up flows and account infrastructure (auth libraries, password fields). react-hook-form register() calls are deliberately not matched."
+  },
+  {
+    "id": "forms.generic",
+    "title_ru": "Серверная форма (Django и аналоги)",
+    "title_en": "Server-side form (Django and similar)",
+    "deps": [],
+    "code": [
+      "\\bforms\\.(?:Model)?Form\\b"
+    ],
+    "hosts": [],
+    "dom": [
+      "(?is)<form\\b(?:(?!</form>).){0,2000}?\\{%\\s*csrf_token\\s*%\\}"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "A Django form class or a template form with a CSRF token: data is posted to the server. Which fields it has and whether they are personal data comes from the form scan. Search forms without a token are not matched."
+  },
+  {
+    "id": "auth.vk_id",
+    "title_ru": "Вход через VK ID",
+    "title_en": "Sign-in with VK ID",
+    "deps": [
+      "@vkid/sdk",
+      "passport-vkontakte",
+      "VKID",
+      "com.vk.id:vkid",
+      "com.vk.id:onetap-compose",
+      "com.vk.id:onetap-xml"
+    ],
+    "code": [
+      "\\bVKID\\.(?:Config|Auth|OneTap|FloatingOneTap)\\b",
+      "\\bVK\\.(?:Auth\\.login|Widgets\\.Auth|init)\\b",
+      "\\b(?:oauth|id)\\.vk\\.(?:com|ru)/(?:authorize|auth|oauth2?)\\b",
+      "\\b(?:social_core\\.backends\\.vk|allauth\\.socialaccount\\.providers\\.vk)\\b",
+      "next-auth/providers/vk\\b"
+    ],
+    "hosts": [
+      "id.vk.com",
+      "id.vk.ru",
+      "oauth.vk.com",
+      "oauth.vk.ru",
+      "unpkg.com/@vkid/sdk"
+    ],
+    "dom": [
+      "(?i)\\bid=[\"']VkIdSdkOneTap[\"']",
+      "(?i)Войти\\s+(?:через|с\\s+помощью)\\s+(?:VK|ВК|ВКонтакте)(?:\\s+ID)?"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "verify: Android and iOS package names (com.vk.id:*, VKID pod); @vkid/sdk confirmed."
+  },
+  {
+    "id": "auth.yandex_id",
+    "title_ru": "Вход через Яндекс ID",
+    "title_en": "Sign-in with Yandex ID",
+    "deps": [
+      "passport-yandex",
+      "com.yandex.android:authsdk",
+      "YandexLoginSDK"
+    ],
+    "code": [
+      "\\bYaAuthSuggest\\b",
+      "\\b(?:YandexAuthSdk\\w*|YandexAuthLoginOptions)\\b",
+      "\\bYandexLoginSDK\\b",
+      "\\boauth\\.yandex\\.(?:ru|com)/authorize\\b",
+      "\\b(?:next-auth/providers/yandex|social_core\\.backends\\.yandex|allauth\\.socialaccount\\.providers\\.yandex)\\b"
+    ],
+    "hosts": [
+      "oauth.yandex.ru",
+      "oauth.yandex.com",
+      "yastatic.net/s3/passport-sdk"
+    ],
+    "dom": [
+      "(?i)Войти\\s+(?:через|с\\s+помощью)\\s+(?:Яндекс|Yandex)(?:\\s+ID)?"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Confirmed in the official docs: com.yandex.android:authsdk (Android), YaAuthSuggest.init, YandexAuthLoginOptions. verify: the iOS YandexLoginSDK name and the yastatic.net script path."
+  },
+  {
+    "id": "auth.gosuslugi",
+    "title_ru": "Вход через Госуслуги (ЕСИА)",
+    "title_en": "Sign-in with Gosuslugi (ESIA)",
+    "deps": [
+      "esia-connector"
+    ],
+    "code": [
+      "\\besia\\.gosuslugi\\.ru\\b",
+      "(?i)\\besia[-_]?(?:client|connector|auth|login|oauth)\\w*\\b",
+      "\\bЕСИА\\b"
+    ],
+    "hosts": [
+      "esia.gosuslugi.ru"
+    ],
+    "dom": [
+      "(?i)\\b(?:Войти|Вход|Авторизаци\\w+|Регистраци\\w+)\\s+(?:через|с\\s+помощью|с)\\s+(?:портал\\w*\\s+)?Госуслуг\\w*",
+      "\\bЕСИА\\b"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Confirmed: esia-connector (PyPI). A plain link to the Gosuslugi portal is not matched."
+  },
+  {
+    "id": "auth.google",
+    "title_ru": "Вход через Google",
+    "title_en": "Sign-in with Google",
+    "deps": [
+      "@react-oauth/google",
+      "react-google-login",
+      "vue3-google-login",
+      "google-auth-library",
+      "passport-google-oauth20",
+      "@react-native-google-signin/google-signin",
+      "google_sign_in",
+      "GoogleSignIn",
+      "com.google.android.gms:play-services-auth"
+    ],
+    "code": [
+      "\\bgoogle\\.accounts\\.id\\.(?:initialize|prompt|renderButton)\\b",
+      "\\b(?:GoogleLogin|GoogleOAuthProvider|GoogleAuthProvider|GIDSignIn|GoogleSignInButton)\\b",
+      "\\bsignInWithGoogle\\b",
+      "\\bGoogleSignIn(?:Options|Client)?\\b",
+      "\\b(?:next-auth/providers/google|social_core\\.backends\\.google|allauth\\.socialaccount\\.providers\\.google)\\b"
+    ],
+    "hosts": [
+      "accounts.google.com/gsi",
+      "accounts.google.com/o/oauth2/v2",
+      "apis.google.com/js/platform.js"
+    ],
+    "dom": [
+      "(?i)\\bid=[\"']g_id_onload[\"']|\\bclass=[\"'][^\"']*\\bg_id_signin\\b",
+      "(?i)\\b(?:Войти\\s+(?:через|с\\s+помощью)\\s+Google|Sign\\s+in\\s+with\\s+Google|Continue\\s+with\\s+Google)\\b"
+    ],
+    "stacks": [
+      "*"
+    ]
+  },
+  {
+    "id": "auth.apple",
+    "title_ru": "Вход через Apple",
+    "title_en": "Sign in with Apple",
+    "deps": [
+      "apple-signin-auth",
+      "@invertase/react-native-apple-authentication",
+      "expo-apple-authentication",
+      "sign_in_with_apple",
+      "passport-apple"
+    ],
+    "code": [
+      "\\bASAuthorizationAppleIDProvider\\b",
+      "\\b(?:SignInWithAppleButton|ASAuthorizationAppleIDButton)\\b",
+      "\\bAppleID\\.auth\\.init\\b",
+      "\\bAppleAuthentication\\.signInAsync\\b",
+      "\\bSignInWithApple\\.getAppleIDCredential\\b",
+      "\\b(?:next-auth/providers/apple|allauth\\.socialaccount\\.providers\\.apple|social_core\\.backends\\.apple)\\b"
+    ],
+    "hosts": [
+      "appleid.apple.com",
+      "appleid.cdn-apple.com"
+    ],
+    "dom": [
+      "(?i)\\bid=[\"']appleid-signin[\"']",
+      "(?i)\\b(?:Войти\\s+через\\s+Apple|Sign\\s+in\\s+with\\s+Apple|Continue\\s+with\\s+Apple)\\b"
+    ],
+    "stacks": [
+      "*"
+    ]
+  },
+  {
+    "id": "auth.telegram",
+    "title_ru": "Вход через Telegram",
+    "title_en": "Sign-in with Telegram",
+    "deps": [
+      "react-telegram-login",
+      "telegram-login-button",
+      "@telegram-auth/react",
+      "@telegram-auth/server"
+    ],
+    "code": [
+      "\\bTelegram\\.Login\\.(?:auth|init)\\b",
+      "\\bdata-telegram-login\\b"
+    ],
+    "hosts": [
+      "telegram.org/js/telegram-widget",
+      "oauth.telegram.org"
+    ],
+    "dom": [
+      "(?i)<script\\b[^>]{1,400}data-telegram-login=[\"']"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "The Login Widget shares telegram-widget.js with post and comment widgets, so the script host alone is weak; the data-telegram-login attribute is specific. verify: the npm package names."
+  },
+  {
+    "id": "auth.facebook",
+    "title_ru": "Вход через Facebook",
+    "title_en": "Sign-in with Facebook",
+    "deps": [
+      "FBSDKLoginKit",
+      "com.facebook.android:facebook-login",
+      "flutter_facebook_auth",
+      "passport-facebook",
+      "react-facebook-login",
+      "@greatsumini/react-facebook-login"
+    ],
+    "code": [
+      "\\bFB\\.(?:login|getLoginStatus)\\s*\\(",
+      "\\bFBSDKLoginManager\\b|\\bLoginManager\\.logInWithPermissions\\b"
+    ],
+    "hosts": [],
+    "dom": [
+      "(?i)\\b(?:Войти\\s+через\\s+Facebook|Continue\\s+with\\s+Facebook|Log\\s+in\\s+with\\s+Facebook|Sign\\s+in\\s+with\\s+Facebook)\\b"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Facebook Login shows Meta's brand on the login screen. verify: @greatsumini/react-facebook-login."
+  },
+  {
+    "id": "auth.sms_otp",
+    "title_ru": "Вход или подтверждение по SMS-коду",
+    "title_en": "SMS one-time code login or verification",
+    "deps": [],
+    "code": [
+      "(?i)\\b(?:send|verify|check|confirm|resend|request)[-_]?(?:sms[-_]?(?:code|otp|pin)?|otp)(?![A-Za-z])",
+      "\\b(?:signInWithPhoneNumber|verifyPhoneNumber|PhoneAuthProvider|signInWithOtp)\\b",
+      "(?i)\\b(?:otp|sms)[-_]?(?:code|token|login|auth|verification)(?![A-Za-z])"
+    ],
+    "hosts": [],
+    "dom": [
+      "(?i)autocomplete=[\"']one-time-code[\"']",
+      "(?i)код\\s+(?:из|в)\\s+(?:SMS|СМС)",
+      "(?i)Подтвердит\\w+\\s+номер\\s+телефона"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Pairs with comms.sms: the SMS gateway behind the code is matched there."
+  },
+  {
+    "id": "commerce.checkout",
+    "title_ru": "Корзина и оформление заказа",
+    "title_en": "Cart and checkout",
+    "deps": [
+      "use-shopping-cart",
+      "react-use-cart",
+      "@medusajs/medusa",
+      "@medusajs/js-sdk",
+      "@shopify/hydrogen",
+      "shopify-buy",
+      "@vendure/core",
+      "@saleor/sdk",
+      "@woocommerce/woocommerce-rest-api",
+      "django-oscar"
+    ],
+    "code": [
+      "\\b(?:addToCart|add_to_cart|useCart|CartProvider|CartItem|cartItems|cart_items|orderItems|order_items)\\b",
+      "(?i)\\bcheckout[-_]?(?:session|page|form|step|button)s?(?![A-Za-z])",
+      "\\bCheckout(?:View|Screen|Activity|Page|Fragment|Controller)\\b",
+      "(?i)\\b(?:Оплатить\\s+заказ|Оформить\\s+заказ|Перейти\\s+к\\s+оплате)"
+    ],
+    "hosts": [
+      "cdn.snipcart.com",
+      "app.snipcart.com"
+    ],
+    "dom": [
+      "(?i)\\b(?:Добавить\\s+в\\s+корзину|В\\s+корзину|Оформить\\s+заказ|Оплатить\\s+заказ|Перейти\\s+к\\s+оплате|Add\\s+to\\s+(?:cart|bag|basket)|Proceed\\s+to\\s+checkout)\\b"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Generic cart, order and checkout signals: something is sold online, goods, services or content. Physical goods are matched under commerce.cart_physical only with a delivery or shipping signal. verify: @saleor/sdk and snipcart hosts."
+  },
+  {
+    "id": "commerce.cart_physical",
+    "title_ru": "Корзина и заказ физических товаров",
+    "title_en": "Cart and orders for physical goods",
+    "deps": [],
+    "code": [
+      "(?i)\\b(?:delivery|shipping)[-_ ]?(?:address|method|cost|price|type|date|option|point|slot)s?(?![A-Za-z])",
+      "(?i)\\b(?:cdek|boxberry|apiship|shiptor|pochta[-_]?rossii|russian[-_]?post)[-_]?(?:api|client|widget|sdk|tariff|delivery)?(?![A-Za-z])",
+      "(?i)\\b(?:Доставка\\s+(?:курьером|по\\s+России|в\\s+пункт\\s+выдачи)|Доставка\\s+и\\s+оплата|(?:Адрес|Способ|Стоимость|Срок)\\w*\\s+доставки|Курьерск\\w*\\s+доставк\\w*|Бесплатн\\w*\\s+доставк\\w*|Самовывоз|Пункты?\\s+выдачи|СДЭК|Почта\\s+России)"
+    ],
+    "hosts": [
+      "api.cdek.ru",
+      "widget.cdek.ru",
+      "api.boxberry.ru",
+      "otpravka-api.pochta.ru",
+      "widget.pochta.ru"
+    ],
+    "dom": [
+      "(?i)\\b(?:Доставка\\s+(?:курьером|по\\s+России|в\\s+пункт\\s+выдачи)|Доставка\\s+и\\s+оплата|(?:Адрес|Способ|Стоимость|Срок)\\w*\\s+доставки|Курьерск\\w*\\s+доставк\\w*|Бесплатн\\w*\\s+доставк\\w*|Самовывоз|Пункты?\\s+выдачи|СДЭК|Почта\\s+России)"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Physical goods: a delivery or shipping signal (shipping fields, delivery services, pick-up wording). Cart and checkout tokens alone are matched under commerce.checkout. verify: the cdek, boxberry and pochta API hosts."
+  },
+  {
+    "id": "commerce.marked_goods",
+    "title_ru": "Маркированные товары",
+    "title_en": "Goods with track-and-trace marking codes",
+    "deps": [],
+    "code": [
+      "(?i)(?:datamatrix|data_matrix|km_code|marking_code|chestny_?znak)",
+      "(?i)\\b(?:Честн\\w+\\s+знак|код\\w*\\s+маркировк\\w+|маркированн\\w+\\s+товар\\w*)"
+    ],
+    "hosts": [
+      "crpt.ru",
+      "markirovka.crpt.ru",
+      "ismp.crpt.ru",
+      "api.crpt.ru"
+    ],
+    "dom": [
+      "(?i)(?:\\bЧестн\\w+\\s+знак|честныйзнак\\.рф|crpt\\.ru|маркировк\\w+\\s+(?:товаров|обуви|одежды|табака|духов|шин|молочн\\w+))"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Weak evidence: the product categories sold are an owner fact. Needs owner confirmation of the catalog categories."
+  },
+  {
+    "id": "commerce.digital_content",
+    "title_ru": "Цифровой контент и ключи",
+    "title_en": "Digital content and licence keys",
+    "deps": [
+      "@lemonsqueezy/lemonsqueezy.js"
+    ],
+    "code": [
+      "(?i)\\b(?:license[-_]?key|activation[-_]?key|serial[-_]?key|digital[-_]?(?:product|goods|download|content)|ebook|e-book|epub)(?![A-Za-z])"
+    ],
+    "hosts": [
+      "gumroad.com",
+      "lemonsqueezy.com",
+      "assets.lemonsqueezy.com",
+      "app.lemonsqueezy.com"
+    ],
+    "dom": [
+      "(?i)\\b(?:электронн\\w+\\s+(?:книг\\w+|товар\\w*|ключ\\w*)|цифров\\w+\\s+(?:товар\\w*|контент\\w*|продукт\\w*)|лицензионн\\w+\\s+ключ\\w*|ключ\\w*\\s+активации|скачать\\s+(?:сразу\\s+)?после\\s+оплаты)"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "verify: @lemonsqueezy/lemonsqueezy.js package name. In-app digital goods are matched under mobile.iap."
+  },
+  {
+    "id": "commerce.services_booking",
+    "title_ru": "Услуги и онлайн-запись",
+    "title_en": "Services and online booking",
+    "deps": [
+      "@calcom/embed-react",
+      "@calcom/atoms",
+      "react-calendly"
+    ],
+    "code": [
+      "\\b(?:BookingForm|AppointmentForm|BookingWidget|BookAppointment|AppointmentPicker|TimeSlotPicker)\\b",
+      "(?i)\\b(?:yclients|dikidi|calendly)\\.(?:com|net|ru)\\b",
+      "(?i)\\b(?:book[-_]appointment|available[-_]slots|time[-_]slots?|appointment[-_]slots?)(?![A-Za-z])",
+      "\\bBooking(?:Page|Screen|View)\\b",
+      "(?i)\\b(?:Записаться\\s+(?:онлайн|и\\s+оплатить|на\\s+(?:приём|прием|консультацию|услугу|занятие|стрижку|процедуру))|Онлайн[-\\s]запись|Запись\\s+(?:онлайн|на\\s+(?:приём|прием|консультацию|услугу)))"
+    ],
+    "hosts": [
+      "yclients.com",
+      "dikidi.net",
+      "calendly.com",
+      "cal.com",
+      "assets.calendly.com",
+      "app.cal.com"
+    ],
+    "dom": [
+      "(?i)\\b(?:Записаться\\s+(?:онлайн|на\\s+(?:приём|прием|консультацию|услугу|занятие|стрижку|процедуру))|Онлайн[-\\s]запись|Запись\\s+онлайн|Забронировать(?:\\s+столик|\\s+номер)?|Выбрать\\s+(?:дату\\s+и\\s+)?время|Book\\s+(?:an?\\s+)?(?:appointment|a\\s+table))"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "verify: dikidi.net host."
+  },
+  {
+    "id": "commerce.prepayment",
+    "title_ru": "Предоплата",
+    "title_en": "Prepayment or advance payment",
+    "deps": [],
+    "code": [
+      "\\bpayment_mode\\W{1,6}(?:full_prepayment|partial_prepayment|advance)\\b",
+      "(?i)\\b(?:pre[-_]?pay(?:ment)?|advance[-_ ]payment|deposit[-_]payment)(?![A-Za-z])"
+    ],
+    "hosts": [],
+    "dom": [
+      "(?i)\\b(?:предоплат\\w+|внести\\s+(?:аванс|задаток)|оплат\\w+\\s+(?:вперёд|вперед))"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Weak evidence: prepayment is mostly an owner fact about the business model; signals only suggest it. Needs owner confirmation."
+  },
+  {
+    "id": "commerce.subscription",
+    "title_ru": "Подписка и автосписание",
+    "title_en": "Subscription and recurring charges",
+    "deps": [
+      "dj-stripe"
+    ],
+    "code": [
+      "\\bmode\\W{1,6}subscription\\b",
+      "\\bsubscriptions\\.(?:create|update|cancel|retrieve)\\b",
+      "(?i)\\b(?:auto[-_]?renew(?:al)?|recurring[-_ ]?(?:payment|billing|charge)s?|rebill(?:ing)?)(?![A-Za-z])",
+      "\\b(?:BillingClient\\.ProductType\\.SUBS|autoRenewable|Product\\.SubscriptionInfo|SubscriptionStoreView)\\b",
+      "\\bsubscriptions/(?:create|find|get|update|cancel)\\b",
+      "(?i)(?:продлева\\w*\\s+автоматически|автоматическ\\w+\\s+продлени\\w+|подписк\\w*[^.\\n<]{0,80}?\\d[\\d\\s]{0,10}(?:₽|руб\\.?)\\s*(?:/|в)\\s*(?:мес\\w*|год\\w*)|\\d[\\d\\s]{0,10}(?:₽|руб\\.?)\\s*(?:/|в)\\s*(?:мес\\w*|год\\w*)[^.\\n<]{0,80}?подписк)"
+    ],
+    "hosts": [],
+    "dom": [
+      "(?i)\\b(?:Автопродлени\\w+|автоматическ\\w+\\s+(?:продлени\\w+|списани\\w+)|отменить\\s+подписку|управлени\\w+\\s+подпиской|регулярн\\w+\\s+(?:платеж\\w*|списани\\w+)|Auto[-\\s]?renew\\w*|cancel\\s+(?:your\\s+)?subscription)",
+      "(?i)\\d[\\d\\s]{0,10}(?:₽|руб\\.?|RUB)\\s*/\\s*(?:мес|месяц|год)\\b",
+      "(?i)(?:продлева\\w*\\s+автоматически|автоматическ\\w+\\s+продлени\\w+|подписк\\w*[^.\\n<]{0,80}?\\d[\\d\\s]{0,10}(?:₽|руб\\.?)\\s*(?:/|в)\\s*(?:мес\\w*|год\\w*)|\\d[\\d\\s]{0,10}(?:₽|руб\\.?)\\s*(?:/|в)\\s*(?:мес\\w*|год\\w*)[^.\\n<]{0,80}?подписк)"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Saved-card tokens (save_payment_method, setup_future_usage) are weak evidence of recurring charges: they also serve one-click payments, so they are not matched; the owner confirms whether charges repeat."
+  },
+  {
+    "id": "commerce.trial",
+    "title_ru": "Пробный период",
+    "title_en": "Free trial",
+    "deps": [],
+    "code": [
+      "\\b(?:trial_period_days|trialPeriodDays|trial_end|trial_days|trialDays|free_trial|freeTrial|is_trial|isTrial|trial_period|introductoryOffer)\\b"
+    ],
+    "hosts": [],
+    "dom": [
+      "(?i)\\b(?:пробн\\w+\\s+(?:период|доступ|версия|урок\\w*)|бесплатн\\w+\\s+(?:пробн\\w+|тестов\\w+|период|доступ\\s+на)|\\d+\\s+дн\\w+\\s+бесплатно|free\\s+trial|try\\s+(?:it\\s+)?for\\s+free|\\d+[-\\s]day\\s+trial)"
+    ],
+    "stacks": [
+      "*"
+    ]
+  },
+  {
+    "id": "commerce.promo_codes",
+    "title_ru": "Промокоды и купоны",
+    "title_en": "Promo codes and coupons",
+    "deps": [],
+    "code": [
+      "(?i)\\b(?:promo[-_ ]?codes?|promocodes?|coupon[-_ ]?codes?|discount[-_ ]?codes?|voucher[-_ ]?codes?|apply[-_]?(?:coupon|promo)\\w*|allow_promotion_codes|promotion_codes?)"
+    ],
+    "hosts": [],
+    "dom": [
+      "(?i)(?:промо-?код\\w*|код\\s+(?:скидки|купона)|купон\\w*\\s+на\\s+скидк\\w+|promo\\s*code|discount\\s+code|coupon\\s+code)"
+    ],
+    "stacks": [
+      "*"
+    ]
+  },
+  {
+    "id": "commerce.loyalty_points",
+    "title_ru": "Бонусы и программа лояльности",
+    "title_en": "Loyalty points and bonus programs",
+    "deps": [],
+    "code": [
+      "(?i)\\b(?:loyalty[-_ ]?(?:points?|program|programme|card|balance|tier|level|rewards?|account)|reward[-_ ]?points?|bonus[-_ ]?(?:points?|balance|account|card)|cashback|cash_back|points_balance|referral[-_ ]?(?:code|bonus|program))(?![A-Za-z])"
+    ],
+    "hosts": [
+      "mindbox.ru",
+      "uds.app",
+      "loymax.tech",
+      "api.mindbox.ru",
+      "web-static.mindbox.ru"
+    ],
+    "dom": [
+      "(?i)\\b(?:бонусн\\w+\\s+(?:балл\\w*|карт\\w*|счёт|счет)|баллы?\\s+(?:лояльности|за\\s+покупк\\w+)|программ\\w+\\s+лояльности|кэшбэк\\w*|кешбэк\\w*|накопительн\\w+\\s+(?:скидк\\w+|карт\\w+)|списать\\s+бонус\\w*|начисл\\w+\\s+бонус\\w*)"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "verify: mindbox.ru, uds.app and loymax.tech hosts. Mindbox is also a marketing platform."
+  },
+  {
+    "id": "commerce.gift_cards",
+    "title_ru": "Подарочные сертификаты и карты",
+    "title_en": "Gift cards and certificates",
+    "deps": [],
+    "code": [
+      "(?i)\\b(?:gift[-_ ]?cards?|giftcards?|gift[-_ ]?certificates?|gift[-_ ]?vouchers?|e[-_]?certificate)(?![A-Za-z])"
+    ],
+    "hosts": [],
+    "dom": [
+      "(?i)\\b(?:подарочн\\w+\\s+(?:сертификат\\w*|карт\\w*)|электронн\\w+\\s+сертификат\\w*|купить\\s+сертификат\\w*|gift\\s*cards?)"
+    ],
+    "stacks": [
+      "*"
+    ]
+  },
+  {
+    "id": "marketing.giveaways",
+    "title_ru": "Розыгрыши, конкурсы и акции с призами",
+    "title_en": "Giveaways, contests and prize promotions",
+    "deps": [],
+    "code": [
+      "(?i)\\b(?:giveaway|sweepstakes?|raffle|lucky[-_]?draw|prize[-_]?draw|contest[-_]?(?:entry|entries|rules|winners?))(?![A-Za-z])"
+    ],
+    "hosts": [],
+    "dom": [
+      "(?i)(?:Розыгрыш\\w*|Участв\\w+\\s+в\\s+(?:розыгрыше|конкурсе)|Правила\\s+(?:акции|розыгрыша|конкурса)|Призов\\w+\\s+фонд|Победител\\w+\\s+(?:акции|розыгрыша|конкурса))"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Wording heuristic for contests, giveaways and prize draws. Discounts and promo codes alone are matched under commerce.promo_codes."
+  },
+  {
+    "id": "payments.yookassa",
+    "title_ru": "Платежи через ЮKassa",
+    "title_en": "Payments via YooKassa",
+    "deps": [
+      "yookassa",
+      "@webzaytsev/yookassa-ts-sdk",
+      "@a2seven/yoo-checkout",
+      "ru.yoomoney.sdk.kassa.payments:yookassa-android-sdk",
+      "YooKassaPayments",
+      "yookassa_payments_flutter"
+    ],
+    "code": [
+      "\\bYooMoneyCheckoutWidget\\b",
+      "\\b(?:from\\s+yookassa\\s+import|import\\s+yookassa)\\b",
+      "\\b(?:YooCheckout|YooKassa\\s*\\()",
+      "\\bapi\\.yookassa\\.ru\\b",
+      "\\buse\\s+YooKassa\\\\",
+      "\\b(?:ru\\.yoomoney\\.sdk\\.kassa\\.payments|YooKassaPayments)\\b"
+    ],
+    "hosts": [
+      "yookassa.ru",
+      "yoomoney.ru",
+      "api.yookassa.ru"
+    ],
+    "dom": [
+      "(?i)\\b(?:ЮKassa|ЮКасса|ЮMoney|YooKassa|YooMoney)\\b"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Confirmed: yookassa (pip), @webzaytsev/yookassa-ts-sdk, the checkout-widget.js script and YooMoneyCheckoutWidget. verify: @a2seven/yoo-checkout and the mobile SDK names. yoomoney.ru also serves wallet donation forms."
+  },
+  {
+    "id": "payments.cloudpayments",
+    "title_ru": "Платежи через CloudPayments",
+    "title_en": "Payments via CloudPayments",
+    "deps": [
+      "cloudpayments",
+      "cloudpayments_sdk",
+      "cloudpayments_api"
+    ],
+    "code": [
+      "\\bcp\\.CloudPayments\\b",
+      "\\b(?:new\\s+CloudPayments|CloudPaymentsClient)\\b",
+      "\\bfrom\\s+cloudpayments\\s+import\\b",
+      "\\bapi\\.cloudpayments\\.ru\\b",
+      "\\bcloudpayments\\.js\\b"
+    ],
+    "hosts": [
+      "widget.cloudpayments.ru",
+      "api.cloudpayments.ru"
+    ],
+    "dom": [
+      "(?i)\\bCloudPayments\\b"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Confirmed: cp.CloudPayments and the widget.cloudpayments.ru/bundles/cloudpayments.js script. Flutter packages cloudpayments_sdk (wraps the native SDKs) and cloudpayments_api (community REST client) exist on pub.dev. verify: the cloudpayments PyPI name (not found in a registry search) and the iOS pod."
+  },
+  {
+    "id": "payments.tbank",
+    "title_ru": "Платежи через Т-Банк (Т-Касса)",
+    "title_en": "Payments via T-Bank acquiring",
+    "deps": [
+      "ru.tinkoff.acquiring:ui",
+      "ru.tinkoff.acquiring:core",
+      "TinkoffASDKUI",
+      "TinkoffASDKCore",
+      "tinkoff_acquiring"
+    ],
+    "code": [
+      "\\bTerminalKey\\b",
+      "\\btinkoff_v2\\.js\\b",
+      "\\bsecurepay\\.tinkoff\\.ru\\b",
+      "\\b(?:TinkoffPay(?:Web)?|TBankPay)\\b",
+      "\\b(?:TinkoffASDK\\w*|ru\\.tinkoff\\.acquiring)\\b"
+    ],
+    "hosts": [
+      "securepay.tinkoff.ru",
+      "rest-api-test.tinkoff.ru",
+      "securepay.tbank.ru",
+      "integrationjs.tbank.ru"
+    ],
+    "dom": [
+      "(?i)\\bname=[\"']terminalkey[\"']",
+      "(?i)\\bclass=[\"'][^\"']*tinkoffPayRow\\b",
+      "(?i)\\b(?:Т-?Касс\\w+|Т-?Банк\\s+Эквайринг|Тинькофф\\s+Касс\\w+)"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "verify: all package names and hosts. The brand moved from Tinkoff to T-Bank, so SDK and host names may differ in current docs; TerminalKey and the securepay form are long-standing. verify: securepay.tbank.ru and integrationjs.tbank.ru (new brand hosts)."
+  },
+  {
+    "id": "payments.robokassa",
+    "title_ru": "Платежи через Робокассу",
+    "title_en": "Payments via Robokassa",
+    "deps": [
+      "robokassa",
+      "aiorobokassa"
+    ],
+    "code": [
+      "\\b(?:OutSum|MerchantLogin)\\b",
+      "(?i)\\brobokassa\\b"
+    ],
+    "hosts": [
+      "auth.robokassa.ru",
+      "merchant.roboxchange.com"
+    ],
+    "dom": [
+      "(?i)\\b(?:Робокасс\\w+|Robokassa)\\b"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Confirmed: robokassa and aiorobokassa on PyPI (unofficial clients). verify: an npm package of the same name."
+  },
+  {
+    "id": "payments.sbp",
+    "title_ru": "Оплата через СБП",
+    "title_en": "Payments via the Faster Payments System (SBP)",
+    "deps": [],
+    "code": [
+      "(?i)\\bsbp[-_]?(?:qr|payment|link|button|pay|merchant|bank)\\w*",
+      "(?i)\\b(?:payment[-_]?(?:method|type)|pay[-_]?with)\\W{1,6}sbp\\b",
+      "\\bСБП\\b"
+    ],
+    "hosts": [
+      "nspk.ru",
+      "qr.nspk.ru",
+      "sub.nspk.ru",
+      "sbp.nspk.ru"
+    ],
+    "dom": [
+      "(?i)(?:\\bСБП\\b|Система\\s+быстрых\\s+платежей)",
+      "(?i)\\bsbp[-_a-z]*\\.(?:svg|png|webp)\\b"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "SBP is usually a payment method of a provider (YooKassa, CloudPayments, T-Bank) or a direct bank QR link; the nspk.ru host appears in QR links and widgets."
+  },
+  {
+    "id": "payments.bnpl",
+    "title_ru": "Оплата частями (сервисы рассрочки)",
+    "title_en": "Buy now, pay later (installment services)",
+    "deps": [],
+    "code": [
+      "(?i)\\b(?:dolyame|podeli|mokka|yandex[-_]?split|bnpl|buy[-_]?now[-_]?pay[-_]?later|pay[-_]?in[-_]?(?:parts|installments))(?![A-Za-z])"
+    ],
+    "hosts": [
+      "dolyame.ru",
+      "podeli.ru",
+      "mokka.ru",
+      "split.yandex.ru"
+    ],
+    "dom": [
+      "(?i)(?:Оплат\\w*\\s+(?:частями|долями|в\\s+рассрочку)|Покупай(?:те)?\\s+частями|Плати\\s+частями|Яндекс\\s*[.\\s]?\\s*Сплит|Сплит\\s+от\\s+Яндекс\\w*)"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Widgets and buttons of third-party installment operators (Dolyame, Podeli, Mokka, Yandex Split). A bank's own consumer loan is not matched. verify: all hosts and the split.yandex.ru widget path."
+  },
+  {
+    "id": "payments.stripe",
+    "title_ru": "Платежи через Stripe",
+    "title_en": "Payments via Stripe",
+    "deps": [
+      "stripe",
+      "@stripe/stripe-js",
+      "@stripe/react-stripe-js",
+      "@stripe/stripe-react-native",
+      "flutter_stripe",
+      "StripePaymentSheet",
+      "StripePayments",
+      "com.stripe:stripe-android",
+      "dj-stripe"
+    ],
+    "code": [
+      "\\bloadStripe\\s*\\(",
+      "\\bStripe\\s*\\(\\s*[\"']pk_(?:live|test)_",
+      "\\bpk_(?:live|test)_[0-9A-Za-z]{10,}\\b",
+      "\\bstripe\\.(?:checkout|paymentIntents|subscriptions|customers|billingPortal|setupIntents)\\b",
+      "\\b(?:import\\s+stripe|from\\s+stripe\\s+import)\\b",
+      "\\bStripeAPI\\.defaultPublishableKey\\b"
+    ],
+    "hosts": [
+      "js.stripe.com",
+      "api.stripe.com",
+      "checkout.stripe.com",
+      "buy.stripe.com",
+      "billing.stripe.com"
+    ],
+    "dom": [
+      "(?i)\\bclass=[\"'][^\"']*\\bStripeElement\\b|\\bdata-stripe\\b"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Confirmed: stripe, @stripe/stripe-js, loadStripe, js.stripe.com. Only publishable keys (pk_) are matched, never secret keys."
+  },
+  {
+    "id": "payments.paddle",
+    "title_ru": "Платежи через Paddle",
+    "title_en": "Payments via Paddle",
+    "deps": [
+      "@paddle/paddle-js",
+      "@paddle/paddle-node-sdk",
+      "paddle-python-sdk"
+    ],
+    "code": [
+      "\\bPaddle\\.(?:Initialize|Setup|Checkout\\.open|Environment\\.set)\\b",
+      "\\binitializePaddle\\s*\\(",
+      "\\b(?:from|import)\\s+paddle_billing\\b"
+    ],
+    "hosts": [
+      "cdn.paddle.com",
+      "sandbox-cdn.paddle.com",
+      "checkout.paddle.com",
+      "buy.paddle.com"
+    ],
+    "dom": [
+      "(?i)\\bclass=[\"'][^\"']*\\bpaddle_button\\b"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Confirmed: @paddle/paddle-js, @paddle/paddle-node-sdk and cdn.paddle.com/paddle/v2/paddle.js. verify: paddle-python-sdk and the checkout hosts."
+  },
+  {
+    "id": "payments.receipts_kkt",
+    "title_ru": "Кассовые чеки и онлайн-ККТ",
+    "title_en": "Fiscal receipts and online cash registers",
+    "deps": [],
+    "code": [
+      "\\b(?:tax_system_code|taxSystemCode|vat_code|vatCode|payment_subject|paymentSubject|payment_mode)\\b",
+      "(?i)\\b(?:cloudkassir|orange[-_ ]?data|atol[-_ ]?online|modul[-_ ]?kassa|fiscal(?:ization|[-_ ]?(?:receipt|document|check))|kkt|ofd[-_]?(?:ru|receipt|url))(?![A-Za-z])"
+    ],
+    "hosts": [
+      "online.atol.ru",
+      "api.orangedata.ru",
+      "modulkassa.ru",
+      "checkonline.ru"
+    ],
+    "dom": [
+      "(?i)\\b(?:кассов\\w+\\s+чек\\w*|чек\\s+(?:ККТ|онлайн-?кассы)|онлайн-?касс\\w*|ККТ|фискальн\\w+\\s+(?:чек|документ)\\w*)"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "verify: atol, orangedata, modulkassa and checkonline hosts. Receipt fields are also YooKassa and CloudPayments request parameters."
+  },
+  {
+    "id": "platform.marketplace",
+    "title_ru": "Маркетплейс (несколько продавцов)",
+    "title_en": "Marketplace with several sellers",
+    "deps": [
+      "@stripe/connect-js",
+      "@stripe/react-connect-js"
+    ],
+    "code": [
+      "\\b(?:application_fee_amount|transfer_data|on_behalf_of|connected_account|stripe_account)\\b",
+      "\\bstripe\\.accounts\\.create\\b",
+      "\\b(?:Deal\\.create|fee_moment)\\b",
+      "(?i)\\b(?:vendor[-_]?(?:dashboard|payout|onboarding)|seller[-_]?(?:dashboard|payout|onboarding|cabinet)|merchant[-_]?onboarding|split[-_]?payments?|marketplace[-_]?(?:fee|commission))(?![A-Za-z])"
+    ],
+    "hosts": [],
+    "dom": [
+      "(?i)\\b(?:Стать\\s+(?:продавцом|партн[её]ром|исполнителем)|Кабинет\\s+продавц\\w+|Разместить\\s+(?:товар|объявление)|Подать\\s+объявление|Продавайте\\s+на|маркетплейс\\w*|Become\\s+a\\s+(?:seller|vendor))"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "verify: @stripe/react-connect-js. Deal.create / fee_moment are YooKassa Safe Deal (split payment) calls."
+  },
+  {
+    "id": "analytics.web_counter",
+    "title_ru": "Счётчики посещаемости (Метрика, GA и др.)",
+    "title_en": "Web analytics counters (Metrica, GA and similar)",
+    "deps": [
+      "react-yandex-metrika",
+      "vue-yandex-metrika",
+      "@nuxtjs/yandex-metrika",
+      "yandex-metrica-watch",
+      "react-ga",
+      "react-ga4",
+      "vue-gtag",
+      "vue-gtag-next",
+      "@nuxtjs/google-analytics",
+      "nuxt-gtag",
+      "gatsby-plugin-google-gtag",
+      "gatsby-plugin-google-analytics",
+      "@firebase/analytics",
+      "@vercel/analytics",
+      "plausible-tracker",
+      "next-plausible",
+      "posthog-js",
+      "mixpanel-browser",
+      "@amplitude/analytics-browser",
+      "@segment/analytics-next",
+      "@datapunt/matomo-tracker-react"
+    ],
+    "code": [
+      "\\bym\\(\\s*(?:\\d{5,}|[A-Za-z_][\\w.]*)\\s*,\\s*[\"'](?:init|hit|reachGoal|userParams|params|setUserID|getClientID|extLink|notBounce)[\"']",
+      "\\bYa\\.Metrika2?\\b",
+      "\\byandex_metrika_callbacks2?\\b",
+      "\\bgtag\\(\\s*[\"'](?:config|js|event|consent|set)[\"']",
+      "\\bga\\(\\s*[\"'](?:create|send|set)[\"']",
+      "\\bGoogleAnalyticsObject\\b",
+      "[\"'](?:firebase/analytics|@firebase/analytics)[\"']",
+      "\\b(?:mixpanel|amplitude|posthog)\\.init\\(",
+      "\\b_paq\\.push\\(",
+      "\\b_gaq\\.push\\("
+    ],
+    "hosts": [
+      "mc.yandex.ru",
+      "mc.yandex.com",
+      "www.google-analytics.com",
+      "ssl.google-analytics.com",
+      "region1.google-analytics.com",
+      "analytics.google.com",
+      "www.googletagmanager.com/gtag/js",
+      "stats.g.doubleclick.net",
+      "counter.yadro.ru",
+      "plausible.io",
+      "cdn.matomo.cloud",
+      "api-js.mixpanel.com",
+      "cdn.mxpnl.com",
+      "cdn.amplitude.com",
+      "us.i.posthog.com",
+      "eu.i.posthog.com",
+      "app.posthog.com",
+      "cdn.segment.com",
+      "va.vercel-scripts.com",
+      "static.cloudflareinsights.com"
+    ],
+    "dom": [
+      "(?i)<script\\b[^>]{1,300}src=[\"'][^\"']{0,200}(?:mc\\.yandex\\.ru/metrika|googletagmanager\\.com/gtag/js|google-analytics\\.com/(?:analytics|ga)\\.js)",
+      "(?i)<img\\b[^>]{1,300}src=[\"']https?://mc\\.yandex\\.ru/watch/\\d+"
+    ],
+    "stacks": [
+      "nextjs",
+      "react",
+      "nestjs",
+      "python",
+      "static-html",
+      "generic-web",
+      "no-code"
+    ],
+    "notes": "Counters of Top.Mail.ru and VK are matched under ads.pixels; Google Tag Manager containers under analytics.tag_manager. Mobile analytics SDKs are matched under analytics.mobile_sdk. Webvisor is matched under analytics.session_replay."
+  },
+  {
+    "id": "analytics.session_replay",
+    "title_ru": "Запись сессий и Вебвизор",
+    "title_en": "Session replay and Webvisor",
+    "deps": [
+      "@hotjar/browser",
+      "react-hotjar",
+      "@microsoft/clarity",
+      "clarity-js",
+      "smartlook-client",
+      "@fullstory/browser",
+      "logrocket",
+      "rrweb",
+      "@openreplay/tracker",
+      "@sentry/replay",
+      "flutter_uxcam",
+      "react-native-ux-cam",
+      "com.uxcam:uxcam",
+      "UXCam"
+    ],
+    "code": [
+      "\\bwebvisor\\s*:\\s*(?:true|!0|1)\\b",
+      "\\bhj\\(\\s*[\"'](?:identify|event|stateChange|trigger)[\"']|\\b_hjSettings\\b|\\bHotjar\\.init\\(",
+      "\\bclarity\\(\\s*[\"'](?:set|identify|consent|event|upgrade)[\"']|\\bwindow\\.clarity\\b|\\bClarity\\.init\\(",
+      "(?i)\\bsmartlook\\(\\s*[\"']init[\"']|\\bSmartlook\\.init\\(",
+      "\\bFS\\.identify\\(|\\bFullStory\\.init\\(|\\bwindow\\._fs_namespace\\b",
+      "\\bLogRocket\\.init\\(",
+      "\\breplayIntegration\\s*\\(|\\bnew\\s+Sentry\\.Replay\\s*\\(",
+      "\\bposthog\\.startSessionRecording\\b",
+      "\\brrweb\\.record\\s*\\(",
+      "\\bUXCam\\.(?:startWithKey|startWithConfiguration)\\b|\\bFlutterUxcam\\b"
+    ],
+    "hosts": [
+      "mc.webvisor.com",
+      "static.hotjar.com",
+      "script.hotjar.com",
+      "vars.hotjar.com",
+      "clarity.ms",
+      "cdn.mouseflow.com",
+      "web-sdk.smartlook.com",
+      "rec.smartlook.com",
+      "edge.fullstory.com",
+      "rs.fullstory.com",
+      "cdn.logrocket.io",
+      "cdn.lr-in-prod.com",
+      "www.clarity.ms",
+      "scripts.clarity.ms"
+    ],
+    "dom": [
+      "(?i)\\bwebvisor\\s*:\\s*(?:true|!0|1)\\b",
+      "(?i)\\bhjid\\s*[:=]\\s*\\d+",
+      "(?i)clarity\\.ms/tag/"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Webvisor is a flag of the Yandex Metrica init call, so the counter signals in analytics.web_counter fire too. verify: UXCam package names (flutter_uxcam, react-native-ux-cam, com.uxcam:uxcam)."
+  },
+  {
+    "id": "ads.pixels",
+    "title_ru": "Рекламные пиксели VK и myTarget",
+    "title_en": "VK and myTarget ad pixels",
+    "deps": [],
+    "code": [
+      "\\bVK\\.Retargeting\\b",
+      "\\b_tmr\\.push\\(|\\bwindow\\._tmr\\b"
+    ],
+    "hosts": [
+      "vk.com/rtrg",
+      "vk.ru/rtrg",
+      "top-fwz1.mail.ru",
+      "top.mail.ru",
+      "ads.vk.com"
+    ],
+    "dom": [
+      "(?i)<img\\b[^>]{1,300}src=[\"']https?://top-fwz1\\.mail\\.ru/counter\\?",
+      "(?i)<img\\b[^>]{1,300}src=[\"'][^\"']{0,200}vk\\.(?:com|ru)/rtrg\\?"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Domestic ad pixels. The Top.Mail.ru counter (top-fwz1.mail.ru, _tmr) is both a counter and the VK/myTarget pixel. Foreign pixels are matched under ads.pixels_foreign, Facebook Login under auth.facebook. verify: ads.vk.com and vk.ru/rtrg."
+  },
+  {
+    "id": "ads.pixels_foreign",
+    "title_ru": "Иностранные рекламные пиксели (Meta, TikTok, Google Ads и др.)",
+    "title_en": "Foreign ad pixels and ad SDKs (Meta, TikTok, Google Ads and others)",
+    "deps": [
+      "react-facebook-pixel",
+      "facebook-nodejs-business-sdk",
+      "react-native-fbsdk-next",
+      "facebook_app_events",
+      "FBSDKCoreKit",
+      "com.facebook.android:facebook-android-sdk",
+      "react-tiktok-pixel"
+    ],
+    "code": [
+      "\\bfbq\\(\\s*[\"'](?:init|track|trackCustom|consent)[\"']",
+      "\\bttq\\.(?:load|page|track)\\(",
+      "\\bpintrk\\(\\s*[\"'](?:load|page|track)[\"']",
+      "\\btwq\\(\\s*[\"'](?:init|track|config)[\"']",
+      "\\b_linkedin_partner_id\\b",
+      "\\bgtag\\(\\s*[\"']event[\"']\\s*,\\s*[\"']conversion[\"']|\\bAW-\\d{6,}\\b",
+      "\\bFacebookSdk\\.sdkInitialize\\b|\\bFBSDK(?:Settings|AppEvents)\\b"
+    ],
+    "hosts": [
+      "connect.facebook.net",
+      "www.facebook.com/tr",
+      "analytics.tiktok.com",
+      "static.ads-twitter.com",
+      "snap.licdn.com",
+      "s.pinimg.com",
+      "sc-static.net",
+      "www.googleadservices.com",
+      "googleads.g.doubleclick.net"
+    ],
+    "dom": [
+      "(?i)<img\\b[^>]{1,300}src=[\"']https?://(?:www\\.)?facebook\\.com/tr\\?"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Pixels and ad SDKs of foreign platforms: Meta, TikTok, X, LinkedIn, Pinterest, Snap, Google Ads conversion tags. react-native-fbsdk-next also carries Facebook Login, matched under auth.facebook."
+  },
+  {
+    "id": "analytics.tag_manager",
+    "title_ru": "Менеджеры тегов",
+    "title_en": "Tag managers",
+    "deps": [
+      "react-gtm-module",
+      "@gtm-support/vue-gtm",
+      "@nuxtjs/gtm",
+      "gatsby-plugin-google-tagmanager",
+      "@analytics/google-tag-manager"
+    ],
+    "code": [
+      "\\bGTM-[A-Z0-9]{5,8}\\b",
+      "\\bTagManager\\.initialize\\s*\\(|<GoogleTagManager\\b",
+      "\\bdataLayer\\.push\\(\\s*\\{\\s*[\"']?(?:event|gtm\\.start)[\"']?\\s*:"
+    ],
+    "hosts": [
+      "www.googletagmanager.com/gtm.js",
+      "www.googletagmanager.com/ns.html"
+    ],
+    "dom": [
+      "(?i)googletagmanager\\.com/(?:gtm\\.js|ns\\.html)\\?id=GTM-"
+    ],
+    "stacks": [
+      "nextjs",
+      "react",
+      "nestjs",
+      "python",
+      "static-html",
+      "generic-web",
+      "no-code"
+    ],
+    "notes": "A container can load any other tracker after consent, so a tag manager is reported separately from the counters it may load."
+  },
+  {
+    "id": "analytics.mobile_sdk",
+    "title_ru": "Аналитика и атрибуция в приложении",
+    "title_en": "Mobile analytics and attribution SDKs",
+    "deps": [
+      "appmetrica_plugin",
+      "appmetrica_push_plugin",
+      "@appmetrica/react-native-analytics",
+      "AppMetricaCore",
+      "AppMetricaAnalytics",
+      "YandexMobileMetrica",
+      "io.appmetrica.analytics:analytics",
+      "com.yandex.android:mobmetricalib",
+      "@react-native-firebase/analytics",
+      "firebase_analytics",
+      "FirebaseAnalytics",
+      "Firebase/Analytics",
+      "com.google.firebase:firebase-analytics",
+      "com.google.firebase:firebase-analytics-ktx",
+      "react-native-adjust",
+      "adjust_sdk",
+      "com.adjust.sdk:adjust-android",
+      "react-native-appsflyer",
+      "appsflyer_sdk",
+      "AppsFlyerFramework",
+      "com.appsflyer:af-android-sdk",
+      "com.my.tracker:mytracker-sdk",
+      "MyTrackerSDK",
+      "@amplitude/analytics-react-native",
+      "amplitude_flutter",
+      "mixpanel_flutter",
+      "mixpanel-react-native"
+    ],
+    "code": [
+      "\\bAppMetrica\\.(?:activate|reportEvent|reportError|setUserProfileID)\\b",
+      "\\b(?:YMMYandexMetrica|YandexMetrica\\.(?:activate|reportEvent))\\b",
+      "\\bAppMetricaConfig(?:uration)?\\b",
+      "\\bFirebaseAnalytics\\.(?:instance|getInstance)\\b",
+      "\\bAnalytics\\.logEvent\\(",
+      "\\banalytics\\(\\)\\.(?:logEvent|logScreenView|setUserId)\\b",
+      "\\b(?:Adjust\\.(?:initSdk|create|appDidLaunch)|AdjustConfig|ADJConfig)\\b",
+      "\\b(?:AppsFlyerLib|AppsFlyerSdk)\\b",
+      "\\bMyTracker\\.(?:initTracker|trackEvent|setDebugMode)\\b"
+    ],
+    "hosts": [
+      "report.appmetrica.yandex.net",
+      "startup.mobile.yandex.net",
+      "api.appmetrica.yandex.com",
+      "app-measurement.com",
+      "app.adjust.com",
+      "app.adjust.io",
+      "appsflyer.com",
+      "tracker-api.my.com"
+    ],
+    "dom": [],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Confirmed: appmetrica_plugin (pub.dev), @appmetrica/react-native-analytics (npm), io.appmetrica.analytics:analytics (Gradle), firebase_analytics, @react-native-firebase/analytics, FirebaseAnalytics (pod), AppMetricaCore and AppMetricaAnalytics (CocoaPods). verify: appmetrica_push_plugin, the Adjust, AppsFlyer, MyTracker and Mixpanel package names, and tracker-api.my.com."
+  },
+  {
+    "id": "chat.widget",
+    "title_ru": "Виджеты чатов и мессенджеров",
+    "title_en": "Chat and messenger widgets",
+    "deps": [
+      "crisp-sdk-web",
+      "@intercom/messenger-js-sdk",
+      "react-use-intercom",
+      "@tawk.to/tawk-messenger-react",
+      "@livechat/widget-react",
+      "react-live-chat-loader"
+    ],
+    "code": [
+      "\\bjivo_(?:api|config|onLoadCallback|destroy)\\b",
+      "\\bTawk_API\\b",
+      "\\$crisp\\b",
+      "\\bIntercom\\(\\s*[\"'](?:boot|update|show|shutdown)[\"']",
+      "\\bdrift\\.load\\(",
+      "\\bcarrotquest\\.(?:connect|identify|track)\\b",
+      "\\bChatraID\\b|\\bChatra\\(\\s*[\"']",
+      "\\bLiveChatWidget\\b|\\b__lc\\.license\\b",
+      "(?i)\\bamo_?social_?button\\b"
+    ],
+    "hosts": [
+      "jivo.ru",
+      "jivosite.com",
+      "embed.tawk.to",
+      "client.crisp.chat",
+      "widget.intercom.io",
+      "js.intercomcdn.com",
+      "js.driftt.com",
+      "cdn.livechatinc.com",
+      "static.zdassets.com",
+      "call.chatra.io",
+      "cdn.carrotquest.app",
+      "cdn.carrotquest.io",
+      "app.carrotquest.io",
+      "cdn-ru.bitrix24.ru",
+      "gso.amocrm.ru",
+      "code.tidio.co",
+      "code.jivo.ru",
+      "code.jivosite.com"
+    ],
+    "dom": [],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Embedded chat widgets that collect visitors' messages and contacts (Jivo, Tawk, Crisp, Intercom and others). Plain messenger links are matched under chat.messenger_links, Telegram Login under auth.telegram. verify: tidio, amocrm and bitrix24 hosts."
+  },
+  {
+    "id": "chat.messenger_links",
+    "title_ru": "Ссылки на мессенджеры (Telegram, WhatsApp, Viber)",
+    "title_en": "Messenger links (Telegram, WhatsApp, Viber)",
+    "deps": [
+      "react-floating-whatsapp"
+    ],
+    "code": [
+      "https?://(?:wa\\.me|api\\.whatsapp\\.com/send|web\\.whatsapp\\.com/send)",
+      "https?://t\\.me/[A-Za-z0-9_]{4,}"
+    ],
+    "hosts": [],
+    "dom": [
+      "(?i)href=[\"']https?://(?:wa\\.me|api\\.whatsapp\\.com/send|web\\.whatsapp\\.com/send|wa\\.link)\\b",
+      "(?i)href=[\"'](?:https?://(?:t\\.me|telegram\\.me)/|tg://resolve)",
+      "(?i)href=[\"']viber://",
+      "(?i)\\bclass=[\"'][^\"']*\\b(?:whatsapp|telegram|messenger|viber)[-_]?(?:button|btn|widget|float\\w*|chat|fab)\\b"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "A t.me, wa.me or viber link is weak evidence: it proves a contact channel in a foreign messenger, not that the site collects messages or personal data. The owner confirms how the channel is used."
+  },
+  {
+    "id": "comms.email_marketing",
+    "title_ru": "E-mail-рассылки",
+    "title_en": "E-mail marketing",
+    "deps": [
+      "@mailchimp/mailchimp_marketing",
+      "mailchimp-marketing",
+      "mailchimp3",
+      "sendpulse-api",
+      "pysendpulse",
+      "klaviyo-api",
+      "@getbrevo/brevo",
+      "sib-api-v3-sdk",
+      "@mailerlite/mailerlite-nodejs"
+    ],
+    "code": [
+      "(?i)\\b(?:mc-embedded-subscribe|mailchimp|unisender|sendpulse|dashamail|esputnik|sendsay|mailganer|notisend|klaviyo|mailerlite|convertkit)(?![A-Za-z])",
+      "(?i)\\b(?:newsletter|subscribe)[-_]?(?:form|email|list|subscribers?|signup)(?![A-Za-z])",
+      "(?i)\\b(?:list-manage\\.com|chimpstatic\\.com|sibforms\\.com|sibautomation\\.com)\\b"
+    ],
+    "hosts": [
+      "list-manage.com",
+      "chimpstatic.com",
+      "unisender.com",
+      "sendpulse.com",
+      "klaviyo.com",
+      "esputnik.com",
+      "dashamail.com",
+      "sendsay.ru",
+      "mailganer.com",
+      "notisend.ru",
+      "sibforms.com",
+      "sibautomation.com",
+      "mailerlite.com",
+      "convertkit.com",
+      "cp.unisender.com",
+      "api.unisender.com",
+      "static.klaviyo.com",
+      "a.klaviyo.com",
+      "static-login.sendpulse.com",
+      "assets.mailerlite.com",
+      "downloads.mailchimp.com"
+    ],
+    "dom": [
+      "(?i)(?:Подписаться\\s+на\\s+(?:нашу\\s+)?(?:рассылку|новости)|Подписка\\s+на\\s+(?:рассылку|новости)|Хочу\\s+получать\\s+(?:новости|рассылку|акции)|Subscribe\\s+to\\s+(?:our\\s+)?(?:newsletter|updates)|Sign\\s+up\\s+for\\s+(?:our\\s+)?newsletter)",
+      "(?i)<form\\b[^>]{0,300}\\bclass=[\"'][^\"']*\\b(?:mc-embedded-subscribe-form|subscribe-form|newsletter-form)\\b"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Transactional senders (nodemailer, plain SMTP, SendGrid, Mailgun, Resend, Postmark) are deliberately not listed: service e-mails alone are not marketing. verify: esputnik, mailganer, notisend, sendsay, sendpulse and mailerlite hosts."
+  },
+  {
+    "id": "comms.push",
+    "title_ru": "Push-уведомления",
+    "title_en": "Push notifications",
+    "deps": [
+      "web-push",
+      "pywebpush",
+      "react-onesignal",
+      "onesignal-node",
+      "@react-native-firebase/messaging",
+      "firebase_messaging",
+      "FirebaseMessaging",
+      "Firebase/Messaging",
+      "com.google.firebase:firebase-messaging",
+      "expo-notifications",
+      "react-native-push-notification",
+      "@notifee/react-native",
+      "onesignal_flutter",
+      "react-native-onesignal",
+      "OneSignalXCFramework",
+      "com.onesignal:OneSignal",
+      "com.huawei.hms:push",
+      "ru.rustore.sdk:pushclient",
+      "appmetrica_push_plugin"
+    ],
+    "code": [
+      "\\bNotification\\.requestPermission\\s*\\(",
+      "\\bpushManager\\.subscribe\\s*\\(",
+      "\\bFirebaseMessaging\\.(?:instance|getInstance)\\b",
+      "\\bmessaging\\(\\)\\.(?:getToken|requestPermission|onMessage)\\b",
+      "[\"']firebase/messaging[\"']",
+      "\\bUNUserNotificationCenter\\.current\\(\\)\\.requestAuthorization\\b|\\bregisterForRemoteNotifications\\s*\\(",
+      "\\bOneSignal\\.(?:init|initialize|login|Notifications)\\b|\\bOneSignalDeferred\\b",
+      "(?i)\\bpushwoosh\\b",
+      "\\bgetExpoPushTokenAsync\\b",
+      "\\b(?:HmsInstanceId|RuStorePushClient)\\b"
+    ],
+    "hosts": [
+      "onesignal.com",
+      "fcm.googleapis.com",
+      "web.webpushs.com",
+      "pushall.ru",
+      "pushwoosh.com",
+      "gravitec.net",
+      "cdn.onesignal.com"
+    ],
+    "dom": [
+      "(?i)(?:Получать\\s+(?:push|пуш)[-\\s]?уведомлени\\w+|Разрешить\\s+уведомления|Включить\\s+уведомления|Allow\\s+notifications|Enable\\s+push\\s+notifications)"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Local-only notifications (flutter_local_notifications) are not listed. verify: onesignal-node, pushwoosh, rustore and appmetrica push package names."
+  },
+  {
+    "id": "comms.sms",
+    "title_ru": "Отправка SMS",
+    "title_en": "SMS sending",
+    "deps": [
+      "twilio",
+      "@vonage/server-sdk",
+      "vonage",
+      "messagebird",
+      "nexmo"
+    ],
+    "code": [
+      "(?i)\\b(?:send[-_]?sms|sms[-_]?(?:gateway|sender|client|api|provider|service)|smsc[-_]?(?:api|login)|sms_ru|smsaero|smspilot|sms_prosto)(?![A-Za-z])",
+      "\\btwilio\\.(?:messages|verify)\\b|\\bfrom\\s+twilio\\.rest\\s+import\\b|\\bnew\\s+Twilio\\("
+    ],
+    "hosts": [
+      "sms.ru",
+      "smsc.ru",
+      "smsaero.ru",
+      "smspilot.ru",
+      "api.twilio.com",
+      "rest.nexmo.com",
+      "api.exolve.ru",
+      "integrationapi.net",
+      "gatewayapi.telegram.org",
+      "gate.smsaero.ru"
+    ],
+    "dom": [
+      "(?i)\\b(?:SMS|СМС)[-\\s]?(?:рассылк\\w+|уведомлени\\w+|информировани\\w+|оповещени\\w+)|получать\\s+(?:SMS|СМС)\\b"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Matches any SMS gateway, including the one behind auth.sms_otp. verify: exolve, devino (integrationapi.net) and Telegram Gateway hosts."
+  },
+  {
+    "id": "comms.calls_calltracking",
+    "title_ru": "Звонки и коллтрекинг",
+    "title_en": "Calls and call tracking",
+    "deps": [],
+    "code": [
+      "(?i)\\b(?:calltouch|comagic|roistat|callibri|ringostat|mango[-_ ]?office|mangotele|callkeeper|binotel|uiscom)(?![A-Za-z])",
+      "\\b(?:roistat_visit|ct_site_id|calltracking_params)\\b",
+      "\\bTwilio\\.Device\\b|\\bJsSIP\\b|\\bnew\\s+SIP\\.UA\\b"
+    ],
+    "hosts": [
+      "calltouch.ru",
+      "comagic.ru",
+      "mango-office.ru",
+      "mangotele.com",
+      "roistat.com",
+      "callibri.ru",
+      "ringostat.com",
+      "binotel.com",
+      "zadarma.com",
+      "uiscom.ru",
+      "callbackhunter.com",
+      "mod.calltouch.ru",
+      "api.calltouch.ru",
+      "app.comagic.ru",
+      "widgets.mango-office.ru",
+      "cloud.roistat.com",
+      "script.ringostat.com",
+      "widgets.binotel.com"
+    ],
+    "dom": [
+      "(?i)\\bclass=[\"'][^\"']*\\b(?:calltouch|comagic|roistat|callibri|ringostat|mango)\\w*",
+      "(?i)\\b(?:Заказать\\s+обратный\\s+звонок|Обратный\\s+звонок|Мы\\s+перезвоним|Перезвоним\\s+вам)"
+    ],
+    "stacks": [
+      "nextjs",
+      "react",
+      "nestjs",
+      "python",
+      "static-html",
+      "generic-web",
+      "no-code"
+    ],
+    "notes": "Call tracking swaps phone numbers per visitor and records calls; callback wording also fires forms.contact. verify: binotel, zadarma, callbackhunter, ringostat and mango-office hosts."
+  },
+  {
+    "id": "ugc.reviews",
+    "title_ru": "Отзывы и комментарии",
+    "title_en": "Reviews and comments",
+    "deps": [
+      "react-star-ratings",
+      "@smastrom/react-rating",
+      "react-rating"
+    ],
+    "code": [
+      "\\b(?:ReviewForm|ReviewList|ReviewsList|ReviewItem|ReviewCard|ProductReviews|AddReview|WriteReview|LeaveReview|Testimonials?|StarRating|RatingStars?)\\b",
+      "[\"']@type[\"']\\s*:\\s*[\"'](?:Review|AggregateRating)[\"']",
+      "\\bclass\\s+(?:Review|Comment|Rating)\\s*\\(\\s*(?:models\\.Model|db\\.Model|Base)\\b"
+    ],
+    "hosts": [
+      "widget.trustpilot.com",
+      "yandex.ru/maps-reviews-widget"
+    ],
+    "dom": [
+      "(?i)\\b(?:Оставить\\s+отзыв|Написать\\s+отзыв|Отзывы\\s+(?:клиентов|покупателей|о\\s+нас)|Ваш\\s+отзыв|Add\\s+(?:your\\s+)?review|Write\\s+a\\s+review|Leave\\s+a\\s+(?:review|comment)|Оставить\\s+комментарий)\\b",
+      "(?i)\\bitemprop=[\"'](?:review|aggregateRating)[\"']"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "schema.org Review markup may only display third-party ratings; confirm whether visitors can post."
+  },
+  {
+    "id": "ugc.user_messaging",
+    "title_ru": "Сообщения между пользователями",
+    "title_en": "User-to-user messaging",
+    "deps": [
+      "stream-chat",
+      "stream-chat-react",
+      "stream_chat_flutter",
+      "@sendbird/chat",
+      "sendbird_sdk",
+      "@twilio/conversations",
+      "react-native-gifted-chat",
+      "flutter_chat_ui",
+      "@chatscope/chat-ui-kit-react"
+    ],
+    "code": [
+      "(?i)\\b(?:direct[-_ ]?messages?|chat[-_ ]?rooms?|message[-_]?threads?(?![-_]?ids?\\b))(?![A-Za-z])"
+    ],
+    "hosts": [],
+    "dom": [
+      "(?i)\\b(?:Личные\\s+сообщения|Мои\\s+сообщения|Написать\\s+(?:сообщение|продавцу|автору|исполнителю|мастеру)|Чат\\s+с\\s+(?:продавцом|исполнителем|мастером|покупателем|автором)|Direct\\s+messages?)"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Heuristic: model, component and wording names. The chat-widget vendors are matched under chat.widget."
+  },
+  {
+    "id": "ugc.public_profiles",
+    "title_ru": "Публичные профили пользователей",
+    "title_en": "Public user profiles",
+    "deps": [],
+    "code": [
+      "(?i)\\b(?:public[-_]?profile|profile[-_]?visibility|is[-_]?profile[-_]?public|show[-_]?profile[-_]?publicly)(?![A-Za-z])",
+      "(?:path|re_path|url)\\(\\s*r?[\"']\\^?(?:u|users?|profiles?|members?|people)/<",
+      "[\"'`/](?:users?|u|profiles?|members?)/(?::|\\[|\\{|<|\\$\\{)(?:username|handle|slug|nickname|login|user_?name)\\b"
+    ],
+    "hosts": [],
+    "dom": [
+      "(?i)\\b(?:Публичный\\s+профиль|Профиль\\s+пользователя|Public\\s+profile|View\\s+(?:my\\s+)?profile)\\b",
+      "(?i)\\bitemtype=[\"']https?://schema\\.org/ProfilePage[\"']"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Heuristic: route and field names. Whether a profile is visible to other visitors is an owner fact."
+  },
+  {
+    "id": "ugc.uploads",
+    "title_ru": "Загрузка файлов пользователями",
+    "title_en": "User file uploads (photo, video, documents)",
+    "deps": [
+      "multer",
+      "formidable",
+      "busboy",
+      "uploadthing",
+      "@uploadthing/react",
+      "react-dropzone",
+      "filepond",
+      "react-filepond",
+      "@uppy/core",
+      "react-native-image-picker",
+      "expo-image-picker",
+      "expo-document-picker",
+      "image_picker",
+      "file_picker",
+      "python-multipart"
+    ],
+    "code": [
+      "\\btype=[\"']file[\"']",
+      "\\b(?:FileInterceptor|FilesInterceptor|FileFieldsInterceptor)\\b",
+      "\\bUploadFile\\b",
+      "\\brequest\\.FILES\\b",
+      "\\bmodels\\.(?:ImageField|FileField)\\s*\\(",
+      "\\bmulter\\s*\\(",
+      "\\b(?:launchImageLibrary|launchImageLibraryAsync|launchCamera|pickImage|pickMultiImage|PHPickerViewController|PhotosPicker|UIImagePickerController)\\b",
+      "(?i)\\bformData\\.append\\(\\s*[\"'](?:file|files|avatar|photo|image|video|document|attachment)[\"']"
+    ],
+    "hosts": [
+      "upload-widget.cloudinary.com",
+      "ucarecdn.com"
+    ],
+    "dom": [
+      "(?i)<input\\b[^>]{0,300}\\btype=[\"']file[\"']",
+      "(?i)\\b(?:Загрузить|Загрузите|Прикрепить|Прикрепите)\\s+(?:фото\\w*|видео|файл\\w*|аватар\\w*|изображени\\w+|документ\\w*|резюме)",
+      "(?i)\\bUpload\\s+(?:a\\s+)?(?:photo|video|file|avatar|image|document|resume)\\b"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Photos and video of people may carry personal data; image-consent wording is decided downstream."
+  },
+  {
+    "id": "ugc.image_uploads",
+    "title_ru": "Загрузка фото и видео пользователями",
+    "title_en": "User photo and video uploads",
+    "deps": [
+      "react-native-image-picker",
+      "expo-image-picker",
+      "image_picker",
+      "react-native-image-crop-picker",
+      "image_cropper"
+    ],
+    "code": [
+      "\\b(?:launchImageLibrary|launchImageLibraryAsync|launchCamera|pickImage|pickMultiImage|PHPickerViewController|PhotosPicker|UIImagePickerController)\\b",
+      "\\bmodels\\.ImageField\\s*\\(",
+      "(?i)\\baccept=[\"'](?:image|video)/",
+      "(?i)\\bformData\\.append\\(\\s*[\"'](?:avatar|photo|image|video)[\"']"
+    ],
+    "hosts": [],
+    "dom": [
+      "(?i)<input\\b[^>]{0,300}\\baccept=[\"'](?:image|video)/",
+      "(?i)\\b(?:Загрузить|Загрузите|Прикрепить|Прикрепите)\\s+(?:фото\\w*|видео|аватар\\w*|изображени\\w+)",
+      "(?i)\\bUpload\\s+(?:a\\s+)?(?:photo|video|avatar|image)\\b"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Photo, video and avatar uploads: pictures of people may need consent to use the image. Any file input is matched under ugc.uploads."
+  },
+  {
+    "id": "content.webinars",
+    "title_ru": "Вебинары и онлайн-трансляции",
+    "title_en": "Webinars and live streams",
+    "deps": [
+      "@zoom/meetingsdk",
+      "@zoomus/websdk"
+    ],
+    "code": [
+      "\\bZoomMtg\\.\\w+",
+      "(?i)\\b(?:webinar|вебинар\\w*)"
+    ],
+    "hosts": [
+      "zoom.us",
+      "webinar.ru",
+      "mts-link.ru",
+      "bizon365.ru",
+      "telemost.yandex.ru",
+      "meet.google.com",
+      "us02web.zoom.us",
+      "us04web.zoom.us",
+      "events.webinar.ru",
+      "my.mts-link.ru",
+      "start.bizon365.ru"
+    ],
+    "dom": [
+      "(?i)\\b(?:вебинар\\w*|Регистрация\\s+на\\s+онлайн-?(?:встречу|мероприятие|конференцию)|Прямой\\s+эфир|Webinar|Live\\s*stream)"
+    ],
+    "stacks": [
+      "nextjs",
+      "react",
+      "nestjs",
+      "python",
+      "static-html",
+      "generic-web",
+      "no-code"
+    ],
+    "notes": "verify: mts-link.ru, bizon365.ru and telemost.yandex.ru hosts. Course platforms are matched under sector.education_courses."
+  },
+  {
+    "id": "audience.kids",
+    "title_ru": "Аудитория: дети",
+    "title_en": "Audience: children",
+    "deps": [],
+    "code": [
+      "(?i)\\b(?:is_?minor|age_?gate|parental[-_]?(?:consent|control|gate)|child[-_]?(?:mode|safe)|kids?[-_]?mode|for_?kids|coppa|grade_?level)(?![A-Za-z])"
+    ],
+    "hosts": [],
+    "dom": [
+      "(?i)\\b(?:для\\s+детей|детск\\w+\\s+(?:сад|клуб|кружок|лагер\\w+|центр|курс\\w*|игр\\w+|одежд\\w+|товар\\w*)|школьник\\w*|дошкольник\\w*|несовершеннолетн\\w+|подростк\\w+|согласи\\w+\\s+родител\\w+|родительск\\w+\\s+(?:контрол\\w+|согласи\\w+)|ваш\\s+ребён\\w+|ваш\\s+ребен\\w+|for\\s+(?:kids|children)|under\\s+(?:13|18)|parental\\s+consent)"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Weak evidence from keywords and age fields: the real audience is an owner fact. Needs owner confirmation."
+  },
+  {
+    "id": "audience.adult_18",
+    "title_ru": "Контент 18+ и проверка возраста",
+    "title_en": "18+ content and age checks",
+    "deps": [],
+    "code": [
+      "(?i)\\b(?:age[-_]?(?:gate|verification|check|confirm\\w*)|is_?adult|over_?18|adult_?only|nsfw|adult_?content|age_?restricted?)(?![A-Za-z])"
+    ],
+    "hosts": [],
+    "dom": [
+      "(?i)(?:\\bМне\\s+(?:уже\\s+)?(?:есть\\s+)?18\\b|мне\\s+исполнилось\\s+18|Подтверд\\w+\\s+(?:свой\\s+)?возраст|Вам\\s+(?:уже\\s+)?(?:есть|исполнилось)\\s+18|только\\s+для\\s+(?:совершеннолетних|лиц\\s+старше\\s+18)|\\bAre\\s+you\\s+(?:over\\s+)?18\\b|age\\s+verification)"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Weak evidence from age-gate wording and checks: the real audience is an owner fact. Needs owner confirmation. A bare 18+ mark (for example the age sign of an information product in a footer) is not matched: it does not show an adult audience or an age check."
+  },
+  {
+    "id": "sector.education_courses",
+    "title_ru": "Отрасль: образование и онлайн-курсы",
+    "title_en": "Sector: education and online courses",
+    "deps": [],
+    "code": [
+      "(?i)\\b(?:lms|e-?learning|course[-_]?(?:catalog|enrollment|progress|module)|syllabus|gradebook|curriculum|lesson[-_]?(?:plan|progress)|certificate[-_]?of[-_]?completion)(?![A-Za-z])"
+    ],
+    "hosts": [
+      "getcourse.ru",
+      "stepik.org",
+      "teachbase.ru",
+      "skillspace.ru",
+      "ispringlearn.ru",
+      "teachable.com",
+      "thinkific.com",
+      "kajabi.com"
+    ],
+    "dom": [
+      "(?i)\\b(?:онлайн-?курс\\w*|образовательн\\w+\\s+(?:программ\\w*|услуг\\w*|платформ\\w*|деятельност\\w+)|записаться\\s+на\\s+курс\\w*|сертификат\\s+о\\s+(?:прохождении|завершении)\\s+курса|обучающ\\w+\\s+платформ\\w*|online\\s+courses?|e-?learning)"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Weak evidence from keywords on page text and identifiers: the field of business is an owner fact (company activity codes, licences). Needs owner confirmation; do not apply sector-only requirements from this signal alone. verify: skillspace.ru and ispringlearn.ru hosts."
+  },
+  {
+    "id": "sector.medical",
+    "title_ru": "Отрасль: медицина",
+    "title_en": "Sector: medical services",
+    "deps": [
+      "@medplum/core",
+      "fhir.resources",
+      "hl7apy",
+      "react-native-health",
+      "react-native-health-connect"
+    ],
+    "code": [
+      "\\b(?:FHIR|HL7|HKHealthStore|HealthKit|HealthConnectClient)\\b",
+      "(?i)\\b(?:patient[-_]?(?:id|record|card|chart)|medical[-_]?(?:record|card|history)|health[-_]?record|electronic[-_]?(?:health|medical)[-_]?record|ehr|emr|telemedicine|doctor[-_]?id|clinic[-_]?id|icd[-_]?10)(?![A-Za-z])"
+    ],
+    "hosts": [],
+    "dom": [
+      "(?i)\\b(?:медицинск\\w+\\s+(?:услуг\\w*|центр\\w*|клиник\\w*|карт\\w*|документ\\w*|организаци\\w+|лицензи\\w+)|клиник\\w+|поликлиник\\w+|запись\\s+к\\s+врачу|приём\\s+врача|прием\\s+врача|врач\\w*|пациент\\w*|телемедицин\\w*|телеконсультаци\\w+|стоматолог\\w*|диагностик\\w+|аптек\\w+|лекарств\\w+|medical\\s+(?:services?|center|records?)|clinic|patients?|telemedicine|doctors?)"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Weak evidence from keywords on page text and identifiers: the field of business is an owner fact (company activity codes, licences). Needs owner confirmation; do not apply sector-only requirements from this signal alone. Health-data SDKs (HealthKit, Health Connect) are stronger evidence than text. verify: react-native-health-connect and hl7apy package names."
+  },
+  {
+    "id": "sector.finance",
+    "title_ru": "Отрасль: финансы",
+    "title_en": "Sector: finance, lending, insurance, crypto",
+    "deps": [
+      "plaid",
+      "react-plaid-link",
+      "plaid-python",
+      "ccxt"
+    ],
+    "code": [
+      "(?i)\\b(?:kyc|aml|credit[-_]?score|loan[-_]?(?:application|amount|term|offer)|interest[-_]?rate|mortgage|insurance[-_]?(?:policy|premium)|brokerage|securities|broker[-_]?account|order[-_]?book)(?![A-Za-z])"
+    ],
+    "hosts": [
+      "cdn.plaid.com",
+      "api.plaid.com"
+    ],
+    "dom": [
+      "(?i)(?:\\bмикрозайм\\w*|\\bмикрофинанс\\w+|\\bзайм(?:ы|ов|ам|ами|ах)?(?!\\w)|\\bкредит(?:ы|ов|ам|ами|ах|ование|ования)?(?!\\w)|\\bипотек\\w+|\\bинвестиц\\w+|\\bброкер\\w*|\\bстрахован\\w+|\\bкриптовалют\\w*|\\bфорекс|\\bforex\\b|\\bбанковск\\w+\\s+вклад\\w*|\\bloans?\\b|\\bmortgage\\b|\\binsurance\\b|\\bbrokerage\\b|\\bcryptocurrenc\\w+|\\btrading\\b|\\binvestments?\\b)"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Weak evidence from keywords on page text and identifiers: the field of business is an owner fact (company activity codes, licences). Needs owner confirmation; do not apply sector-only requirements from this signal alone."
+  },
+  {
+    "id": "sector.gambling",
+    "title_ru": "Отрасль: азартные игры и ставки",
+    "title_en": "Sector: gambling and betting",
+    "deps": [],
+    "code": [
+      "(?i)\\b(?:sportsbook|bet[-_]?slip|bookmaker|roulette|jackpot|casino|loot[-_]?box|poker[-_]?room)(?![A-Za-z])"
+    ],
+    "hosts": [],
+    "dom": [
+      "(?i)\\b(?:казино|букмекер\\w*|ставк\\w+\\s+на\\s+спорт|азартн\\w+\\s+игр\\w+|игров\\w+\\s+автомат\\w*|рулетк\\w+|тотализатор\\w*|лотере\\w+|покер\\w*|джекпот\\w*|casino|sports?\\s*betting|bookmaker|gambling|jackpot|roulette|poker|lottery)"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Weak evidence from keywords on page text and identifiers: the field of business is an owner fact (company activity codes, licences). Needs owner confirmation; do not apply sector-only requirements from this signal alone."
+  },
+  {
+    "id": "sector.alcohol_tobacco",
+    "title_ru": "Отрасль: алкоголь и табак",
+    "title_en": "Sector: alcohol and tobacco",
+    "deps": [],
+    "code": [
+      "(?i)\\b(?:egais|alcohol[-_]?(?:license|code|content)|tobacco[-_]?product|excise[-_]?stamp|vape[-_]?product)(?![A-Za-z])"
+    ],
+    "hosts": [],
+    "dom": [
+      "(?i)\\b(?:алкогол\\w+|пив(?:о|а|е|у|ом|н\\w+)\\b|вино(?:м)?\\b|водк\\w+|виски|коньяк\\w*|крепк\\w+\\s+напитк\\w+|сигарет\\w*|табак\\w*|табачн\\w+|кальян\\w*|вейп\\w*|электронн\\w+\\s+сигарет\\w*|никотин\\w*|снюс\\w*|ЕГАИС|vap(?:e|ing)|tobacco|cigar(?:ette)?s?|alcohol(?:ic)?|beer|vodka|whisk(?:e)?y|liquor|nicotine|hookah|shisha)"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Weak evidence from keywords on page text and identifiers: the field of business is an owner fact (company activity codes, licences). Needs owner confirmation; do not apply sector-only requirements from this signal alone."
+  },
+  {
+    "id": "sector.gov",
+    "title_ru": "Отрасль: госсектор и муниципальные услуги",
+    "title_en": "Sector: government and municipal services",
+    "deps": [],
+    "code": [
+      "(?i)\\b(?:smev3?|gis[-_]?(?:gmp|zhkh)|ЕПГУ|СМЭВ)(?![A-Za-z])"
+    ],
+    "hosts": [],
+    "dom": [
+      "(?i)\\b(?:госуслуг\\w*|государственн\\w+\\s+(?:услуг\\w*|информационн\\w+\\s+систем\\w*|орган\\w*)|муниципальн\\w+\\s+(?:услуг\\w*|образовани\\w+|контракт\\w*)|администраци\\w+\\s+(?:города|района|области|муниципальн\\w+)|органы?\\s+(?:власти|местного\\s+самоуправления)|межведомственн\\w+|СМЭВ|ГИС\\s+ЖКХ|ГИС\\s+ГМП|электронн\\w+\\s+правительств\\w+|госзакупк\\w*|обращени\\w+\\s+граждан)"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Weak evidence from keywords on page text and identifiers: the field of business is an owner fact (company activity codes, licences). Needs owner confirmation; do not apply sector-only requirements from this signal alone. Typical owner facts: the operator is a state or municipal body, or runs a state information system."
+  },
+  {
+    "id": "sector.taxi_tourism",
+    "title_ru": "Отрасль: такси, перевозки и туризм",
+    "title_en": "Sector: taxi, passenger transport and tourism",
+    "deps": [
+      "amadeus"
+    ],
+    "code": [
+      "(?i)\\b(?:ride[-_]?request|trip[-_]?request|fare[-_]?estimate|pickup[-_]?(?:location|address)|dropoff[-_]?(?:location|address)|driver[-_]?location|booking[-_]?reference|tour[-_]?(?:package|operator))(?![A-Za-z])"
+    ],
+    "hosts": [
+      "tourvisor.ru",
+      "travelpayouts.com",
+      "tp.media",
+      "ostrovok.ru"
+    ],
+    "dom": [
+      "(?i)\\b(?:такси|заказ\\w*\\s+(?:такси|трансфер\\w*)|перевозк\\w+\\s+пассажиров|каршеринг\\w*|трансфер\\w*|турагент\\w*|туроператор\\w*|туристическ\\w+\\s+(?:услуг\\w*|продукт\\w*|агентство)|путёвк\\w+|путевк\\w+|турпродукт\\w*|экскурси\\w+|бронирование\\s+(?:отел\\w+|тур\\w*|авиа\\w*|билет\\w*)|авиабилет\\w*|ж/?д\\s+билет\\w*|taxi|ride[-\\s]?hailing|travel\\s+agen\\w+|tour\\s+operator|tour\\s+package|hotel\\s+booking|airline\\s+tickets?|car[-\\s]?(?:rental|sharing))"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Weak evidence from keywords on page text and identifiers: the field of business is an owner fact (company activity codes, licences). Needs owner confirmation; do not apply sector-only requirements from this signal alone. verify: amadeus (npm and pip) and the travel widget hosts."
+  },
+  {
+    "id": "tech.generative_ai",
+    "title_ru": "Генеративный ИИ",
+    "title_en": "Generative AI",
+    "deps": [
+      "openai",
+      "@anthropic-ai/sdk",
+      "anthropic",
+      "@google/genai",
+      "@google/generative-ai",
+      "google-generativeai",
+      "google-genai",
+      "langchain",
+      "@langchain/openai",
+      "@langchain/anthropic",
+      "@ai-sdk/openai",
+      "@ai-sdk/anthropic",
+      "@ai-sdk/google",
+      "cohere-ai",
+      "cohere",
+      "mistralai",
+      "@mistralai/mistralai",
+      "groq-sdk",
+      "groq",
+      "replicate",
+      "together-ai",
+      "together",
+      "llama-index",
+      "@huggingface/inference",
+      "huggingface_hub",
+      "gigachat",
+      "langchain-gigachat",
+      "yandex-ai-studio-sdk",
+      "yandex-cloud-ml-sdk",
+      "google_generative_ai",
+      "openai_dart",
+      "dart_openai",
+      "com.google.ai.client.generativeai:generativeai",
+      "com.openai:openai-java"
+    ],
+    "code": [
+      "\\bnew\\s+OpenAI\\s*\\(",
+      "\\bopenai\\.(?:chat|responses|images|embeddings|audio|ChatCompletion|Completion)\\b",
+      "\\bchat\\.completions\\.create\\b",
+      "\\b(?:new\\s+Anthropic|anthropic\\.Anthropic|AsyncAnthropic)\\s*\\(",
+      "\\bGoogleGenerativeAI\\s*\\(|\\bgenai\\.(?:GenerativeModel|Client)\\b|\\bGenerativeModel\\s*\\(",
+      "\\bGigaChat(?:Client)?\\s*\\(",
+      "(?i)\\byandex[-_]?gpt\\b",
+      "\\bgpt://[\\w\\-/.]+",
+      "\\b(?:ChatOpenAI|ChatAnthropic|ChatGoogleGenerativeAI|ChatGigaChat)\\b",
+      "\\b(?:gpt-(?:3\\.5|4|5)[\\w.\\-]*|o[134]-(?:mini|preview)|claude-(?:\\d|opus|sonnet|haiku)[\\w.\\-]*|gemini-(?:\\d|pro|flash)[\\w.\\-]*|deepseek-(?:chat|reasoner)|mistral-(?:large|small|medium)[\\w.\\-]*)"
+    ],
+    "hosts": [
+      "api.openai.com",
+      "api.anthropic.com",
+      "generativelanguage.googleapis.com",
+      "aiplatform.googleapis.com",
+      "api.mistral.ai",
+      "api.cohere.ai",
+      "api.cohere.com",
+      "api.groq.com",
+      "api.together.xyz",
+      "api.replicate.com",
+      "openrouter.ai",
+      "api.x.ai",
+      "api.deepseek.com",
+      "api.perplexity.ai",
+      "llm.api.cloud.yandex.net",
+      "gigachat.devices.sberbank.ru",
+      "ngw.devices.sberbank.ru",
+      "api.giga.chat"
+    ],
+    "dom": [
+      "(?i)(?:ИИ-?(?:ассистент|помощник|чат-?бот)\\w*|нейро-?(?:ассистент|помощник)\\w*|\\bAI[-\\s](?:assistant|chatbot|chat)\\b|(?:Спросит\\w*|Спроси|Задайте\\s+вопрос|Задать\\s+вопрос)\\s+(?:у\\s+)?(?:нейросет\\w*|ИИ\\b|ChatGPT|GigaChat|ассистент\\w*)|Чат\\s+с\\s+(?:ИИ\\b|нейросетью|ассистентом)|Powered\\s+by\\s+(?:OpenAI|ChatGPT|GPT-?\\d|GigaChat|YandexGPT|Claude))"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Confirmed: openai, @anthropic-ai/sdk, anthropic, gigachat (default hosts gigachat.devices.sberbank.ru, ngw.devices.sberbank.ru, api.giga.chat), yandex-ai-studio-sdk (YandexGPT). verify: yandex-cloud-ml-sdk (older name), llm.api.cloud.yandex.net, dart_openai and the Gradle coordinates. Local-only inference (ollama, transformers) is not listed because no data leaves the device. Page wording counts only as product UI (an assistant, ask-the-AI, explicit vendor attribution); articles and marketing about neural networks are not matched. Foreign providers are also matched under tech.generative_ai_foreign."
+  },
+  {
+    "id": "tech.generative_ai_foreign",
+    "title_ru": "Иностранные API генеративного ИИ",
+    "title_en": "Foreign generative AI APIs",
+    "deps": [
+      "openai",
+      "@anthropic-ai/sdk",
+      "anthropic",
+      "@google/genai",
+      "@google/generative-ai",
+      "google-generativeai",
+      "google-genai",
+      "@langchain/openai",
+      "@langchain/anthropic",
+      "@ai-sdk/openai",
+      "@ai-sdk/anthropic",
+      "@ai-sdk/google",
+      "cohere-ai",
+      "cohere",
+      "mistralai",
+      "@mistralai/mistralai",
+      "groq-sdk",
+      "groq",
+      "replicate",
+      "together-ai",
+      "together",
+      "@huggingface/inference",
+      "google_generative_ai",
+      "openai_dart",
+      "dart_openai",
+      "com.google.ai.client.generativeai:generativeai",
+      "com.openai:openai-java"
+    ],
+    "code": [
+      "\\bnew\\s+OpenAI\\s*\\(",
+      "\\bopenai\\.(?:chat|responses|images|embeddings|audio|ChatCompletion|Completion)\\b",
+      "\\bchat\\.completions\\.create\\b",
+      "\\b(?:new\\s+Anthropic|anthropic\\.Anthropic|AsyncAnthropic)\\s*\\(",
+      "\\bGoogleGenerativeAI\\s*\\(|\\bgenai\\.(?:GenerativeModel|Client)\\b|\\bGenerativeModel\\s*\\(",
+      "\\b(?:ChatOpenAI|ChatAnthropic|ChatGoogleGenerativeAI)\\b",
+      "\\b(?:gpt-(?:3\\.5|4|5)[\\w.\\-]*|o[134]-(?:mini|preview)|claude-(?:\\d|opus|sonnet|haiku)[\\w.\\-]*|gemini-(?:\\d|pro|flash)[\\w.\\-]*|deepseek-(?:chat|reasoner)|mistral-(?:large|small|medium)[\\w.\\-]*)"
+    ],
+    "hosts": [
+      "api.openai.com",
+      "api.anthropic.com",
+      "generativelanguage.googleapis.com",
+      "aiplatform.googleapis.com",
+      "api.mistral.ai",
+      "api.cohere.ai",
+      "api.cohere.com",
+      "api.groq.com",
+      "api.together.xyz",
+      "api.replicate.com",
+      "openrouter.ai",
+      "api.x.ai",
+      "api.deepseek.com",
+      "api.perplexity.ai"
+    ],
+    "dom": [],
+    "stacks": [
+      "*"
+    ],
+    "notes": "SDKs, client classes, model names and API hosts of foreign providers (OpenAI, Anthropic, Google, Mistral, Cohere, Groq, DeepSeek and others). GigaChat and YandexGPT are domestic and are matched only under tech.generative_ai. The OpenAI SDK can be pointed at another base URL, so the API host is the strongest evidence."
+  },
+  {
+    "id": "tech.recommendations",
+    "title_ru": "Рекомендации и персональная выдача",
+    "title_en": "Recommendations and personalised feeds",
+    "deps": [
+      "implicit",
+      "lightfm",
+      "scikit-surprise",
+      "recbole",
+      "rectools",
+      "tensorflow-recommenders",
+      "recombee-api-client",
+      "@aws-sdk/client-personalize-runtime"
+    ],
+    "code": [
+      "(?i)\\b(?:recommended[-_]?for[-_]?you|personali[sz]ed[-_]?(?:feed|recommendations?)|recommendation[-_]?(?:engine|model|service)|get[-_]?recommendations|collaborative[-_]?filtering)(?![A-Za-z])"
+    ],
+    "hosts": [
+      "cdn.retailrocket.ru",
+      "api.retailrocket.ru"
+    ],
+    "dom": [
+      "(?i)(?:Персональн\\w+\\s+(?:рекомендаци\\w+|подборк\\w+)|Рекомендаци\\w+\\s+(?:товаров|фильмов|сериалов|книг|музыки|треков|курсов|статей|видео|контента)|Подобрали\\s+для\\s+вас|Recommended\\s+for\\s+you|Personali[sz]ed\\s+recommendations)"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Libraries, services and wording of personalised recommendations. A static block of the same products for everyone is not personalisation; the owner confirms whether the feed uses user preferences. verify: recombee-api-client and the Retail Rocket hosts."
+  },
+  {
+    "id": "mobile.app",
+    "title_ru": "Мобильное приложение",
+    "title_en": "Mobile app",
+    "deps": [
+      "react-native",
+      "expo",
+      "flutter",
+      "@capacitor/core",
+      "@capacitor/ios",
+      "@capacitor/android",
+      "@ionic/react",
+      "cordova-android",
+      "cordova-ios",
+      "@nativescript/core",
+      "com.android.application",
+      "androidx.core:core-ktx",
+      "org.jetbrains.kotlin.android"
+    ],
+    "code": [
+      "(?m)^\\s*import\\s+(?:SwiftUI|UIKit)\\b",
+      "@main\\s+struct\\s+\\w+\\s*:\\s*App\\b",
+      "@UIApplicationMain\\b|\\bUIApplicationDelegate\\b|\\bFlutterAppDelegate\\b",
+      "import\\s+[\"']package:flutter/",
+      "\\bAppRegistry\\.registerComponent\\s*\\(|\\bregisterRootComponent\\s*\\(",
+      "\\b(?:ComponentActivity|AppCompatActivity|FlutterActivity)\\b",
+      "android\\.intent\\.action\\.MAIN",
+      "\\b(?:PRODUCT_BUNDLE_IDENTIFIER|CFBundleIdentifier)\\b",
+      "\\bapplicationId\\s*=?\\s*[\"'][\\w.]+[\"']"
+    ],
+    "hosts": [
+      "apps.apple.com",
+      "itunes.apple.com",
+      "play.google.com/store/apps",
+      "appgallery.huawei.com",
+      "apps.rustore.ru",
+      "rustore.ru/catalog/app"
+    ],
+    "dom": [
+      "(?i)<meta\\s+name=[\"']apple-itunes-app[\"']",
+      "(?i)href=[\"']https?://(?:apps\\.apple\\.com|itunes\\.apple\\.com|play\\.google\\.com/store/apps|appgallery\\.huawei\\.com|apps\\.rustore\\.ru|(?:www\\.)?rustore\\.ru/catalog/app)"
+    ],
+    "stacks": [
+      "react-native",
+      "flutter",
+      "swift",
+      "generic-web"
+    ],
+    "notes": "In a repository these signals show the product ships as an app. Store badges and links on a website only show that an app exists; the store listing itself is checked separately."
+  },
+  {
+    "id": "mobile.iap",
+    "title_ru": "Покупки в приложении (IAP)",
+    "title_en": "In-app purchases",
+    "deps": [
+      "react-native-iap",
+      "expo-in-app-purchases",
+      "in_app_purchase",
+      "purchases_flutter",
+      "react-native-purchases",
+      "@revenuecat/purchases-js",
+      "flutter_inapp_purchase",
+      "react-native-adapty",
+      "adapty_flutter",
+      "com.android.billingclient:billing",
+      "com.android.billingclient:billing-ktx",
+      "com.revenuecat.purchases:purchases",
+      "ru.rustore.sdk:billingclient"
+    ],
+    "code": [
+      "(?m)^\\s*import\\s+StoreKit\\b",
+      "\\b(?:SKPaymentQueue|SKProductsRequest)\\b",
+      "\\bProduct\\.products\\(for:|\\bTransaction\\.updates\\b",
+      "\\b(?:BillingClient\\.newBuilder|launchBillingFlow|BillingClient\\.ProductType)\\b",
+      "\\bInAppPurchase\\.instance\\b",
+      "\\bPurchases\\.(?:configure|purchasePackage|purchaseProduct)\\b",
+      "\\b(?:requestSubscription|requestPurchase)\\s*\\(",
+      "\\bRuStoreBillingClient\\w*"
+    ],
+    "hosts": [],
+    "dom": [],
+    "stacks": [
+      "react-native",
+      "flutter",
+      "swift",
+      "generic-web"
+    ],
+    "notes": "verify: ru.rustore.sdk:billingclient, adapty and RevenueCat package names."
+  },
+  {
+    "id": "mobile.att",
+    "title_ru": "Отслеживание и рекламный идентификатор (ATT)",
+    "title_en": "App tracking permission and advertising identifiers (ATT)",
+    "deps": [
+      "expo-tracking-transparency",
+      "react-native-tracking-transparency",
+      "app_tracking_transparency"
+    ],
+    "code": [
+      "\\bATTrackingManager\\b",
+      "\\bNSUserTrackingUsageDescription\\b",
+      "(?m)^\\s*import\\s+AppTrackingTransparency\\b",
+      "\\b(?:ASIdentifierManager|advertisingIdentifier)\\b",
+      "\\brequestTrackingPermissionsAsync\\b",
+      "\\b(?:com\\.google\\.android\\.gms\\.permission\\.AD_ID|AdvertisingIdClient)\\b"
+    ],
+    "hosts": [],
+    "dom": [],
+    "stacks": [
+      "swift",
+      "react-native",
+      "flutter",
+      "generic-web"
+    ]
+  },
+  {
+    "id": "mobile.rustore",
+    "title_ru": "Приложение в RuStore",
+    "title_en": "App in RuStore",
+    "deps": [
+      "ru.rustore.sdk:billingclient",
+      "ru.rustore.sdk:pushclient",
+      "ru.rustore.sdk:review",
+      "ru.rustore.sdk:appupdate",
+      "flutter_rustore_billing",
+      "flutter_rustore_push",
+      "flutter_rustore_review",
+      "flutter_rustore_update"
+    ],
+    "code": [
+      "\\bru\\.rustore\\.sdk\\b",
+      "\\bRuStore(?:Billing|Push|Review|AppUpdate)\\w*\\b"
+    ],
+    "hosts": [
+      "apps.rustore.ru",
+      "rustore.ru/catalog/app"
+    ],
+    "dom": [
+      "(?i)href=[\"']https?://(?:apps\\.rustore\\.ru|(?:www\\.)?rustore\\.ru/catalog/app)"
+    ],
+    "stacks": [
+      "react-native",
+      "flutter",
+      "generic-web"
+    ],
+    "notes": "RuStore SDKs in the app or a link to its RuStore page. verify: the flutter_rustore_* package names."
+  },
+  {
+    "id": "foreign.fonts",
+    "title_ru": "Шрифты с иностранных серверов",
+    "title_en": "Fonts loaded from foreign servers",
+    "deps": [
+      "google_fonts",
+      "webfontloader"
+    ],
+    "code": [
+      "\\bfonts\\.(?:googleapis|gstatic)\\.com\\b",
+      "\\bGoogleFonts\\.\\w+\\s*\\(",
+      "\\bWebFont\\.load\\s*\\(\\s*\\{\\s*google\\b",
+      "\\buse\\.typekit\\.net\\b|\\bTypekit\\.load\\b"
+    ],
+    "hosts": [
+      "fonts.googleapis.com",
+      "fonts.gstatic.com",
+      "use.typekit.net",
+      "p.typekit.net",
+      "fast.fonts.net"
+    ],
+    "dom": [
+      "(?i)<link\\b[^>]{1,300}href=[\"'][^\"']{0,200}fonts\\.googleapis\\.com",
+      "(?i)@import\\s+(?:url\\()?[\"']?https?://fonts\\.googleapis\\.com",
+      "(?i)<link\\b[^>]{1,300}rel=[\"']preconnect[\"'][^>]{1,300}href=[\"']https://fonts\\.(?:googleapis|gstatic)\\.com"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Self-hosted font setups (next/font/google, @fontsource/*, @expo-google-fonts/*) are intentionally not matched: they do not call Google at runtime. The Flutter google_fonts package fetches fonts at runtime unless they are bundled as assets (verify per project)."
+  },
+  {
+    "id": "foreign.captcha",
+    "title_ru": "Иностранная капча (reCAPTCHA, hCaptcha, Turnstile)",
+    "title_en": "Foreign CAPTCHA (reCAPTCHA, hCaptcha, Turnstile)",
+    "deps": [
+      "react-google-recaptcha",
+      "react-google-recaptcha-v3",
+      "@google-cloud/recaptcha-enterprise",
+      "@nestlab/google-recaptcha",
+      "google-recaptcha",
+      "django-recaptcha",
+      "@hcaptcha/react-hcaptcha",
+      "@marsidev/react-turnstile",
+      "react-turnstile",
+      "recaptcha_enterprise_flutter"
+    ],
+    "code": [
+      "\\bgrecaptcha\\.(?:ready|execute|render|getResponse)\\b",
+      "\\bhcaptcha\\.(?:render|execute|getResponse)\\b",
+      "\\bturnstile\\.(?:render|execute|getResponse)\\b",
+      "\\bRECAPTCHA_(?:SITE_KEY|SECRET_KEY|PUBLIC_KEY|PRIVATE_KEY)\\b",
+      "\\b(?:ReCAPTCHA|GoogleReCaptcha\\w*|GoogleRecaptcha\\w*)\\b"
+    ],
+    "hosts": [
+      "www.google.com/recaptcha",
+      "www.recaptcha.net",
+      "www.gstatic.com/recaptcha",
+      "hcaptcha.com",
+      "challenges.cloudflare.com",
+      "js.hcaptcha.com"
+    ],
+    "dom": [
+      "(?i)\\bclass=[\"'][^\"']*\\bg-recaptcha\\b",
+      "(?i)\\bclass=[\"'][^\"']*\\bh-captcha\\b",
+      "(?i)\\bclass=[\"'][^\"']*\\bcf-turnstile\\b"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Yandex SmartCaptcha is a different entry (captcha.smartcaptcha). Local captchas (django-simple-captcha) are not matched. verify: recaptcha_enterprise_flutter and react-turnstile package names."
+  },
+  {
+    "id": "captcha.smartcaptcha",
+    "title_ru": "Яндекс SmartCaptcha",
+    "title_en": "Yandex SmartCaptcha",
+    "deps": [],
+    "code": [
+      "\\bsmartCaptcha\\.(?:render|execute|getResponse|reset)\\b",
+      "\\bsmartcaptcha\\.(?:cloud\\.yandex\\.ru|yandexcloud\\.net)\\b",
+      "\\bSmartCaptcha\\b"
+    ],
+    "hosts": [
+      "smartcaptcha.cloud.yandex.ru",
+      "smartcaptcha.yandexcloud.net",
+      "captcha-api.yandex.ru"
+    ],
+    "dom": [
+      "(?i)\\bclass=[\"'][^\"']*\\bsmart-captcha\\b"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Domestic counterpart of foreign.captcha, listed so a scan can tell reCAPTCHA from SmartCaptcha. Confirmed: window.smartCaptcha.render and the smartcaptcha.cloud.yandex.ru/captcha.js script. verify: captcha-api.yandex.ru (legacy)."
+  },
+  {
+    "id": "foreign.static_cdn",
+    "title_ru": "Библиотеки и стили с иностранных CDN",
+    "title_en": "Libraries and styles from foreign CDNs",
+    "deps": [],
+    "code": [
+      "https?://(?:cdnjs\\.cloudflare\\.com|cdn\\.jsdelivr\\.net|unpkg\\.com|ajax\\.googleapis\\.com|code\\.jquery\\.com|stackpath\\.bootstrapcdn\\.com|maxcdn\\.bootstrapcdn\\.com|cdn\\.tailwindcss\\.com|kit\\.fontawesome\\.com|use\\.fontawesome\\.com)\\b"
+    ],
+    "hosts": [
+      "cdnjs.cloudflare.com",
+      "cdn.jsdelivr.net",
+      "unpkg.com",
+      "ajax.googleapis.com",
+      "code.jquery.com",
+      "stackpath.bootstrapcdn.com",
+      "maxcdn.bootstrapcdn.com",
+      "cdn.tailwindcss.com",
+      "kit.fontawesome.com",
+      "use.fontawesome.com"
+    ],
+    "dom": [
+      "(?i)<(?:script|link)\\b[^>]{1,300}(?:src|href)=[\"'](?:https?:)?//(?:cdnjs\\.cloudflare\\.com|cdn\\.jsdelivr\\.net|unpkg\\.com|ajax\\.googleapis\\.com|code\\.jquery\\.com|stackpath\\.bootstrapcdn\\.com|maxcdn\\.bootstrapcdn\\.com|cdn\\.tailwindcss\\.com|use\\.fontawesome\\.com|kit\\.fontawesome\\.com)"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Scripts, styles and icon fonts loaded from public library CDNs: the visitor's browser sends a request to a foreign server, as with web fonts. No user data is stored there by the product."
+  },
+  {
+    "id": "foreign.cdn_hosting",
+    "title_ru": "Иностранные CDN, хостинг и облачные сервисы",
+    "title_en": "Foreign CDNs, hosting and cloud services",
+    "deps": [
+      "firebase",
+      "firebase-functions",
+      "firebase-admin",
+      "cloud_firestore",
+      "firebase_core",
+      "@react-native-firebase/app",
+      "@supabase/supabase-js",
+      "@vercel/analytics",
+      "@vercel/speed-insights",
+      "@vercel/blob",
+      "@vercel/postgres",
+      "@vercel/kv",
+      "@netlify/functions",
+      "wrangler",
+      "@cloudflare/workers-types",
+      "@aws-sdk/client-s3",
+      "aws-sdk",
+      "boto3",
+      "@google-cloud/storage",
+      "google-cloud-storage",
+      "@azure/storage-blob",
+      "azure-storage-blob",
+      "@neondatabase/serverless",
+      "@planetscale/database",
+      "@upstash/redis"
+    ],
+    "code": [
+      "\\b[\\w-]+\\.(?:supabase\\.co|firebaseio\\.com|firebaseapp\\.com|web\\.app|vercel\\.app|netlify\\.app|herokuapp\\.com|pages\\.dev|workers\\.dev|onrender\\.com|fly\\.dev|railway\\.app|azurewebsites\\.net|azureedge\\.net|cloudfront\\.net|amazonaws\\.com)\\b",
+      "\\bmongodb\\+srv://",
+      "\\bFirebaseApp\\.configure\\s*\\(|\\bFirebase\\.initializeApp\\s*\\("
+    ],
+    "hosts": [
+      "supabase.co",
+      "firebaseio.com",
+      "firebaseapp.com",
+      "web.app",
+      "vercel.app",
+      "netlify.app",
+      "herokuapp.com",
+      "pages.dev",
+      "workers.dev",
+      "onrender.com",
+      "fly.dev",
+      "railway.app",
+      "azurewebsites.net",
+      "azureedge.net",
+      "cloudfront.net",
+      "amazonaws.com",
+      "storage.googleapis.com",
+      "firestore.googleapis.com",
+      "s3.amazonaws.com",
+      "identitytoolkit.googleapis.com"
+    ],
+    "dom": [],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Foreign backend, serverless, backend-as-a-service and object-storage platforms (Firebase, Supabase, Vercel, Netlify, AWS, Azure, Google Cloud). Where the server and database physically sit is an owner fact and cannot be read from code. Library CDNs are matched under foreign.static_cdn."
+  },
+  {
+    "id": "foreign.embeds",
+    "title_ru": "Встраиваемый иностранный контент (видео, карты, формы)",
+    "title_en": "Embedded foreign content (video, maps, forms)",
+    "deps": [
+      "react-youtube",
+      "react-player",
+      "@googlemaps/js-api-loader",
+      "@react-google-maps/api",
+      "google_maps_flutter",
+      "mapbox-gl",
+      "youtube_player_flutter",
+      "react-native-youtube-iframe",
+      "react-native-maps"
+    ],
+    "code": [
+      "\\bgoogle\\.maps\\.(?:Map|Marker|places|Geocoder)\\b",
+      "\\bnew\\s+mapboxgl\\.Map\\b",
+      "\\bYT\\.Player\\s*\\(",
+      "https?://(?:www\\.)?youtube(?:-nocookie)?\\.com/embed/",
+      "https?://player\\.vimeo\\.com/video/",
+      "(?i)\\b(?:typeform\\.com|jotform\\.com|forms\\.gle|docs\\.google\\.com/forms)\\b"
+    ],
+    "hosts": [
+      "www.youtube.com/embed",
+      "www.youtube-nocookie.com/embed",
+      "www.youtube.com/iframe_api",
+      "i.ytimg.com",
+      "img.youtube.com",
+      "player.vimeo.com",
+      "maps.googleapis.com",
+      "maps.google.com",
+      "www.google.com/maps/embed",
+      "api.mapbox.com",
+      "docs.google.com/forms",
+      "forms.gle",
+      "typeform.com",
+      "jotform.com",
+      "tally.so",
+      "airtable.com",
+      "drive.google.com/file",
+      "drive.google.com/uc"
+    ],
+    "dom": [
+      "(?i)<iframe\\b[^>]{1,300}src=[\"'](?:https?:)?//(?:www\\.)?(?:youtube(?:-nocookie)?\\.com/embed|player\\.vimeo\\.com/video|google\\.com/maps/embed|maps\\.google\\.com|docs\\.google\\.com/forms|forms\\.gle|[\\w.-]*typeform\\.com|[\\w.-]*jotform\\.com|tally\\.so|airtable\\.com/embed)"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Each embed is a third-party request from the visitor's browser; embedded form builders (Google Forms, Typeform, Jotform, Tally, Airtable) also collect data in a foreign service. Yandex Maps, Rutube and VK Video embeds are not matched."
+  },
+  {
+    "id": "foreign.data_processors",
+    "title_ru": "Иностранные сервисы, получающие данные пользователей",
+    "title_en": "Foreign services that receive user data",
+    "deps": [
+      "@firebase/analytics",
+      "firebase_analytics",
+      "@react-native-firebase/analytics",
+      "FirebaseAnalytics",
+      "Firebase/Analytics",
+      "com.google.firebase:firebase-analytics",
+      "com.google.firebase:firebase-analytics-ktx",
+      "firebase_crashlytics",
+      "@react-native-firebase/crashlytics",
+      "com.google.firebase:firebase-crashlytics",
+      "firebase_messaging",
+      "@react-native-firebase/messaging",
+      "react-ga",
+      "react-ga4",
+      "vue-gtag",
+      "nuxt-gtag",
+      "@nuxtjs/google-analytics",
+      "gatsby-plugin-google-gtag",
+      "gatsby-plugin-google-analytics",
+      "react-facebook-pixel",
+      "react-tiktok-pixel",
+      "@hotjar/browser",
+      "react-hotjar",
+      "@microsoft/clarity",
+      "mixpanel-browser",
+      "mixpanel-react-native",
+      "mixpanel_flutter",
+      "@amplitude/analytics-browser",
+      "@amplitude/analytics-react-native",
+      "amplitude_flutter",
+      "react-native-appsflyer",
+      "appsflyer_sdk",
+      "AppsFlyerFramework",
+      "com.appsflyer:af-android-sdk",
+      "react-native-adjust",
+      "adjust_sdk",
+      "com.adjust.sdk:adjust-android",
+      "@intercom/messenger-js-sdk",
+      "react-use-intercom",
+      "crisp-sdk-web",
+      "@tawk.to/tawk-messenger-react",
+      "@mailchimp/mailchimp_marketing",
+      "mailchimp-marketing",
+      "mailchimp3",
+      "@sendgrid/mail",
+      "sendgrid",
+      "react-onesignal",
+      "onesignal-node",
+      "onesignal_flutter",
+      "react-native-onesignal",
+      "OneSignalXCFramework",
+      "com.onesignal:OneSignal"
+    ],
+    "code": [
+      "\\bgtag\\(\\s*[\"']config[\"']\\s*,\\s*[\"']G-[A-Z0-9]+",
+      "\\bgetAnalytics\\s*\\(|\\bfirebase\\.analytics\\s*\\(|\\bAnalytics\\.logEvent\\s*\\(",
+      "\\bfbq\\(\\s*[\"']init[\"']",
+      "\\bhj\\(\\s*[\"']|\\b_hjSettings\\b"
+    ],
+    "hosts": [
+      "www.google-analytics.com",
+      "ssl.google-analytics.com",
+      "region1.google-analytics.com",
+      "analytics.google.com",
+      "www.googletagmanager.com/gtag/js",
+      "app-measurement.com",
+      "firebaselogging-pa.googleapis.com",
+      "connect.facebook.net",
+      "analytics.tiktok.com",
+      "static.hotjar.com",
+      "script.hotjar.com",
+      "clarity.ms",
+      "api-js.mixpanel.com",
+      "cdn.mxpnl.com",
+      "cdn.amplitude.com",
+      "api2.amplitude.com",
+      "us.i.posthog.com",
+      "eu.i.posthog.com",
+      "app.posthog.com",
+      "appsflyer.com",
+      "app.adjust.com",
+      "app.adjust.io",
+      "widget.intercom.io",
+      "js.intercomcdn.com",
+      "client.crisp.chat",
+      "embed.tawk.to",
+      "code.tidio.co",
+      "list-manage.com",
+      "chimpstatic.com",
+      "api.sendgrid.com",
+      "onesignal.com",
+      "cdn.onesignal.com",
+      "ingest.sentry.io",
+      "browser.sentry-cdn.com",
+      "cdn.segment.com"
+    ],
+    "dom": [],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Foreign SDKs and services to which the product or the visitor's browser sends personal data: analytics, attribution, crash reporting, session replay, chat, mailing and push providers. Domestic services (Yandex Metrica, AppMetrica, Jivo, Unisender) are not listed. Sentry and Segment are matched by their cloud hosts only, because both can be self-hosted; self-hosted PostHog is matched only by its library, so the owner confirms where the data goes. verify: firebaselogging-pa.googleapis.com."
+  },
+  {
+    "id": "ads.own_site_promo",
+    "title_ru": "Реклама на собственном ресурсе",
+    "title_en": "Advertising on the own site or app (erid, ad blocks)",
+    "deps": [],
+    "code": [
+      "(?i)\\berid[\"']?\\s*[:=]\\s*[\"']?[A-Za-z0-9]{6,}",
+      "[?&]erid=[A-Za-z0-9]{6,}",
+      "\\byandexContextAsyncCallbacks\\b",
+      "\\badsbygoogle\\b",
+      "\\badfoxAsyncParamsCallbacks\\b|\\bYa\\.adfoxCode\\b",
+      "(?i)\\bРеклама\\.\\s*(?:ООО|ИП|АО|ПАО|ЗАО|ОАО)\\b|\\bРекламодатель\\s*[:\\-–—]"
+    ],
+    "hosts": [
+      "yandex.ru/ads/system/context.js",
+      "an.yandex.ru",
+      "adfox.yandex.ru",
+      "yastatic.net/pcode/adfox",
+      "pagead2.googlesyndication.com",
+      "ad.mail.ru",
+      "ads.adfox.ru",
+      "adriver.ru",
+      "ad.adriver.ru"
+    ],
+    "dom": [
+      "(?i)\\berid[\"']?\\s*[:=]\\s*[\"']?[A-Za-z0-9]{6,}",
+      "(?i)[?&]erid=[A-Za-z0-9]{6,}",
+      "(?i)\\bdata-erid=",
+      "(?i)\\bРеклама\\.\\s*(?:ООО|ИП|АО|ПАО|ЗАО|ОАО)\\b|\\bРекламодатель\\s*[:\\-–—]",
+      "(?i)\\bclass=[\"'][^\"']*\\b(?:adsbygoogle|yandex_rtb\\w*|ad-banner|advert\\w*|banner-ad|adfox\\w*)\\b"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Covers both labelled advertising placed by the owner (erid tokens, ad labels) and third-party ad blocks shown on the site. verify: ad.mail.ru, ads.adfox.ru and adriver.ru hosts."
+  },
+  {
+    "id": "content.meta_symbols",
+    "title_ru": "Символика и ссылки Instagram и Facebook",
+    "title_en": "Instagram and Facebook symbols and links",
+    "deps": [
+      "react-instagram-embed"
+    ],
+    "code": [
+      "\\b(?:FaInstagram|FaFacebook\\w*|FiInstagram|FiFacebook|SiInstagram|SiFacebook\\w*|BsInstagram|BsFacebook|AiFillInstagram|AiFillFacebook|AiOutlineInstagram|AiOutlineFacebook|IoLogoInstagram|IoLogoFacebook|RiInstagram\\w*|RiFacebook\\w*|TbBrandInstagram|TbBrandFacebook)\\b",
+      "\\bFontAwesomeIcons\\.(?:instagram|facebook\\w*)\\b",
+      "https?://(?:www\\.)?(?:instagram\\.com|facebook\\.com|fb\\.com|fb\\.me|m\\.me|threads\\.net)/"
+    ],
+    "hosts": [
+      "platform.instagram.com",
+      "instagram.com/embed.js",
+      "www.facebook.com/plugins"
+    ],
+    "dom": [
+      "(?i)href=[\"']https?://(?:www\\.|m\\.)?(?:instagram\\.com|facebook\\.com|fb\\.com|fb\\.me|m\\.me|threads\\.net)\\b",
+      "(?i)\\bclass=[\"'][^\"']*\\b(?:fa-|bi-|icon-|social-|ico-|si-)(?:instagram|facebook)\\b",
+      "(?i)(?:src|href|data-src)=[\"'][^\"']*(?:instagram|facebook|fb)[-_.]?(?:logo|icon)?\\.(?:svg|png|webp)\\b",
+      "(?i)(?<![\\w./@-])(?:Instagram|Facebook|Инстаграм|Фейсбук)(?![\\w-])(?!\\.(?:com|net|me))"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Matches links, logos, icons and plain mentions of Instagram and Facebook. Meta Platforms SDKs and pixels are matched under ads.pixels."
+  },
+  {
+    "id": "content.vpn_mentions",
+    "title_ru": "Упоминания VPN и обхода блокировок",
+    "title_en": "VPN and circumvention mentions",
+    "deps": [],
+    "code": [
+      "\\b(?:NEVPNManager|NETunnelProviderManager|NEPacketTunnelProvider|VpnService)\\b",
+      "(?i)\\b(?:openvpn|wireguard|shadowsocks|v2ray|xray-core|vless|vmess|trojan-go|hysteria2|sing-box)(?![A-Za-z])"
+    ],
+    "hosts": [],
+    "dom": [
+      "(?i)(?:(?:Купить|Подключить|Скачать|Бесплатн\\w+|Быстр\\w+|Лучш\\w+|Наш\\w*|Надёжн\\w+|Надежн\\w+)\\s+VPN\\b|\\bVPN[-\\s](?:сервис|подписк|ключ|для\\s+обхода)\\w*|обход\\w*\\s+(?:блокировк\\w+|ограничени\\w+)|обойти\\s+блокировк\\w+|bypass\\s+(?:censorship|blocking|geo[-\\s]?block\\w*)|анонимайзер\\w*)"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Weak evidence: a mention of VPN in text or a VPN-capable app. Whether the product offers or advertises circumvention is an owner fact. Needs owner confirmation. Generic dev-server proxy settings are deliberately not matched. A plain mention of VPN (for example a corporate VPN for staff) is not matched; only offer and ad wording is."
+  },
+  {
+    "id": "i18n.foreign_language_ui",
+    "title_ru": "Иноязычный интерфейс",
+    "title_en": "Foreign-language interface",
+    "deps": [],
+    "code": [
+      "\\b(?:locales|supportedLngs|supportedLocales|availableLocales|supportedLanguages)\\s*[:=]\\s*(?:const\\s+)?[\\[][^\\]]{0,300}[\"'](?:en|de|fr|es|it|pt|zh|ja|ko|tr|ar|uk|kk|uz|be|az|hy|ka)(?:[-_][A-Za-z]{2})?[\"']",
+      "\\b(?:defaultLocale|fallbackLng|fallbackLocale|defaultLanguage|LANGUAGE_CODE)\\s*[:=]\\s*[\"'](?!ru)[a-z]{2}(?:[-_][A-Za-z]{2})?[\"']",
+      "\\bhreflang=[\"'](?!ru|x-default)[a-z]{2}",
+      "<html\\b[^>]{0,300}\\blang=[\"'](?!ru)[a-z]{2}"
+    ],
+    "hosts": [],
+    "dom": [
+      "(?i)<html\\b[^>]{0,300}\\blang=[\"'](?!ru)[a-z]{2}",
+      "(?i)\\bhreflang=[\"'](?!ru|x-default)[a-z]{2}",
+      "(?i)<a\\b[^>]{0,300}>\\s*(?:English|Deutsch|Français|Español|Italiano|中文|日本語|Türkçe)\\s*</a>"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Weak evidence: locale lists, a non-Russian default language, hreflang alternates or a language switcher. Whether a Russian version exists and is complete is checked in the interface and confirmed with the owner. i18n libraries are not listed because they also serve Russian-only products."
+  }
+]

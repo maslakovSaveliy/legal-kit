@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Мастер-класс</title>
+  <script src="https://widget.cloudpayments.ru/bundles/cloudpayments.js"></script>
+  <script src="https://code.jivo.ru/widget/abc123" async></script>
+  <script>
+    var _tmr = window._tmr || (window._tmr = []);
+    _tmr.push({id: "3333333", type: "pageView", start: (new Date()).getTime()});
+  </script>
+  <script>
+    !function(f,b,e,v,n,t,s){n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+    (window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '123456789');
+  </script>
+</head>
+<body>
+  <button onclick="new cp.CloudPayments().pay('charge', {publicId: 'test', amount: 100, currency: 'RUB'})">Оплатить</button>
+  <iframe src="https://www.youtube.com/embed/abc123" title="video"></iframe>
+  <p class="ad">Реклама. ООО «Ромашка», ИНН 7700000000. erid: 2VtzqwP9nYfAbC</p>
+</body>
+</html>

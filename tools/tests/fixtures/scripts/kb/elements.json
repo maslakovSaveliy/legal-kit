@@ -1,0 +1,54 @@
+[
+ {
+  "template": "tpl-policy",
+  "id": "А1",
+  "section": "А",
+  "text": "Element А1",
+  "status": "обязательно",
+  "qualifier": "",
+  "method": "norm",
+  "norm": "Test-FZ",
+  "requirements": [
+   "ru:t-always"
+  ]
+ },
+ {
+  "template": "tpl-policy",
+  "id": "А2",
+  "section": "А",
+  "text": "Element А2",
+  "status": "рекомендуется",
+  "qualifier": "",
+  "method": "practice",
+  "norm": "Test-FZ",
+  "requirements": [
+   "ru:t-always"
+  ]
+ },
+ {
+  "template": "tpl-policy",
+  "id": "А3",
+  "section": "А",
+  "text": "Element А3",
+  "status": "при условии",
+  "qualifier": "",
+  "method": "norm",
+  "norm": "Test-FZ",
+  "requirements": [
+   "ru:t-analytics"
+  ]
+ },
+ {
+  "template": "tpl-policy",
+  "id": "А4",
+  "section": "А",
+  "text": "Element А4",
+  "status": "обязательно",
+  "qualifier": "",
+  "method": "interpretation",
+  "norm": "Test-FZ",
+  "requirements": [
+   "ru:t-analytics"
+  ]
+ }
+]

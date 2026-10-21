@@ -1,0 +1,13 @@
+[
+{"template":"publichnaya-oferta-tovary","pattern_text":"«Продавец вправе отменить заказ», «цена может быть изменена после оформления заказа», «в случае отсутствия товара заказ аннулируется»","violates":"пп. 1 п. 2 ст. 16; Обзор ВС 2023 пп. 4–5 (условие об отмене при отсутствии товара продавца не защитило)","severity":"violation"},
+{"template":"publichnaya-oferta-tovary","pattern_text":"«Споры рассматриваются по месту нахождения Продавца»","violates":"пп. 2; право выбора суда по п. 2 ст. 17","severity":"violation"},
+{"template":"publichnaya-oferta-tovary","pattern_text":"«Товар надлежащего качества возврату не подлежит», «возврат только в магазине», «возврат возможен после согласования»","violates":"ст. 26.1 п. 4 и порядок КС № 7-П; квалификация как ущемляющего условия — вывод карточек (ч. 2 ст. 14.8 КоАП)","severity":"violation"},
+{"template":"publichnaya-oferta-tovary","pattern_text":"«Продавец не несёт ответственности», «неустойка не взыскивается», «убытки не возмещаются»","violates":"пп. 4, 9","severity":"violation"},
+{"template":"publichnaya-oferta-tovary","pattern_text":"«Обязательный претензионный порядок до обращения в суд»","violates":"пп. 11","severity":"violation"},
+{"template":"publichnaya-oferta-tovary","pattern_text":"«Наценка за оплату картой», «скидка при оплате онлайн» (если есть оплата наличными при получении)","violates":"пп. 7; ст. 16.1 п. 4","severity":"violation"},
+{"template":"publichnaya-oferta-tovary","pattern_text":"«Скидка при оплате через СБП» относительно оплаты картой; «оплата только банковской картой»","violates":"зона риска, а не бесспорное нарушение: разница между безналичными способами — раздел 6.7 (low); наличные «по выбору потребителя» при продаже только онлайн — раздел 6.8","severity":"risk"},
+{"template":"publichnaya-oferta-tovary","pattern_text":"«Покупатель обязан доказать, что недостаток возник до передачи» сверх ст. 18 п. 6","violates":"пп. 12","severity":"violation"},
+{"template":"publichnaya-oferta-tovary","pattern_text":"«Гарантийный ремонт при условии покупки платной услуги»","violates":"пп. 5, 14","severity":"violation"},
+{"template":"publichnaya-oferta-tovary","pattern_text":"Предварительно отмеченная платная опция, «продолжая оформление, вы соглашаетесь на опцию»","violates":"пп. 6, п. 3.1 ст. 16","severity":"violation"},
+{"template":"publichnaya-oferta-tovary","pattern_text":"«Продавец вправе расторгнуть договор в любое время без объяснения причин»","violates":"пп. 8","severity":"violation"}
+]

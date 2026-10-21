@@ -1,0 +1,19 @@
+{
+  "_comment": "Fictitious stub for offline evals (LEGAL_KIT_OFFLINE=1). The organization does not exist.",
+  "status": "ok",
+  "data": {
+    "kind": "ul",
+    "name": "ООО \"Улыбка-тест\"",
+    "inn": "0012345049",
+    "ogrn": "1220000000043",
+    "registered": "2022-07-01",
+    "state": "active",
+    "address": "644000, г. Омск, ул. Тестовая, д. 7",
+    "okved_main": "86.23",
+    "okved_additional": [
+      "47.74"
+    ]
+  },
+  "url": "https://egrul.nalog.ru/",
+  "checked_at": "2026-10-18T09:00:00Z"
+}

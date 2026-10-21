@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "updated": "2026-10-18T09:00:00Z",
+  "product": {
+    "name": "Школа-тест",
+    "summary": "Онлайн-школа: платные курсы, запись и оплата на сайте, доступ к записям занятий, сертификат по итогам. Тестовый стенд, организация вымышлена.",
+    "kinds": ["site"],
+    "urls": ["https://shkola.test"],
+    "stores": {
+      "app_store": null,
+      "google_play": null,
+      "rustore": null,
+      "appgallery": null
+    },
+    "repo": "."
+  },
+  "owner": {
+    "status": "ul",
+    "name": "ООО \"Школа-тест\"",
+    "inn": "0012345031",
+    "ogrn": "1220000000032",
+    "country": "RU",
+    "address": "620000, г. Екатеринбург, ул. Тестовая, д. 5",
+    "email": "info@shkola.test",
+    "phone": "+7 343 000-00-00",
+    "pd_officer": "Соколова Ирина Павловна, директор, privacy@shkola.test",
+    "withheld": []
+  },
+  "audience": {
+    "b2c": true,
+    "b2b": false,
+    "minors": "none",
+    "countries": ["RU"]
+  },
+  "business": {
+    "sectors": ["education"],
+    "revenue_over_20m": false,
+    "rkn_notified": null
+  },
+  "decisions": {
+    "block_counters": true,
+    "apply_changes": true,
+    "commit_legal_dir": false,
+    "consent_at_forms": []
+  },
+  "document_facts": {}
+}

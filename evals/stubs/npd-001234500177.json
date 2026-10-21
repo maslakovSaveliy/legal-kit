@@ -1,0 +1,12 @@
+{
+  "_comment": "Fictitious stub for offline evals (LEGAL_KIT_OFFLINE=1). The organization does not exist. The sole trader is not on the professional income tax regime.",
+  "status": "not_found",
+  "data": {
+    "inn": "001234500177",
+    "date": "2026-10-18",
+    "is_npd": false,
+    "message": "Не является плательщиком налога на профессиональный доход"
+  },
+  "url": "https://npd.nalog.ru/check-status/",
+  "checked_at": "2026-10-18T09:00:00Z"
+}

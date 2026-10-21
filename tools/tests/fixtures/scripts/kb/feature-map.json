@@ -1,0 +1,122 @@
+{
+ "always": [
+  "ru:t-always",
+  "ru:t-ul-only"
+ ],
+ "features": {
+  "analytics.web_counter": [
+   "ru:t-analytics",
+   "ru:t-ios"
+  ],
+  "payments.online": [
+   "ru:t-b2c"
+  ],
+  "ads.future": [
+   "ru:t-future",
+   "ru:t-mixed"
+  ],
+  "clinic.keyword": [
+   "ru:t-medical"
+  ]
+ },
+ "owner_facts": {
+  "subject:npd": [
+   "ru:t-npd-only"
+  ],
+  "b2c": [
+   "ru:t-b2c"
+  ],
+  "minors": [
+   "ru:t-minors"
+  ],
+  "revenue_over_20m": [
+   "ru:t-revenue"
+  ],
+  "domain_ru": [
+   "ru:t-domain-ru"
+  ]
+ },
+ "sectoral": {
+  "medical": {
+   "evidence": [
+    "okved:86",
+    "keywords:clinic"
+   ],
+   "requirements": [
+    "ru:t-medical"
+   ]
+  }
+ },
+ "not_detectable": {
+  "ru:t-offmap": "cannot be seen in code or pages",
+  "ru:t-offmap-npd": "only for self-employed owners",
+  "ru:t-always": "already in always: not a checklist item"
+ },
+ "templates": {
+  "tpl-policy": {
+   "always": true
+  },
+  "tpl-banner": {
+   "features": [
+    "analytics.web_counter"
+   ]
+  },
+  "tpl-medical": {
+   "facts": [
+    "medical"
+   ]
+  },
+  "tpl-npd": {
+   "facts": [
+    "subject:npd"
+   ]
+  },
+  "tpl-ru": {
+   "facts": [
+    "domain_ru"
+   ]
+  },
+  "tpl-never": {
+   "features": [],
+   "facts": []
+  },
+  "tpl-agreement": {
+   "features": [
+    "analytics.web_counter"
+   ],
+   "without": [
+    "payments.online"
+   ]
+  },
+  "tpl-seller": {
+   "always": true,
+   "products": [
+    "site",
+    "webapp"
+   ]
+  }
+ },
+ "documents": {
+  "doc-always": {
+   "always": true
+  },
+  "doc-analytics": {
+   "features": [
+    "analytics.web_counter"
+   ],
+   "without": [
+    "payments.online"
+   ]
+  },
+  "doc-medical": {
+   "facts": [
+    "subject:npd",
+    "revenue_over_20m"
+   ]
+  }
+ },
+ "notes": {
+  "ru:t-always": "Note for tests: applies to everyone",
+  "ru:t-medical": "Only a clinic"
+ }
+}

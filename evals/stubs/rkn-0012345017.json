@@ -1,0 +1,14 @@
+{
+  "_comment": "Fictitious stub for offline evals (LEGAL_KIT_OFFLINE=1). The organization does not exist. Geo-block of the operators registry reproduced: the check is handed to the user.",
+  "status": "manual",
+  "data": {
+    "reason": "geo-block",
+    "detail": "pd.rkn.gov.ru does not answer from outside the Russian Federation",
+    "key": {
+      "inn": "0012345017"
+    },
+    "paste_back": "registration number, date of entry, purposes, cross-border flag, database location"
+  },
+  "url": "https://pd.rkn.gov.ru/operators-registry/operators-list/",
+  "checked_at": "2026-10-18T09:00:00Z"
+}

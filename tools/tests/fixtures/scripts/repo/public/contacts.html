@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="ru">
+<head><title>Контакты</title></head>
+<body>
+<form action="/send" method="post">
+  <input type="email" name="email">
+  <input type="checkbox" name="agree" checked> Согласен с политикой конфиденциальности
+  <button>Отправить</button>
+</form>
+<form action="/subscribe" method="post">
+  <input type="email" name="mail">
+  <input type="checkbox" name="consent" id="c2">
+  <label for="c2">Я согласен на обработку персональных данных</label>
+  <input type="checkbox" name="remember" checked> Запомнить меня
+</form>
+<div data-telegram-login="shop_bot"></div>
+</body>
+</html>

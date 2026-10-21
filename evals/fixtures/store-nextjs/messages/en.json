@@ -1,0 +1,15 @@
+{
+  "footer": {
+    "copyright": "© 2026 Warm Home",
+    "offer": "Offer"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "name": "Your name",
+    "phone": "Phone",
+    "email": "E-mail",
+    "address": "Delivery address",
+    "saveAddress": "Remember the address for next orders",
+    "pay": "Proceed to payment"
+  }
+}

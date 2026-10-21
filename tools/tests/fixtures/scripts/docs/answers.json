@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "updated": "2026-10-18T09:30:00Z",
+  "product": {
+    "name": "Test shop",
+    "summary": null,
+    "kinds": [
+      "site"
+    ],
+    "urls": [
+      "https://shop.example.test"
+    ],
+    "stores": {
+      "app_store": null,
+      "google_play": null,
+      "rustore": null,
+      "appgallery": null
+    },
+    "repo": null
+  },
+  "owner": {
+    "status": "ul",
+    "name": "ООО «Тест-Компания»",
+    "inn": "0098765437",
+    "ogrn": "1020000000008",
+    "country": "RU",
+    "address": null,
+    "email": null,
+    "phone": null,
+    "pd_officer": null
+  },
+  "audience": {
+    "b2c": true,
+    "b2b": false,
+    "minors": "none",
+    "countries": [
+      "RU"
+    ]
+  },
+  "business": {
+    "sectors": [
+      "medical"
+    ],
+    "revenue_over_20m": true,
+    "rkn_notified": null
+  },
+  "decisions": {
+    "block_counters": true,
+    "apply_changes": null,
+    "commit_legal_dir": false
+  }
+}

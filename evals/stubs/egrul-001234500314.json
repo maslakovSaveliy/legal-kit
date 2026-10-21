@@ -1,0 +1,17 @@
+{
+  "_comment": "Fictitious stub for offline evals (LEGAL_KIT_OFFLINE=1). The organization does not exist.",
+  "status": "ok",
+  "data": {
+    "kind": "fl",
+    "name": "ИП Сидорова Мария Тестовна",
+    "inn": "001234500314",
+    "ogrn": "322000000000034",
+    "registered": "2022-08-08",
+    "state": "active",
+    "address": "443000, г. Самара, ул. Тестовая, д. 6",
+    "okved_main": "96.02",
+    "okved_additional": []
+  },
+  "url": "https://egrul.nalog.ru/",
+  "checked_at": "2026-10-18T09:00:00Z"
+}

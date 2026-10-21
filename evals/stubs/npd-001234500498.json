@@ -1,0 +1,12 @@
+{
+  "_comment": "Fictitious stub for offline evals (LEGAL_KIT_OFFLINE=1). The organization does not exist.",
+  "status": "ok",
+  "data": {
+    "inn": "001234500498",
+    "date": "2026-10-18",
+    "is_npd": true,
+    "message": "Является плательщиком налога на профессиональный доход"
+  },
+  "url": "https://npd.nalog.ru/check-status/",
+  "checked_at": "2026-10-18T09:00:00Z"
+}

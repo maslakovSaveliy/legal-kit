@@ -1,0 +1,19 @@
+{
+  "_comment": "Fictitious stub for offline evals (LEGAL_KIT_OFFLINE=1). The organization does not exist.",
+  "status": "ok",
+  "data": {
+    "kind": "ul",
+    "name": "ООО \"Школа-тест\"",
+    "inn": "0012345031",
+    "ogrn": "1220000000032",
+    "registered": "2022-06-10",
+    "state": "active",
+    "address": "620000, г. Екатеринбург, ул. Тестовая, д. 5",
+    "okved_main": "85.41",
+    "okved_additional": [
+      "58.19"
+    ]
+  },
+  "url": "https://egrul.nalog.ru/",
+  "checked_at": "2026-10-18T09:00:00Z"
+}

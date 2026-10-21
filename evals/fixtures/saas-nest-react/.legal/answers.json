@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "updated": "2026-10-18T09:00:00Z",
+  "product": {
+    "name": "Облако — личный ассистент",
+    "summary": "Веб-сервис по подписке: пробный период 14 дней, затем 990 руб. в месяц с автопродлением; ИИ-чат на базе облачной большой языковой модели. Тестовый стенд, организация вымышлена.",
+    "kinds": ["webapp"],
+    "urls": ["https://oblako.test"],
+    "stores": {
+      "app_store": null,
+      "google_play": null,
+      "rustore": null,
+      "appgallery": null
+    },
+    "repo": "."
+  },
+  "owner": {
+    "status": "ul",
+    "name": "ООО \"Облако-тест\"",
+    "inn": "0012345024",
+    "ogrn": "1220000000021",
+    "country": "RU",
+    "address": "630000, г. Новосибирск, ул. Тестовая, д. 3",
+    "email": "support@oblako.test",
+    "phone": "+7 383 000-00-00",
+    "pd_officer": "Кузнецов Андрей Викторович, технический директор, privacy@oblako.test",
+    "withheld": []
+  },
+  "audience": {
+    "b2c": true,
+    "b2b": true,
+    "minors": "none",
+    "countries": ["RU"]
+  },
+  "business": {
+    "sectors": [],
+    "revenue_over_20m": false,
+    "rkn_notified": null
+  },
+  "decisions": {
+    "block_counters": true,
+    "apply_changes": true,
+    "commit_legal_dir": false,
+    "consent_at_forms": []
+  },
+  "document_facts": {}
+}

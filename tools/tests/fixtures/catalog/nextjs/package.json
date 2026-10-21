@@ -1,0 +1,13 @@
+{
+  "name": "shop-demo",
+  "private": true,
+  "dependencies": {
+    "next": "15.0.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "@vkid/sdk": "^2.0.0",
+    "@webzaytsev/yookassa-ts-sdk": "^1.0.0",
+    "@stripe/stripe-js": "^4.0.0",
+    "@anthropic-ai/sdk": "^0.30.0"
+  }
+}

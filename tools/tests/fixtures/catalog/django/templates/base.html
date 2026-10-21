@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}Студия{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+<body>
+  {% block content %}{% endblock %}
+  <form method="post" action="{% url 'lead' %}">
+    {% csrf_token %}
+    <input type="text" name="name">
+    <input type="tel" name="phone">
+    <textarea name="message"></textarea>
+    <div class="g-recaptcha" data-sitekey="site-key"></div>
+    <button>Оставить заявку</button>
+  </form>
+</body>
+</html>

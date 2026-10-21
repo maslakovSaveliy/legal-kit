@@ -1,0 +1,14 @@
+[
+ {
+  "template": "publichnaya-oferta-tovary",
+  "pattern_text": "«Продавец вправе отменить заказ», «цена может быть изменена после оформления заказа»",
+  "violates": "ZoZPP st. 16 p. 2",
+  "severity": "violation"
+ },
+ {
+  "template": "publichnaya-oferta-tovary",
+  "pattern_text": "«Скидка при оплате через СБП» относительно оплаты картой; «оплата только банковской картой»",
+  "violates": "ZoZPP st. 16.1",
+  "severity": "risk"
+ }
+]

@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "Бегом",
+    "slug": "begom-test",
+    "version": "1.2.0",
+    "scheme": "begom",
+    "ios": { "bundleIdentifier": "ru.begomtest.app", "supportsTablet": false },
+    "android": { "package": "ru.begomtest.app" },
+    "plugins": ["expo-router", "expo-notifications"]
+  }
+}

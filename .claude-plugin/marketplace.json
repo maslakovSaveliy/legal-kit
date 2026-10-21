@@ -1,0 +1,14 @@
+{
+  "name": "legal-kit",
+  "description": "Legal setup for websites and apps: audit, documents, consent UI (RU law first)",
+  "owner": {
+    "name": "maslakovSaveliy"
+  },
+  "plugins": [
+    {
+      "name": "legal-kit",
+      "source": "./",
+      "description": "Legal setup for websites and apps: audit, documents, consent UI (RU law first)"
+    }
+  ]
+}

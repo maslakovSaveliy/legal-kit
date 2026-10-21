@@ -1,0 +1,22 @@
+[
+  {"query": "Нужна политика обработки персональных данных и чекбокс согласия в форме заявки на моём Next.js сайте", "should_trigger": true},
+  {"query": "Add a cookie consent banner for Yandex Metrica that blocks the counter until the visitor accepts, for a site with Russian users", "should_trigger": true},
+  {"query": "Составь публичную оферту для интернет-магазина и добавь ссылки на неё в футер", "should_trigger": true},
+  {"query": "Check my website against 152-FZ: do I need to notify Roskomnadzor and which documents are missing?", "should_trigger": true},
+  {"query": "Нужно юридическое оформление мобильного приложения на Flutter для российских пользователей: пользовательское соглашение, политика, согласие на push", "should_trigger": true},
+  {"query": "Generate a privacy policy and terms of use for my SaaS with Russian customers and wire a consent checkbox into the signup form", "should_trigger": true},
+  {"query": "Проверь мой лендинг на соответствие 152-ФЗ и закону о защите прав потребителей, что нужно исправить?", "should_trigger": true},
+  {"query": "Я самозанятый, у меня сайт-визитка. Какие сведения о владельце и какие документы обязательно разместить?", "should_trigger": true},
+  {"query": "I run an online course school in Russia. Which legal documents do I need on the site: offer, refund terms, wording about certificates?", "should_trigger": true},
+  {"query": "Подготовь уведомление в РКН об обработке персональных данных и локальные акты для нашего приложения", "should_trigger": true},
+  {"query": "Fix the CSS so the existing cookie banner no longer overlaps the footer on small screens", "should_trigger": false},
+  {"query": "Write a GDPR privacy policy and a data processing notice for our SaaS that sells only to customers in Germany and France", "should_trigger": false},
+  {"query": "Draft the Terms of Service and a CCPA notice at collection for our US-only mobile app", "should_trigger": false},
+  {"query": "Как самозанятому посчитать налог на профессиональный доход и в какой срок его платить?", "should_trigger": false},
+  {"query": "Set up Google Analytics 4 events for the checkout funnel in our React app", "should_trigger": false},
+  {"query": "Проведи SEO-аудит сайта: мета-теги, sitemap и скорость загрузки страниц", "should_trigger": false},
+  {"query": "Составь договор аренды квартиры в Москве между двумя физлицами и акт приёма-передачи", "should_trigger": false},
+  {"query": "Нужен трудовой договор для разработчика, который работает удалённо из России, с испытательным сроком", "should_trigger": false},
+  {"query": "Баннер cookie на сайте не закрывается в iOS Safari, найди баг в компоненте CookieBanner.tsx", "should_trigger": false},
+  {"query": "Нарисуй макет страницы с тарифами в Figma и сверстай её на Tailwind", "should_trigger": false}
+]

@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "updated": "2026-10-18T09:00:00Z",
+  "product": {
+    "name": "Запись.Мастер для клиники",
+    "summary": "Приложение записи на приём в стоматологическую клинику: онлайн-запись к врачу, предоплата 30% за услугу через ЮKassa, публичные отзывы пациентов с именем и фото. Тестовый стенд, клиника и реквизиты вымышлены.",
+    "kinds": ["ios", "android"],
+    "urls": [],
+    "stores": {
+      "app_store": null,
+      "google_play": null,
+      "rustore": null,
+      "appgallery": null
+    },
+    "repo": "."
+  },
+  "owner": {
+    "status": "ul",
+    "name": "ООО \"Улыбка-тест\"",
+    "inn": "0012345049",
+    "ogrn": "1220000000043",
+    "country": "RU",
+    "address": "644000, г. Омск, ул. Тестовая, д. 7",
+    "email": "clinic@ulybka.test",
+    "phone": "+7 381 000-00-00",
+    "pd_officer": "Лебедев Антон Игоревич, директор, privacy@ulybka.test",
+    "withheld": []
+  },
+  "audience": {
+    "b2c": true,
+    "b2b": false,
+    "minors": "none",
+    "countries": ["RU"]
+  },
+  "business": {
+    "sectors": [],
+    "revenue_over_20m": false,
+    "rkn_notified": null
+  },
+  "decisions": {
+    "block_counters": true,
+    "apply_changes": true,
+    "commit_legal_dir": false,
+    "consent_at_forms": []
+  },
+  "document_facts": {}
+}

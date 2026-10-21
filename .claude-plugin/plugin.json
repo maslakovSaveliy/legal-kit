@@ -1,0 +1,10 @@
+{
+  "name": "legal-kit",
+  "version": "0.1.0",
+  "description": "Legal setup for websites and apps: audit, documents, consent UI (RU law first)",
+  "author": {
+    "name": "maslakovSaveliy"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/maslakovSaveliy/legal-kit"
+}

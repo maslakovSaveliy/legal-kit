@@ -1,0 +1,13 @@
+{
+  "_comment": "Fictitious stub for offline evals (LEGAL_KIT_OFFLINE=1). The organization does not exist.",
+  "status": "ok",
+  "data": {
+    "domain": "ROMASHKA.TEST",
+    "registrar": "TEST-RU",
+    "created": "2022-03-20",
+    "paid-till": "2027-03-20",
+    "state": "REGISTERED, DELEGATED, VERIFIED"
+  },
+  "url": "whois.tcinet.ru:43",
+  "checked_at": "2026-10-18T09:00:00Z"
+}

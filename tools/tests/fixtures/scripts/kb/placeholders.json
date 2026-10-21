@@ -1,0 +1,8 @@
+{
+ "ИНН": {
+  "hint": "x",
+  "templates": [
+   "tpl-policy"
+  ]
+ }
+}

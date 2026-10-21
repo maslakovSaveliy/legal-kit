@@ -1,0 +1,84 @@
+[
+ {
+  "id": "analytics.web_counter",
+  "title_ru": "Счётчик посещаемости",
+  "title_en": "Web counter",
+  "deps": [
+   "react-yandex-metrika"
+  ],
+  "code": [
+   "\\bym\\("
+  ],
+  "hosts": [
+   "mc.yandex.ru"
+  ],
+  "dom": [
+   "data-ym-id"
+  ],
+  "stacks": [
+   "*"
+  ]
+ },
+ {
+  "id": "analytics.app_sdk",
+  "title_ru": "SDK аналитики",
+  "title_en": "App analytics SDK",
+  "deps": [
+   "appmetrica_plugin",
+   "@appmetrica/react-native-analytics"
+  ],
+  "code": [
+   "AppMetrica\\.activate"
+  ],
+  "hosts": [],
+  "dom": [],
+  "stacks": [
+   "flutter",
+   "react-native"
+  ]
+ },
+ {
+  "id": "auth.telegram_login",
+  "title_ru": "Вход через Telegram",
+  "title_en": "Telegram login",
+  "deps": [],
+  "code": [],
+  "hosts": [
+   "telegram.org/js/telegram-widget.js"
+  ],
+  "dom": [
+   "data-telegram-login"
+  ],
+  "stacks": [
+   "*"
+  ]
+ },
+ {
+  "id": "sector.education_test",
+  "title_ru": "Образование",
+  "title_en": "Education",
+  "deps": [],
+  "code": [
+   "лицензия на образовательную деятельность"
+  ],
+  "hosts": [],
+  "dom": [],
+  "stacks": [
+   "*"
+  ]
+ },
+ {
+  "id": "payments.broken_regex",
+  "title_ru": "x",
+  "title_en": "x",
+  "deps": [],
+  "code": [
+   "(unclosed"
+  ],
+  "hosts": [],
+  "dom": [],
+  "stacks": [
+   "*"
+  ]
+ }
+]
