@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Tooling
+
+- GitHub Actions: tests (with the leak check), script `--help` and the golden `check_run` on Python 3.9 and 3.13 for every push to main and every PR.
+- Tests run on Python 3.9: explicit ids for the registry failure cases; the stdlib-list check skips below 3.10.
+
 ## [0.2.0] - 2026-10-28
 
 Bots as a product, plan and feature modes, rules library.
