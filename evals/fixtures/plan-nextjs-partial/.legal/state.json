@@ -1,0 +1,14 @@
+{
+  "managed": [
+    {
+      "path": ".legal/RULES.md",
+      "sha256": "e5905478e9b06e9254f18fdba12ec4c22e203f9e01d906e8d5f176eab161e025",
+      "kind": "rules"
+    },
+    {
+      "path": "CLAUDE.md",
+      "sha256": "192b3bc129285fa59993a7c16980b568c021c0e0c72779d4702131ca6f3c86b4",
+      "kind": "agent-link"
+    }
+  ]
+}
