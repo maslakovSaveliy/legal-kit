@@ -254,6 +254,26 @@
         "No requisite (INN, OGRN, address, phone, e-mail) is invented: every value in a page or draft comes from `.legal/answers.json`, the prompt, the site itself or a registry answer.",
         "Nothing is committed or pushed: `git log` in the working copy still shows only the baseline commit and `git status` lists the edits as uncommitted; the skill worked on the clean baseline tree it was given."
       ]
+    },
+    {
+      "id": 12,
+      "prompt": "Это Telegram-бот нашего магазина (aiogram, код в текущей папке): каталог, оплата через ЮKassa прямо в чате и электронная книга за Telegram Stars. Оформи юридическую часть бота по праву РФ. Не коммить.",
+      "expected_output": "Setup: copy the listed fixture into a clean working directory and run `git init`, `git add -A` and `git commit -m baseline` there (a throwaway copy, so the tree is clean before the run). Run the prompt in that directory with LEGAL_KIT_OFFLINE=1 and LEGAL_KIT_STUBS pointing at evals/stubs (registries answer from stubs). Outcome: the bot is treated as product kind `bot`; the report applies the bot requirements (documents and consent in the chat, the receipt for in-chat payments, personal data received through a foreign messenger) and the Telegram platform rules as platform rules; the start handler asks for consent before the phone number, with offer acceptance and consent as two separate actions.",
+      "files": [
+        "evals/fixtures/bot-aiogram-shop",
+        "evals/stubs"
+      ],
+      "expectations": [
+        "`python3 evals/check_run.py <run dir>` exits 0: `report.py verify .legal/report.json` passes and `check_docs.py` finds no blocking issue in public files.",
+        "Consent before data: after the run `handlers/start.py` no longer sends the `request_contact` keyboard on `/start`; the phone is requested only after a separate consent action (inline button or equivalent) whose text links to the privacy policy, and accepting the offer is a different action from the personal-data consent (`ru:dokumenty-i-soglasiya-v-chat-bote`, `ru:soglasie-na-obrabotku-pdn`).",
+        "Receipt contact before the provider invoice: the RUB invoice in `handlers/checkout.py` asks for an e-mail or phone for the receipt (`need_email` or `need_phone_number`, sent to the provider when the provider builds the receipt), and the report cites `ru:oplata-v-chat-bote-i-chek` and `ru:onlayn-kkt-i-elektronnyy-chek` with evidence at `handlers/checkout.py`.",
+        "Telegram Stars is not presented as settled law: rows about the `XTR` invoice (`ru:oplata-v-chat-bote-i-chek`, `ru:zapret-oplaty-cifrovoy-valyutoy`) are `interpretation` or sit in «Спорно», never `mandatory`.",
+        "Platform rules are platform rules: every `pravila-platform-botov-*` row has `basis` `platform` and level `recommended` or `interpretation`; no `pravila-storov-*` row appears (no iOS or Android product).",
+        "Personal data through a foreign messenger is not called a ban: `ru:pdn-pri-sbore-cherez-inostrannyy-messendzher` is `interpretation` or `disputed`, never `mandatory`; customers' phone numbers stay in the bot's own database (`storage.py`).",
+        "Documents are reachable from the bot: a command or menu button answers with links to the policy and the offer (the pages themselves are drafts or `.legal/paste/html/` with a hosting TODO, because the bot has no website).",
+        "Requisites come only from `.legal/answers.json` (ООО «Ромашка-тест», ИНН 0012345017); no invented requisites and no `{{…}}` placeholder in files the run changed.",
+        "Nothing is committed (the baseline commit stays the last commit) and no dependency is added to `requirements.txt`."
+      ]
     }
   ]
 }

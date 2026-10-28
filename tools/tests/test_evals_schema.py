@@ -467,7 +467,8 @@ def test_answers_withheld_and_document_facts_have_their_types(path):
 
 def test_answers_fixtures_exist_for_every_fixture_except_the_two_without():
     expected = {"landing-static", "landing-injection", "store-nextjs", "saas-nest-react", "mobile-expo",
-                "courses-django", "services-flutter", "services-flutter-dentistry", "shop-swift"}
+                "courses-django", "services-flutter", "services-flutter-dentistry", "shop-swift",
+                "bot-aiogram-shop"}
     assert {p.parts[-3] for p in ANSWER_FILES} == expected
     assert not (FIXTURES / "landing-minimal" / ".legal").exists()
 
@@ -557,7 +558,7 @@ def test_expected_fixture_directories_exist():
     assert {p.name for p in FIXTURE_DIRS} == {
         "landing-static", "landing-injection", "landing-minimal", "store-nextjs", "saas-nest-react",
         "mobile-expo", "mobile-expo-store-page", "courses-django", "services-flutter",
-        "services-flutter-dentistry", "shop-swift",
+        "services-flutter-dentistry", "shop-swift", "bot-aiogram-shop",
     }
 
 
