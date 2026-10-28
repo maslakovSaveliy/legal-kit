@@ -2,7 +2,7 @@
 id: ru:postavshchiki-analitiki-i-sdk
 title: "Поставщики аналитики и SDK: поручение обработки, локализация и трансграничная передача"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["152-ФЗ ст. 3 п. 2", "152-ФЗ ст. 6 ч. 3, 4, 5, 6", "152-ФЗ ст. 18 ч. 5", "152-ФЗ ст. 12 ч. 2, 3, 5, 10, 11", "266-ФЗ от 14.07.2022 ст. 1 п. 3", "23-ФЗ от 28.02.2025 ст. 1 п. 2"]
 effective_from: mixed
 checked: 2026-09-29

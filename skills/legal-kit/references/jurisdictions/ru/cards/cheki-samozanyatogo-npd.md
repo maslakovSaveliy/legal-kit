@@ -2,7 +2,7 @@
 id: ru:cheki-samozanyatogo-npd
 title: "Чеки самозанятого (НПД) при онлайн-оплате через «Мой налог»"
 category: concept
-updated: 2026-09-30
+updated: 2026-10-23
 verified: 2026-09-30
 legal_confidence: high
 volatility: warm
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [npd]
 models: [b2c, b2b]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["422-ФЗ ст. 14 ч. 1–7", "422-ФЗ ст. 7 ч. 1–2", "422-ФЗ ст. 1 ч. 2", "54-ФЗ ст. 2 п. 2.2", "НК РФ ст. 129.13"]
 effective_from: 2019-01-01
 checked: 2026-09-30

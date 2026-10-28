@@ -2,7 +2,7 @@
 id: ru:edinaya-cena-nezavisimo-ot-sposoba-oplaty
 title: "Единая цена независимо от способа оплаты и от рассрочки (ЗоЗПП ст. 16.1 п. 4, 4.1)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-09-30
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: general
 source_kind: law
 subjects: [ul, ip, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ЗоЗПП ст. 16.1 п. 4", "ЗоЗПП ст. 16.1 п. 4.1", "284-ФЗ от 31.07.2025 ст. 1, ст. 4 ч. 1–2", "КоАП ст. 14.8 ч. 4 (применимость — вывод)"]
 effective_from: mixed
 checked: 2026-09-30

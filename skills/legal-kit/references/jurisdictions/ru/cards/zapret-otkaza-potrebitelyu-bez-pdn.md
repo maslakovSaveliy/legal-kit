@@ -2,7 +2,7 @@
 id: ru:zapret-otkaza-potrebitelyu-bez-pdn
 title: "Запрет отказывать потребителю из-за отказа предоставить ПДн (ЗоЗПП ст. 16 п. 4)"
 category: concept
-updated: 2026-09-29
+updated: 2026-10-23
 verified: 2026-09-29
 legal_confidence: high
 volatility: warm
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ЗоЗПП ст. 16 п. 4 (ред. 135-ФЗ)", "152-ФЗ ст. 18 ч. 2", "152-ФЗ ст. 6 ч. 1 п. 5"]
 effective_from: 2022-09-01
 checked: 2026-09-29

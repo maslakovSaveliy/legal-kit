@@ -2,7 +2,7 @@
 id: ru:otchisleniya-3-s-internet-reklamy
 title: "Обязательные отчисления 3 % с дохода от интернет-рекламы (38-ФЗ ст. 18.2; ПП № 1224)"
 category: concept
-updated: 2026-09-30
+updated: 2026-10-23
 verified: 2026-09-30
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["38-ФЗ ст. 18.2 ч. 1, 3–8, 10–13", "ПП РФ от 15.08.2025 № 1224", "ПП РФ от 24.07.2025 № 1087", "КоАП ст. 14.3 ч. 15"]
 effective_from: 2025-04-01
 checked: 2026-09-30

@@ -2,7 +2,7 @@
 id: ru:chto-schitaetsya-reklamoy-na-svoem-resurse
 title: "Что считается рекламой на собственном сайте и в приложении (38-ФЗ ст. 3 п. 1, ст. 2 ч. 2 п. 3; позиции ФАС и РКН)"
 category: concept
-updated: 2026-09-30
+updated: 2026-10-23
 verified: 2026-09-30
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: regulator
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["38-ФЗ ст. 3 п. 1, 5, 7", "38-ФЗ ст. 2 ч. 2 п. 3", "ПП РФ от 24.07.2025 № 1087", "Приказ ФАС от 14.11.2023 № 821/23, п. 3, 9"]
 effective_from: mixed
 checked: 2026-09-30

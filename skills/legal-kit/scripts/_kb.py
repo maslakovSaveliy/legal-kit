@@ -43,7 +43,7 @@ PLATFORM_DOMAINS = ("developer.apple.com", "support.google.com", "rustore.ru", "
 
 SUBJECTS = ("ul", "ip", "npd", "foreign")
 MODELS = ("b2b", "b2c")
-PRODUCTS = ("site", "webapp", "ios", "android")
+PRODUCTS = ("site", "webapp", "ios", "android", "bot")
 DEFAULT_KB = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "references",
                           "jurisdictions", "ru")
 DEFAULT_CATALOG = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "references", "features",

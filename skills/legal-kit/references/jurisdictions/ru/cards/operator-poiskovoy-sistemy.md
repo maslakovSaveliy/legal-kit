@@ -2,7 +2,7 @@
 id: ru:operator-poiskovoy-sistemy
 title: "Оператор поисковой системы: «право на забвение» (149-ФЗ ст. 2 п. 20, ст. 10.3)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: warm
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["149-ФЗ ст. 2 п. 20", "149-ФЗ ст. 10.3 ч. 1–8", "158-ФЗ ст. 1 п. 1, ст. 3 ч. 2", "ГПК ст. 402 ч. 3 п. 11, ст. 29 ч. 6.2", "КоАП ст. 17.15 ч. 1.1, 3"]
 effective_from: mixed
 checked: 2026-10-01

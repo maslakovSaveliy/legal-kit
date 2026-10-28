@@ -2,7 +2,7 @@
 id: ru:avtospisaniya-po-podpiskam
 title: "Запрет автосписаний по онлайн-подписке после отказа потребителя от платёжных реквизитов (ЗоЗПП ст. 16.1 п. 4.2)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ЗоЗПП ст. 16.1 п. 4.2", "376-ФЗ от 15.10.2025 ст. 1, 2", "ГК РФ ст. 429.4", "КоАП ст. 14.8 ч. 4 (применимость не подтверждена)", "Положение Банка России от 03.12.2025 № 876-П, п. 1.2, 3.14, прил. 1 п. 10.2, 24 (адресовано банкам)", "Единые правила Союзного государства (Декрет ВГС от 06.12.2024 № 6), ст. 43 — прямое действие в РФ не установлено"]
 effective_from: 2026-03-01
 checked: 2026-10-16

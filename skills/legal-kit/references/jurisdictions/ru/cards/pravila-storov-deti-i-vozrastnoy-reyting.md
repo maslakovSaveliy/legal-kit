@@ -2,7 +2,7 @@
 id: ru:pravila-storov-deti-i-vozrastnoy-reyting
 title: "Правила сторов о детях и возрастном рейтинге: шкалы Apple, Google Play, RuStore и AppGallery, детские категории, реклама и SDK"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -74,6 +74,7 @@ summary: "Правила магазинов приложений, не зако�
 - **Кому.** Любой издатель в соответствующем сторе. Рейтинг — всем приложениям; разделы B и C — если дети входят в целевую или фактическую аудиторию (Google — и при смешанной аудитории); раздел D — по функциям.
 - **Продукты.** iOS (Apple), Android (Google Play, RuStore, AppGallery).
 - **Даты.** Apple Guidelines — «Last Updated: June 8, 2026»; справка Apple о рейтингах — без даты, значения для ОС версии 26 и новее. Google и RuStore — даты не указаны. AppGallery: раздел 1 — V2 (2026-01-07), раздел 8 — V5 (2026-09-28), FAQ 50142 — V2 (2024-09-09). Снято 2026-10-01.
+- **Применимость к боту:** нет — это правила магазинов приложений (App Store, Google Play, RuStore, AppGallery); бот и Mini App внутри мессенджера в магазин не подаются, правила платформы мессенджера — отдельный слой.
 
 ## Исключения
 

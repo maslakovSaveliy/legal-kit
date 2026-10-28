@@ -2,7 +2,7 @@
 id: ru:dostupnost-dlya-invalidov-obshchie-normy-181-fz
 title: "Доступность для инвалидов: общие нормы 181-ФЗ и их применимость к цифровым продуктам"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: general
 source_kind: law
 subjects: [ul]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["181-ФЗ ст. 15 ч. 1 пп. 1, 2, 5, 8", "181-ФЗ ст. 15 ч. 2, 3, 4, 5", "181-ФЗ ст. 14 ч. 1", "181-ФЗ ст. 3.1", "181-ФЗ ст. 15.1, 16", "419-ФЗ ст. 26 ч. 1, 3", "552-ФЗ ст. 2, 3", "КоАП ст. 9.13", "КоАП ст. 5.62", "Приказ Минздрава от 14.04.2025 № 210н п. 1, 2", "Приказ Минпросвещения от 31.03.2025 № 253, Порядок п. 1, п. 4 пп. 2", "Приказ Минобрнауки от 25.04.2025 № 384, Порядок п. 1, п. 4 пп. 2"]
 effective_from: mixed
 checked: 2026-10-01

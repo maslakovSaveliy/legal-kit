@@ -2,7 +2,7 @@
 id: ru:dogovor-uslug-informaciya-sroki-nedostatki
 title: "Договор оказания услуг и выполнения работ: информация, сроки, недостатки"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: general
 source_kind: law
 subjects: [ul, ip, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ЗоЗПП ст. 8–10, 12 п. 1 (информация)", "ЗоЗПП ст. 27, 28, 29, 30, 31, 33, 36, 37, 39, 39.1 (ред. от 01.10.2026, 290-ФЗ)", "ЗоЗПП ст. 29 п. 7 (290-ФЗ, с 01.10.2026)", "ГК ст. 730, 732, 735, 737, 739, 779–783", "ПП РФ от 21.09.2020 № 1514, Правила пп. 1–4, 9, 11 (действует до 01.01.2027)", "Пленум ВС РФ от 28.06.2012 № 17, пп. 2, 28, 31, 32 «б», «в», 34"]
 effective_from: mixed
 checked: 2026-10-16

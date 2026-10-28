@@ -2,7 +2,7 @@
 id: ru:reklama-finansovyh-uslug-i-kreditov
 title: "Реклама финансовых услуг и потребительских кредитов: наименование, ПСК, обязательные предупреждения, запрет рекламы нелицензированных (38-ФЗ ст. 28)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: high
 volatility: warm
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["38-ФЗ ст. 28 ч. 1, 2, 2.1, 3, 3.1, 3.2, 5.1–5.3, 13–15", "39-ФЗ ст. 6.1 п. 2 (в связке с ч. 14 ст. 28)", "38-ФЗ ст. 2 ч. 1, ч. 2 п. 2–3", "38-ФЗ ст. 38 ч. 6, 7", "479-ФЗ ст. 1 п. 5, 7, ст. 4 ч. 2, 5", "КоАП ст. 14.3 ч. 1, 6"]
 effective_from: mixed
 checked: 2026-10-01

@@ -2,7 +2,7 @@
 id: ru:prava-na-kontent-i-po-vladelca
 title: "Возникновение прав владельца на собственный контент, программу, сайт и базу данных (ГК РФ ст. 1228, 1259–1261, 1270, 1271)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: general
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ГК РФ ст. 1225 п. 1 подп. 1–3", "ГК РФ ст. 1226", "ГК РФ ст. 1228 пп. 1–3", "ГК РФ ст. 1229 п. 1", "ГК РФ ст. 1257", "ГК РФ ст. 1259 пп. 1–7", "ГК РФ ст. 1260 пп. 2–4, 6", "ГК РФ ст. 1261", "ГК РФ ст. 1270 п. 2 подп. 1, 9, 11, п. 3", "ГК РФ ст. 1271", "ГК РФ ст. 1231 п. 1", "ГК РФ ст. 1256 п. 1", "296-ФЗ ст. 1 п. 1, ст. 2", "Пленум ВС РФ от 23.04.2019 № 10 пп. 80, 81, 87, 89, 109"]
 effective_from: mixed
 checked: 2026-10-01

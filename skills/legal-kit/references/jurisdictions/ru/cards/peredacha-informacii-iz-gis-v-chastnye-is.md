@@ -2,7 +2,7 @@
 id: ru:peredacha-informacii-iz-gis-v-chastnye-is
 title: "Передача информации из ГИС в частные информационные системы"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip]
 models: [b2b, b2c]
-products: [site, webapp]
+products: [site, webapp, bot]
 acts: ["149-ФЗ ст. 14 ч. 8.1", "216-ФЗ ст. 1 п. 3, ст. 5 ч. 1", "Приказ ФСТЭК от 11.04.2025 № 117, п. 2", "149-ФЗ ст. 16 ч. 3–5"]
 effective_from: mixed
 checked: 2026-09-30

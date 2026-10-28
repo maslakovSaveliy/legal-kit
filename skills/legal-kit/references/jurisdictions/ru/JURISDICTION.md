@@ -26,7 +26,7 @@ The pack follows the contract in [../README.md](../README.md).
 
 ## Scope
 
-Requirements for websites, web apps and mobile apps (iOS, Android) owned by a Russian legal entity, an individual entrepreneur, a self-employed person (НПД) or a foreign owner serving users in Russia. Requirement records are grouped into directions:
+Requirements for websites, web apps, mobile apps (iOS, Android) and bots or mini apps in messengers (Telegram, MAX; product kind `bot`) owned by a Russian legal entity, an individual entrepreneur, a self-employed person (НПД) or a foreign owner serving users in Russia. Requirement records are grouped into directions:
 
 | Direction | Topic |
 |---|---|
@@ -44,6 +44,7 @@ Requirements for websites, web apps and mobile apps (iOS, Android) owned by a Ru
 | L | App stores and preinstallation |
 | M | Rights to content and software |
 | N | New technologies (AI and experimental regimes) |
+| O | Bots and mini apps in messengers (Telegram, MAX) |
 
 Each requirement record carries the owner statuses it applies to (`ul`, `ip`, `npd`, `foreign`), business models (`b2b`, `b2c`), product kinds (`site`, `webapp`, `ios`, `android`), obligation (`general`, `conditional`, `sectoral`) and norm dates. Applicability is decided per record, never per direction.
 

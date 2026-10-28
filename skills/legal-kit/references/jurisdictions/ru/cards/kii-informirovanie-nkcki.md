@@ -2,7 +2,7 @@
 id: ru:kii-informirovanie-nkcki
 title: "Информирование НКЦКИ об атаках и инцидентах на объектах КИИ (187-ФЗ ст. 9 ч. 2; приказ ФСБ № 547)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: sectoral
 source_kind: law
 subjects: [ul]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["187-ФЗ ст. 9 ч. 2 пп. 1–3 (ред. 58-ФЗ)", "187-ФЗ ст. 9 ч. 3 пп. 3, 7 (ред. 58-ФЗ)", "187-ФЗ ст. 6 ч. 4 п. 6 (ред. 58-ФЗ)", "Приказ ФСБ от 25.12.2025 № 547 пп. 2, 3", "Порядок (приказ ФСБ № 547) пп. 1–11, 14", "КоАП ст. 13.12.1 ч. 2", "КоАП ст. 19.7.15 ч. 2"]
 effective_from: mixed
 checked: 2026-09-30

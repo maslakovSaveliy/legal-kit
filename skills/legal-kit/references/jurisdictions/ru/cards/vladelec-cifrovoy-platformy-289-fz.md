@@ -2,7 +2,7 @@
 id: ru:vladelec-cifrovoy-platformy-289-fz
 title: "Общие обязанности владельца цифровой платформы (289-ФЗ ст. 4 ч. 1)"
 category: concept
-updated: 2026-10-11
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["289-ФЗ ст. 4 ч. 1 пп. 1–4", "289-ФЗ ст. 2 пп. 2–3", "289-ФЗ ст. 1 ч. 1, 3–4", "289-ФЗ ст. 21", "289-ФЗ ст. 23 ч. 1", "ПП РФ от 02.07.2026 № 820 п. 2–3"]
 effective_from: 2026-10-01
 checked: 2026-10-01

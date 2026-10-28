@@ -2,7 +2,7 @@
 id: ru:uvedomlenie-rkn-ob-obrabotke-pdn
 title: "Уведомление РКН о намерении обрабатывать персональные данные"
 category: concept
-updated: 2026-09-29
+updated: 2026-10-23
 verified: 2026-09-29
 legal_confidence: high
 volatility: warm
@@ -10,7 +10,7 @@ obligation: general
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["152-ФЗ ст. 22 ч. 1, 2, 3, 3.1, 7, 8", "Приказ РКН от 28.10.2022 № 180"]
 effective_from: mixed
 checked: 2026-09-29

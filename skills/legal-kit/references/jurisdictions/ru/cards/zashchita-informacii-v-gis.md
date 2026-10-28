@@ -2,7 +2,7 @@
 id: ru:zashchita-informacii-v-gis
 title: "Защита информации в ГИС и иных ИС госорганов, ГУП и госучреждений (приказ ФСТЭК № 117)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: sectoral
 source_kind: bylaw
 subjects: [ul]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["149-ФЗ ст. 16 ч. 5", "149-ФЗ ст. 13 ч. 2, 2.2, 5.1", "149-ФЗ ст. 14 ч. 5, 5.1", "Приказ ФСТЭК от 11.04.2025 № 117", "Приказ ФСТЭК от 08.05.2026 № 137", "КоАП ст. 13.12 ч. 2, 6"]
 effective_from: mixed
 checked: 2026-09-30

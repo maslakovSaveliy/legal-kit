@@ -2,7 +2,7 @@
 id: ru:sankcii-v-oblasti-kii
 title: "Санкции в области КИИ: КоАП ст. 13.12.1, 13.12.2, 19.7.15"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: sectoral
 source_kind: law
 subjects: [ul]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["КоАП ст. 13.12.1 ч. 1–3", "КоАП ст. 13.12.2", "КоАП ст. 19.7.15 ч. 1–3", "КоАП ст. 23.90 ч. 1", "КоАП ст. 23.91 ч. 1", "141-ФЗ ст. 2", "77-ФЗ от 09.04.2026", "518-ФЗ от 19.12.2022"]
 effective_from: mixed
 checked: 2026-09-30

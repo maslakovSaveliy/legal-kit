@@ -2,7 +2,7 @@
 id: ru:zashchita-pdn-urovni-i-mery
 title: "Защита ПДн: меры безопасности по ст. 19 152-ФЗ и уровни защищённости по ПП № 1119"
 category: concept
-updated: 2026-09-30
+updated: 2026-10-23
 verified: 2026-09-30
 legal_confidence: medium
 volatility: warm
@@ -10,7 +10,7 @@ obligation: general
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["152-ФЗ ст. 19 ч. 1–4, 11", "ПП РФ от 01.11.2012 № 1119", "Приказ ФСТЭК от 18.02.2013 № 21 (ред. от 14.05.2020 № 68) пп. 2–4, 6–13", "Приказ ФСТЭК от 23.03.2017 № 49", "Приказ ФСБ от 10.07.2014 № 378 пп. 2–26"]
 effective_from: mixed
 checked: 2026-09-30

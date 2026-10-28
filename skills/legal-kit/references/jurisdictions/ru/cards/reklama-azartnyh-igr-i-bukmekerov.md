@@ -2,7 +2,7 @@
 id: ru:reklama-azartnyh-igr-i-bukmekerov
 title: "Реклама азартных игр, пари и букмекеров: запреты содержания, предупреждение о зависимости 7 %, места размещения в интернете, запрет рекламы лицам из перечня самоограничения (38-ФЗ ст. 27)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["38-ФЗ ст. 27 ч. 1, 1.1, 2, 2.2 пп. 1–4, 3, 4, 4.1, 5, 6", "38-ФЗ ст. 7 пп. 1, 7", "38-ФЗ ст. 38 ч. 6–7", "41-ФЗ от 20.02.2026 ст. 1, 3", "575-ФЗ ст. 1", "КоАП ст. 14.3 ч. 1"]
 effective_from: mixed
 checked: 2026-10-01

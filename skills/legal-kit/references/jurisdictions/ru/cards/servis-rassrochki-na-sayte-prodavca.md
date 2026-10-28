@@ -2,7 +2,7 @@
 id: ru:servis-rassrochki-na-sayte-prodavca
 title: "Кнопка «оплатить частями» у продавца или маркетплейса: оператор из реестра, доступ к правилам сервиса, единая цена (283-ФЗ ст. 3, 12 ч. 6; ЗоЗПП ст. 16.1 п. 4.1)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["283-ФЗ (2025) ст. 3 ч. 2, 6", "283-ФЗ (2025) ст. 12 ч. 6", "283-ФЗ (2025) ст. 14 ч. 1 п. 8", "ЗоЗПП ст. 16.1 п. 4.1 (284-ФЗ)", "ЗоЗПП ст. 10 п. 2", "353-ФЗ ст. 5 ч. 6", "353-ФЗ ст. 7 ч. 9.5 п. 5"]
 effective_from: mixed
 checked: 2026-10-01

@@ -2,7 +2,7 @@
 id: ru:razrabotchik-suverennoy-nacionalnoy-modeli-ii
 title: "Разработчик суверенной или национальной большой модели ИИ: статус, права и обязанности (243-ФЗ ст. 6–8)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["243-ФЗ ст. 8", "243-ФЗ ст. 6 ч. 2–5", "243-ФЗ ст. 7", "243-ФЗ ст. 3 пп. 2, 5", "243-ФЗ ст. 5 ч. 2 пп. 4, 5, ч. 5", "243-ФЗ ст. 13 ч. 2, 4"]
 effective_from: 2027-03-01
 checked: 2026-10-01

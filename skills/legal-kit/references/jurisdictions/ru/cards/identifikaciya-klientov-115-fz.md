@@ -2,7 +2,7 @@
 id: ru:identifikaciya-klientov-115-fz
 title: "Идентификация клиентов по 115-ФЗ в онлайн-сервисе: кто обязан, упрощённая и удалённая идентификация"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-15
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: sectoral
 source_kind: law
 subjects: [ul, ip, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["115-ФЗ ст. 5", "115-ФЗ ст. 7 п. 1.1, 1.4, 1.11, 1.12, 1.12-1, 1.12-5, 1.13", "115-ФЗ ст. 7 п. 5.8, 5.8-1, 5.8-2", "283-ФЗ от 04.08.2026 ст. 7, ст. 23 ч. 1, 14", "41-ФЗ ст. 7, ст. 16 ч. 5–6", "44-ФЗ от 20.02.2026 ст. 1 п. 1–2, ст. 3", "115-ФЗ ст. 7 п. 1.5 (абз. 1–2), 1.5-1, 1.5-2, 1.5-6–1.5-11, 1.6–1.8", "161-ФЗ ст. 14.1 ч. 3 п. 1, ч. 4, ч. 13"]
 effective_from: mixed
 checked: 2026-10-01

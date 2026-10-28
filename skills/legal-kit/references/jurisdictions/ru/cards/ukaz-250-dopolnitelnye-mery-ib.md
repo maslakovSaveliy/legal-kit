@@ -2,7 +2,7 @@
 id: ru:ukaz-250-dopolnitelnye-mery-ib
 title: "Указ № 250: заместитель и подразделение по ИБ, только лицензиаты и аккредитованные центры ГосСОПКА, запрет СЗИ из недружественных государств"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: bylaw
 subjects: [ul]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["Указ Президента РФ от 01.05.2022 № 250 п. 1 подп. «а»–«е» (ред. № 500)", "Указ № 250 п. 2", "Указ № 250 п. 5 (ред. № 500)", "Указ № 250 п. 6 (ред. № 500)", "Указ № 250 п. 7"]
 effective_from: mixed
 checked: 2026-09-30

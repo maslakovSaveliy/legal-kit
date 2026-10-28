@@ -2,7 +2,7 @@
 id: ru:zapret-inostrannogo-po-v-gossektore
 title: "Запрет иностранных интернет-сервисов и программ в информационных системах госсектора"
 category: concept
-updated: 2026-09-29
+updated: 2026-10-23
 verified: 2026-09-29
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: sectoral
 source_kind: law
 subjects: [ul]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["149-ФЗ ст. 13 ч. 2.4", "406-ФЗ ст. 1 п. 5, ст. 3 ч. 4", "568-ФЗ ст. 1 п. 1, ст. 2"]
 effective_from: mixed
 checked: 2026-09-29

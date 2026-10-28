@@ -27,7 +27,7 @@ SEED_SCRIPT = ROOT / "tools" / "seed_feature_map.py"
 SCRIPTS = ROOT / "skills" / "legal-kit" / "scripts"
 TODAY = datetime.date(2026, 10, 18)
 
-EXPECTED_REQUIREMENTS = 219
+EXPECTED_REQUIREMENTS = 227
 TOP_KEYS = {"_doc", "always", "features", "owner_facts", "sectoral", "not_detectable", "notes", "platform_rules",
             "templates", "documents"}
 # Features that are evidence only and may map to no requirement (see the map's "_doc").

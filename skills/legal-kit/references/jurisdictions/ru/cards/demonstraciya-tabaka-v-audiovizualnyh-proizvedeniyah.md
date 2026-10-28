@@ -2,7 +2,7 @@
 id: ru:demonstraciya-tabaka-v-audiovizualnyh-proizvedeniyah
 title: "Запрет демонстрации табака и никотина в аудиовизуальных произведениях и социальная реклама при показе (15-ФЗ ст. 16)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: warm
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["15-ФЗ ст. 16 ч. 1 п. 1 «д», ч. 2, 3, 4, 5", "15-ФЗ ст. 21", "КоАП ст. 14.3.1 ч. 2, 3, 5", "149-ФЗ ст. 10.5 ч. 1, 16", "ГК РФ ст. 1270 п. 2 подп. 11", "436-ФЗ ст. 5 ч. 2 п. 2, ст. 9 п. 2", "38-ФЗ ст. 7 п. 8"]
 effective_from: mixed
 checked: 2026-10-01

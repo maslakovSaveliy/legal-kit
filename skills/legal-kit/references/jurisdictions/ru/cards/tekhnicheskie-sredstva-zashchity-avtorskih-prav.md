@@ -2,7 +2,7 @@
 id: ru:tekhnicheskie-sredstva-zashchity-avtorskih-prav
 title: "Технические средства защиты авторских прав и информация об авторском праве (ГК РФ ст. 1299, 1300)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ГК РФ ст. 1299 пп. 1–4", "ГК РФ ст. 1300 пп. 1–3", "ГК РФ ст. 1252.1 п. 1", "ГК РФ ст. 1301 п. 2", "214-ФЗ ст. 1 пп. 4, 8–10", "243-ФЗ ст. 10 ч. 2", "Пленум ВС РФ от 23.04.2019 № 10 пп. 108, 109"]
 effective_from: mixed
 checked: 2026-10-01

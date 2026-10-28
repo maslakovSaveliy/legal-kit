@@ -2,7 +2,7 @@
 id: ru:markirovka-ishodyashchih-zvonkov
 title: "Маркировка исходящих звонков организаций: наименование и категория вызова на экране абонента (126-ФЗ ст. 46 п. 9.1, ПП № 1300)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: bylaw
 subjects: [ul, ip]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["126-ФЗ ст. 46 п. 9.1", "126-ФЗ ст. 46 п. 9", "ПП РФ от 28.08.2025 № 1300, Правила п. 1–9", "41-ФЗ ст. 16 ч. 3"]
 effective_from: 2025-09-01
 checked: 2026-09-30

@@ -2,7 +2,7 @@
 id: ru:licenzionnoe-soglashenie-s-polzovatelem-eula
 title: "Лицензионное соглашение с пользователем (EULA) и лицензия на пользовательский контент (ГК РФ ст. 1235, 1280, 1286)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: warm
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ГК РФ ст. 1229 п. 1", "ГК РФ ст. 1233 пп. 1, 3, 4", "ГК РФ ст. 1235 пп. 1–6", "ГК РФ ст. 1236 пп. 1, 2", "ГК РФ ст. 1237 п. 3", "ГК РФ ст. 1238 п. 1", "ГК РФ ст. 1266 п. 1", "ГК РФ ст. 1280", "ГК РФ ст. 1286 пп. 2–5", "Пленум ВС РФ от 23.04.2019 № 10 пп. 37, 78, 87, 89, 101, 103"]
 effective_from: mixed
 checked: 2026-10-01

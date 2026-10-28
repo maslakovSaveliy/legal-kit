@@ -2,7 +2,7 @@
 id: ru:avtomatizirovannye-resheniya-pdn
 title: "Решения на основании исключительно автоматизированной обработки ПДн"
 category: concept
-updated: 2026-09-29
+updated: 2026-10-23
 verified: 2026-09-29
 legal_confidence: medium
 volatility: cold
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["152-ФЗ ст. 16 ч. 1–4", "152-ФЗ ст. 9 ч. 4"]
 effective_from: mixed
 checked: 2026-09-29

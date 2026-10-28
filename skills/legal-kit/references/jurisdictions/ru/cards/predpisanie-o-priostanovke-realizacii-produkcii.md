@@ -2,7 +2,7 @@
 id: ru:predpisanie-o-priostanovke-realizacii-produkcii
 title: "Исполнение продавцом предписания о приостановке (запрете) реализации продукции, в том числе в интернет-магазине и на маркетплейсе (с 01.03.2027)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-15
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip]
 models: [b2c, b2b]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["184-ФЗ ст. 39 п. 3, 3.2, 4 (ред. 331-ФЗ ст. 3 п. 2)", "52-ФЗ ст. 50 п. 2 абз. 3, ст. 51 п. 1.1 (ред. 331-ФЗ ст. 2)", "381-ФЗ ст. 20.1 ч. 1.1 (ред. 331-ФЗ ст. 4)", "248-ФЗ ст. 59 ч. 1 п. 2, ст. 90 ч. 2 п. 2 (ред. 331-ФЗ ст. 6)", "ЗоЗПП ст. 40 п. 5.1, 7.1 (ред. 331-ФЗ ст. 1)", "331-ФЗ ст. 7 ч. 1", "184-ФЗ ст. 38 п. 1–4 (действующая ред., пересказ)"]
 effective_from: 2027-03-01
 checked: 2026-10-11

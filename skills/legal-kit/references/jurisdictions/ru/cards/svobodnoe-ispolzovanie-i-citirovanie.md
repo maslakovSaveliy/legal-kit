@@ -2,7 +2,7 @@
 id: ru:svobodnoe-ispolzovanie-i-citirovanie
 title: "Свободное использование и цитирование в контенте владельца (ГК РФ ст. 1274, 1265 п. 3)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ГК РФ ст. 1229 пп. 1, 5", "ГК РФ ст. 1265 пп. 1, 3", "ГК РФ ст. 1266 п. 1", "ГК РФ ст. 1273 п. 1", "ГК РФ ст. 1274 п. 1 подп. 1, 3, п. 4", "ГК РФ ст. 1299 п. 4", "214-ФЗ ст. 1 п. 6", "35-ФЗ ст. 7 ч. 1", "Пленум ВС РФ от 23.04.2019 № 10 пп. 89, 98, 99"]
 effective_from: mixed
 checked: 2026-10-01

@@ -311,6 +311,7 @@ DIRECTIONS = {
     "L": ("Магазины приложений и предустановка", "App stores and preinstallation"),
     "M": ("Права владельца на контент и ПО", "Owner's rights to content and software"),
     "N": ("Новые технологии", "New technologies"),
+    "O": ("Боты и мини-приложения в мессенджерах", "Bots and mini apps in messengers"),
 }
 OTHER = "?"
 

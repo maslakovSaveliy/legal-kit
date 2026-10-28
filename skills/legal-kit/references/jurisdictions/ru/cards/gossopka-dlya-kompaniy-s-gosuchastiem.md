@@ -2,7 +2,7 @@
 id: ru:gossopka-dlya-kompaniy-s-gosuchastiem
 title: "ГосСОПКА для госорганов, госучреждений и компаний с госучастием более 50 % (187-ФЗ ст. 9 ч. 4–6)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["187-ФЗ ст. 9 ч. 4, 5, 6 (ред. 58-ФЗ)", "187-ФЗ ст. 9 ч. 2, ч. 3 п. 7 (ред. 58-ФЗ)", "187-ФЗ ст. 6 ч. 4 пп. 6, 8 (ред. 58-ФЗ)", "Порядок (приказ ФСБ № 547) п. 1 абз. 2, п. 2, п. 3 абз. 2–3, пп. 15–17"]
 effective_from: mixed
 checked: 2026-09-30

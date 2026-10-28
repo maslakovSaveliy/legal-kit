@@ -2,7 +2,7 @@
 id: ru:vrachebnaya-tayna-v-medicinskih-servisah
 title: "Врачебная тайна и данные о здоровье в медицинских сервисах (323-ФЗ ст. 13; 152-ФЗ ст. 10)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: warm
@@ -10,7 +10,7 @@ obligation: sectoral
 source_kind: law
 subjects: [ul, ip]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["323-ФЗ ст. 13 ч. 1–4", "323-ФЗ ст. 20 ч. 7", "323-ФЗ ст. 36.2 ч. 5", "323-ФЗ ст. 79 ч. 1 п. 4", "323-ФЗ ст. 91 ч. 2", "152-ФЗ ст. 10 ч. 1, ч. 2 пп. 1, 4, ч. 4", "152-ФЗ ст. 9 ч. 4", "ПП РФ № 447, п. 7"]
 effective_from: mixed
 checked: 2026-10-01

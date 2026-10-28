@@ -2,7 +2,7 @@
 id: ru:nedostatki-i-garantiya-tovara
 title: "Недостатки товара, гарантийный срок и срок службы: права потребителя и сроки"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: general
 source_kind: law
 subjects: [ul, ip, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ЗоЗПП ст. 5, 6, 18, 19, 20, 21, 22, 23, 24 (ред. от 01.10.2026, 290-ФЗ)", "500-ФЗ от 28.12.2025, ст. 1 пп. 2–3, ст. 3", "ПП РФ от 10.11.2011 № 924 (ред. от 27.03.2019, ПП № 327)", "ПП РФ от 30.05.2026 № 657, приложение 1", "Пленум ВС РФ от 28.06.2012 № 17, пп. 13, 14, 28, 31, 32, 34, 38, 39, 40", "Обзор ВС РФ от 18.10.2023, пп. 6, 7, 13", "Постановление КС РФ от 09.06.2026 № 38-П (п. 2 ст. 477 ГК)"]
 effective_from: mixed
 checked: 2026-10-16

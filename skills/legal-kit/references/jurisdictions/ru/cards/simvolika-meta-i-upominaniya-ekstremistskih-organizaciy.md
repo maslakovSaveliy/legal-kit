@@ -2,7 +2,7 @@
 id: ru:simvolika-meta-i-upominaniya-ekstremistskih-organizaciy
 title: "Символика Meta и упоминания организаций из перечня экстремистских на сайте и в приложении вне рекламы"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["КоАП ст. 20.3 ч. 1 и примечание", "КоАП ст. 20.3 ч. 3 (с 03.11.2026)", "КоАП ст. 13.15 ч. 2", "КоАП ст. 13.15 ч. 13 (с 03.11.2026)", "КоАП ст. 2.4 примечание", "114-ФЗ ст. 1 п. 1, 2, 4", "114-ФЗ ст. 9 ч. 6", "Перечень Минюста России, запись № 96", "Решение Тверского районного суда г. Москвы от 21.03.2022 № 02-2473/2022"]
 effective_from: mixed
 checked: 2026-10-16

@@ -2,7 +2,7 @@
 id: ru:gossopka-dlya-operatorov-gis
 title: "ГосСОПКА для операторов ГИС и иных ИС госорганов, ГУП и госучреждений (приказ ФСБ № 297)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: sectoral
 source_kind: law
 subjects: [ul]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["149-ФЗ ст. 16 ч. 7", "568-ФЗ ст. 1 п. 3 «б», ст. 2", "Приказ ФСБ от 06.08.2026 № 297", "Приказ ФСТЭК от 11.04.2025 № 117, подп. «х» п. 34, п. 59"]
 effective_from: 2026-09-01
 checked: 2026-09-30

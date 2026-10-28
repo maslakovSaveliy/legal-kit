@@ -2,8 +2,8 @@
 id: ru:pravila-storov-polzovatelskiy-kontent
 title: "Правила сторов о пользовательском контенте (UGC): Apple 1.2, Google Play UGC и Child Safety Standards, RuStore 3.5 и 8.3, AppGallery 4.18"
 category: concept
-updated: 2026-10-01
-verified: 2026-10-01
+updated: 2026-10-23
+verified: 2026-10-23
 legal_confidence: medium
 volatility: hot
 obligation: conditional
@@ -75,6 +75,7 @@ summary: "Правила магазинов приложений, не зако�
 - **Продукты.** iOS (Apple), Android (Google Play, RuStore, AppGallery).
 - **Даты.** Apple Guidelines — «Last Updated: June 8, 2026». Даты редакций страниц Google и RuStore не указаны. У AppGallery раздел 4 — V3 от 2026-01-07, раздел 8 — V5 от 2026-09-28. Все страницы сняты 2026-10-01.
 - **Санкции стора** (не закона): Apple — удаление приложения и исключение из программы; Google — удаление; RuStore — от предупреждения до блокировки аккаунта, одна апелляция, рассмотрение до 30 календарных дней; по соглашению RuStore — вплоть до блокировки с требованием штрафа 100 000 руб. (п. 9.5).
+- **Применимость к боту:** нет — это правила магазинов приложений (App Store, Google Play, RuStore, AppGallery); бот и Mini App внутри мессенджера в магазин не подаются, правила платформы мессенджера — отдельный слой.
 
 ## Исключения
 

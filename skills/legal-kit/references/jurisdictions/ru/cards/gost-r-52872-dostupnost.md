@@ -2,7 +2,7 @@
 id: ru:gost-r-52872-dostupnost
 title: "ГОСТ Р 52872-2019 и ГОСТ Р 70176-2022: добровольные стандарты доступности и случаи их обязательности"
 category: concept
-updated: 2026-09-30
+updated: 2026-10-23
 verified: 2026-09-30
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: standard
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["162-ФЗ ст. 4 п. 1", "162-ФЗ ст. 26 ч. 1, 3", "ГОСТ Р 52872-2019 (приказ Росстандарта от 29.08.2019 № 589-ст)", "ГОСТ Р 70176-2022 (приказ Росстандарта от 22.06.2022 № 515-ст)", "ПП РФ от 07.02.2026 № 102 п. 2 пп. «в», «г»", "Приказ Минцифры от 28.02.2022 № 147, Порядок п. 11, сноска 7"]
 effective_from: mixed
 checked: 2026-09-30

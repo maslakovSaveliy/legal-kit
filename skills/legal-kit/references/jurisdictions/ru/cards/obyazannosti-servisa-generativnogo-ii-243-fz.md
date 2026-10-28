@@ -2,7 +2,7 @@
 id: ru:obyazannosti-servisa-generativnogo-ii-243-fz
 title: "Сервис на большой модели ИИ: возможность предупреждения и уведомление о правах на результаты (243-ФЗ ст. 9 ч. 1–2, ст. 10 ч. 1)"
 category: concept
-updated: 2026-10-15
+updated: 2026-10-23
 verified: 2026-10-15
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["243-ФЗ ст. 9 ч. 1, 2", "243-ФЗ ст. 10 ч. 1", "243-ФЗ ст. 3 п. 2", "243-ФЗ ст. 11", "243-ФЗ ст. 13 ч. 2", "Методические рекомендации Банка России от 16.06.2026 № 3-МР (позиция органа)", "Информационное письмо Банка России от 09.07.2025 № ИН-016-13/91 — Кодекс этики ИИ на финансовом рынке (позиция органа)"]
 effective_from: 2027-03-01
 checked: 2026-10-01

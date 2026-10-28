@@ -2,7 +2,7 @@
 id: ru:trebovaniya-k-soderzhaniyu-reklamy
 title: "Требования к содержанию рекламы: достоверность, существенная информация, цена в рублях, возрастная категория, русский язык (38-ФЗ ст. 5)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: high
 volatility: warm
@@ -10,7 +10,7 @@ obligation: general
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["38-ФЗ ст. 5 ч. 1–3, 7, 7.1, 9, 10.1, 11", "38-ФЗ ст. 7 п. 1, 7", "38-ФЗ ст. 5 ч. 3 п. 15", "38-ФЗ ст. 9", "38-ФЗ ст. 38 ч. 6, 7", "53-ФЗ ст. 3 ч. 1 п. 10, ч. 2–3", "КоАП ст. 14.3 ч. 1", "КоАП ст. 4.5 ч. 1"]
 effective_from: mixed
 checked: 2026-10-16

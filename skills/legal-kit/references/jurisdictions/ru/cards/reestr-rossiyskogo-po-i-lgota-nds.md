@@ -2,7 +2,7 @@
 id: ru:reestr-rossiyskogo-po-i-lgota-nds
 title: "Реестр российского ПО: условия, обязанности после включения и освобождение от НДС"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-15
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["149-ФЗ ст. 12.1 ч. 1–7, 10", "ПП РФ от 16.11.2015 № 1236, Правила пп. 3, 4 (подп. «ж», «н», «с», «у», «ф»), 5, 6, 9, 10 (подп. «г»), 11 (подп. «а», «д»–«з»), 25, 30, 30.4–30.6, 33, 37", "ПП РФ от 28.11.2025 № 1937 пп. 2, 5, 6", "ПП РФ от 13.08.2026 № 1007 п. 2", "НК РФ ст. 149 п. 2 подп. 26, п. 5", "НК РФ ст. 163", "265-ФЗ от 31.07.2020 ст. 1 п. 1 «а», ст. 2 ч. 2", "321-ФЗ от 14.07.2022 ст. 1 п. 1, ст. 3 ч. 2", "325-ФЗ от 31.07.2025 ст. 6"]
 effective_from: mixed
 checked: 2026-10-15

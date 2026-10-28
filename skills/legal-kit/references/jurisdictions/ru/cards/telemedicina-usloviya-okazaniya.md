@@ -2,7 +2,7 @@
 id: ru:telemedicina-usloviya-okazaniya
 title: "Телемедицина: условия дистанционных консультаций и наблюдения (323-ФЗ ст. 36.2; приказ Минздрава № 193н)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-15
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: sectoral
 source_kind: law
 subjects: [ul, ip]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["323-ФЗ ст. 2 пп. 11, 22", "323-ФЗ ст. 36.2 ч. 1–7", "323-ФЗ ст. 79 ч. 1 п. 16", "Приказ Минздрава от 11.04.2025 № 193н, пп. 1–17, 19, 34, 35, 38–51 Порядка", "Приказ Минздрава от 25.03.2026 № 209н, пп. 1–3 приказа; Порядок пп. 2, 4, 5, 9–31", "ПП РФ от 09.02.2022 № 140, прил. № 1 пп. 20, 21, 23, 25; прил. № 2 п. 21", "ПП РФ от 30.05.2026 № 659, п. 34"]
 effective_from: mixed
 checked: 2026-10-11

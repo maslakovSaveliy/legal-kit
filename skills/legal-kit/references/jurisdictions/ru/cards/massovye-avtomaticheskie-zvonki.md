@@ -2,7 +2,7 @@
 id: ru:massovye-avtomaticheskie-zvonki
 title: "Массовые и автоматические звонки: согласие абонента, договор с оператором, отказ через оператора (126-ФЗ ст. 44.1-1)"
 category: concept
-updated: 2026-10-11
+updated: 2026-10-23
 verified: 2026-10-11
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["126-ФЗ ст. 44.1-1 п. 1–4", "Правила оказания услуг телефонной связи (ПП № 1994) пп. 222–226 в ред. ПП № 1137", "41-ФЗ ст. 16 ч. 3", "210-ФЗ ст. 1 п. 2, ст. 11 ч. 3 (с 01.03.2027)"]
 effective_from: 2025-09-01
 checked: 2026-09-30

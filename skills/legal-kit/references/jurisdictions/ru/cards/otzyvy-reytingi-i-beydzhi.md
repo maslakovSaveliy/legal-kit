@@ -2,7 +2,7 @@
 id: ru:otzyvy-reytingi-i-beydzhi
 title: "Отзывы, рейтинги и бейджи: запрет вводить в заблуждение (ЗоЗПП ст. 10, 135-ФЗ ст. 14.1–14.3, 289-ФЗ)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-09-30
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, foreign]
 models: [b2c, b2b]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ЗоЗПП ст. 10 п. 1", "КоАП ст. 14.7 ч. 2", "135-ФЗ ст. 4 п. 9, ст. 14.1, 14.2, 14.3, 14.8, 39.1", "КоАП ст. 14.33 ч. 1", "289-ФЗ ст. 2 п. 17, ст. 5 ч. 4 п. 7–8, ст. 9 ч. 5, ст. 10 ч. 1–2, ст. 21, ст. 23 ч. 1"]
 effective_from: mixed
 checked: 2026-09-30

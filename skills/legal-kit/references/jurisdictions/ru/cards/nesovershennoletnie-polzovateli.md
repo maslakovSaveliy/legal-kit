@@ -2,7 +2,7 @@
 id: ru:nesovershennoletnie-polzovateli
 title: "Несовершеннолетние пользователи: дееспособность при регистрации и согласия (ГК РФ ст. 21, 26, 28; 152-ФЗ; 572-ФЗ)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: warm
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ГК РФ ст. 21 п. 1–2", "ГК РФ ст. 26 п. 1–3", "ГК РФ ст. 28 п. 1–3", "152-ФЗ ст. 6 ч. 1 п. 5", "152-ФЗ ст. 9 ч. 1, 6", "572-ФЗ ст. 3 ч. 19"]
 effective_from: mixed
 checked: 2026-10-01

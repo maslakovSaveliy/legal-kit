@@ -2,8 +2,8 @@
 id: ru:pravila-storov-akkaunty-i-vhod
 title: "Правила сторов об аккаунтах и входе: Apple 4.8, 5.1.1(v) и 2.1(a), Google Play account deletion, RuStore, AppGallery"
 category: concept
-updated: 2026-10-01
-verified: 2026-10-01
+updated: 2026-10-23
+verified: 2026-10-23
 legal_confidence: medium
 volatility: hot
 obligation: conditional
@@ -94,6 +94,7 @@ summary: "Правила магазинов приложений, не зако�
   - есть авторизация — S3 (п. 8.5); демо- или тестовый аккаунт для модерации — S1 2.1(a), S3, S4 (1.21).
 - **Продукты.** iOS (Apple), Android (Google Play, RuStore), AppGallery. Веб-ссылка для удаления в Google Play — часть требования S2.
 - **Даты.** Apple Guidelines — «Last Updated: June 8, 2026». Дата страниц Google и RuStore не указана. RuStore перечитан 2026-10-01: гайд переработан (разделы 1–12), дата редакции по-прежнему не указана. AppGallery — разделы 1, 3 и 7 в версии V2 от 2026-01-07, общие положения — V3 от 2024-11-18. Хронология Google на странице: объявление — апрель 2023, срок заполнения формы — 07.12.2023, продление — до 31.05.2024.
+- **Применимость к боту:** нет — это правила магазинов приложений (App Store, Google Play, RuStore, AppGallery); бот и Mini App внутри мессенджера в магазин не подаются, правила платформы мессенджера — отдельный слой.
 
 ## Исключения
 

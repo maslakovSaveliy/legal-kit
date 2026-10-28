@@ -2,7 +2,7 @@
 id: ru:dokumenty-ob-obuchenii-po-itogam-kursa
 title: "Документы по итогам онлайн-курса: перечень ст. 60 273-ФЗ, «сертификат» и внесение сведений в ФИС ФРДО"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip]
 models: [b2c, b2b]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["273-ФЗ ст. 2 п. 17–20, 35", "273-ФЗ ст. 12 ч. 4", "273-ФЗ ст. 32 ч. 3", "273-ФЗ ст. 60 ч. 1–3, 10, 12, 15–16", "273-ФЗ ст. 74 ч. 1", "273-ФЗ ст. 76 ч. 3, 14–15", "273-ФЗ ст. 98 ч. 9–10", "ПП РФ от 31.05.2021 № 825, п. 4 постановления; Правила пп. 4, 6, 11, прил. 1", "ПП РФ от 15.09.2020 № 1441, Правила п. 13 подп. «н»", "КоАП ст. 19.30.2 ч. 1–2", "КоАП ст. 19.30 ч. 2–3"]
 effective_from: mixed
 checked: 2026-10-16

@@ -384,7 +384,8 @@
       "ru:cheki-pri-prodazhe-cherez-agentov-i-story",
       "ru:edinaya-cena-nezavisimo-ot-sposoba-oplaty",
       "ru:onlayn-kkt-i-elektronnyy-chek",
-      "ru:svedeniya-o-prodavce-pri-distancionnoy-prodazhe"
+      "ru:svedeniya-o-prodavce-pri-distancionnoy-prodazhe",
+      "ru:trebovaniya-ekvayerov-k-sertifikatam-nuc"
     ],
     "payments.yookassa": [
       "ru:cena-v-rublyah-i-polnaya-summa",
@@ -633,6 +634,7 @@
         "ru:oficialnye-sayty-i-stranicy-gosorganov",
         "ru:peredacha-informacii-iz-gis-v-chastnye-is",
         "ru:podryadchik-operatora-gis",
+        "ru:sertifikaty-bezopasnosti-nuc",
         "ru:skzi-v-gis",
         "ru:ukaz-250-dopolnitelnye-mery-ib",
         "ru:zapret-inostrannogo-po-v-gossektore",
@@ -804,6 +806,7 @@
     "ru:avtomatizirovannye-resheniya-pdn": "Принимает ли продукт решения с юридическими последствиями только автоматически (скоринг, блокировка антифрод-системой, автомодерация с санкциями), из кода и страниц не видно; спросить владельца. Для подтверждённого сектора finance требование уже входит в группу.",
     "ru:biometriya-pri-autentifikacii": "В каталоге нет признака биометрической верификации (сверка селфи с документом, голос); Face ID и Touch ID на устройстве биометрию владельцу не передают. Спросить владельца о входе и верификации по лицу или голосу.",
     "ru:demonstraciya-tabaka-v-audiovizualnyh-proizvedeniyah": "Норма касается и небольших видеосервисов вне статуса аудиовизуального сервиса, а признака видеокаталога в каталоге нет; спросить владельца сервиса с фильмами или видео.",
+    "ru:dokumenty-i-soglasiya-v-chat-bote": "Бот: функции bot.* появятся в каталоге (задача 2).",
     "ru:eksperimentalnyy-pravovoy-rezhim-258-fz": "Статус субъекта или участника экспериментального правового режима — факт владельца, в продукте не виден; спросить владельца.",
     "ru:firmennoe-naimenovanie-i-kommercheskoe-oboznachenie": "Чек-лист владельца: сигнала в коде нет, признак есть почти у любого продукта; проверить, что наименование в подвале, оферте и карточке стора совпадает с ЕГРЮЛ, а бренд не повторяет чужие обозначения.",
     "ru:interfeys-programmy-kak-promyshlennyy-obrazec-296-fz": "Касается решения запатентовать интерфейс и сходства с чужим зарегистрированным образцом; из кода не видно, нужен патентный поиск. Спросить владельца.",
@@ -815,8 +818,13 @@
     "ru:mnogofunkcionalnyy-servis-razresheniya": "Норма даёт право, а не обязанность: уведомлять граждан через национальный мессенджер — решение владельца, признака в каталоге нет. Упомянуть как возможность, если продукт шлёт обязательные уведомления.",
     "ru:obezlichivanie-pdn": "Обезличивает ли владелец ПДн (вместо уничтожения, для аналитики и обучения моделей, по требованию Минцифры), из кода не следует; спросить владельца.",
     "ru:obyazatelnoe-primenenie-suverennyh-modeley-ii": "Случаи обязательного применения суверенных моделей ИИ определит акт Правительства, которого ещё нет; для систем, работающих на дату вступления закона, — не ранее срока из карточки. Из кода не следует; упомянуть в дорожной карте для продуктов с ИИ.",
+    "ru:oplata-v-chat-bote-i-chek": "Бот: функции bot.* появятся в каталоге (задача 2).",
     "ru:otkrytye-licenzii-i-open-source": "Чек-лист владельца: сигнала в коде нет, признак есть почти у любого продукта; проверить лицензии сторонних библиотек, шрифтов и медиа и условия публикации собственного кода.",
+    "ru:pdn-pri-sbore-cherez-inostrannyy-messendzher": "Бот: функции bot.* появятся в каталоге (задача 2).",
     "ru:prava-na-rezultaty-podryadchikov-i-frilanserov": "Кто создал код, дизайн и тексты (подрядчики, фрилансеры), — факт договоров, а не кода; спросить владельца вместе с ru:prava-na-kontent-i-po-vladelca.",
+    "ru:pravila-platform-botov-dannye-i-dopusk": "Бот: функции bot.* появятся в каталоге (задача 2).",
+    "ru:pravila-platform-botov-oplata": "Бот: функции bot.* появятся в каталоге (задача 2).",
+    "ru:pravila-platform-botov-rassylki-i-soobshcheniya": "Бот: функции bot.* появятся в каталоге (задача 2).",
     "ru:pravo-izgotovitelya-bazy-dannyh": "Существенные затраты на собственную базу данных и извлечение данных из чужих баз (парсинг, импорт) из кода надёжно не определить; спросить владельца.",
     "ru:predustanovka-programm": "Заявка в перечень предустановки — решение правообладателя, в продукте не видна; спросить владельца.",
     "ru:prizemlenie-inostrannyh-lic-236-fz": "Суточная аудитория из РФ и условия «приземления» из кода не видны; проверить перечень РКН по 236-ФЗ (registries.md). Для иностранного владельца в группах social-network и intermediary-platform требование уже входит в группу.",
@@ -876,6 +884,7 @@
     "ru:sluzhba-zakaza-legkovogo-taksi": "Только служба заказа легкового такси из регионального реестра.",
     "ru:telemedicina-informaciya-dlya-pacienta": "Консультирующая медорганизация или оператор иной ИС, через которую идут телемедицинские консультации.",
     "ru:telemedicina-usloviya-okazaniya": "Только медорганизация или ИП с лицензией, оказывающие медпомощь с телемедицинскими технологиями.",
+    "ru:trebovaniya-ekvayerov-k-sertifikatam-nuc": "Требование банка, не норма: корень Минцифры в trust store бэка.",
     "ru:ukaz-250-dopolnitelnye-mery-ib": "Только субъекты КИИ, стратегические и системообразующие организации, госкорпорации.",
     "ru:upolnomochennoe-lico-v-bankovskom-prilozhenii": "Только банк, у которого есть клиенты-физлица.",
     "ru:vrachebnaya-tayna-v-medicinskih-servisah": "Медорганизации и лица, получившие сведения при исполнении обязанностей; любому оператору данных о здоровье — ru:specialnye-kategorii-pdn.",
@@ -885,6 +894,9 @@
     "ru:zashchita-informacii-v-gis": "Только оператор ГИС, иной ИС госоргана, ГУП или госучреждения; подрядчику — ru:podryadchik-operatora-gis."
   },
   "platform_rules": [
+    "ru:pravila-platform-botov-dannye-i-dopusk",
+    "ru:pravila-platform-botov-oplata",
+    "ru:pravila-platform-botov-rassylki-i-soobshcheniya",
     "ru:pravila-storov-akkaunty-i-vhod",
     "ru:pravila-storov-deti-i-vozrastnoy-reyting",
     "ru:pravila-storov-generativnyy-ii",

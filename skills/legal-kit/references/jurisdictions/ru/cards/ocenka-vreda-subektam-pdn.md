@@ -2,7 +2,7 @@
 id: ru:ocenka-vreda-subektam-pdn
 title: "Оценка вреда субъектам ПДн по требованиям РКН (приказ № 178)"
 category: concept
-updated: 2026-09-29
+updated: 2026-10-23
 verified: 2026-09-29
 legal_confidence: high
 volatility: warm
@@ -10,7 +10,7 @@ obligation: general
 source_kind: bylaw
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["152-ФЗ ст. 18.1 ч. 1 п. 5", "Приказ РКН от 27.10.2022 № 178"]
 effective_from: 2023-03-01
 checked: 2026-09-29

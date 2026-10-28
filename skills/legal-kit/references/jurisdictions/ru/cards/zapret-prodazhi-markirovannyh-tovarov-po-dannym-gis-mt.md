@@ -2,7 +2,7 @@
 id: ru:zapret-prodazhi-markirovannyh-tovarov-po-dannym-gis-mt
 title: "Запрет розничной продажи маркированных товаров по данным ГИС мониторинга (ПП № 1944 от 21.11.2023)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: bylaw
 subjects: [ul, ip]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["381-ФЗ ст. 5 ч. 1 п. 3.6", "ПП РФ от 21.11.2023 № 1944, п. 1–2 и Правила пп. 1–20", "Перечень к ПП № 1944, разд. I, II, VIII", "КоАП ст. 14.43 ч. 4", "КоАП ст. 14.6 ч. 4–6", "КоАП ст. 14.3.1 ч. 6–8", "КоАП ст. 28.6 ч. 3.1"]
 effective_from: mixed
 checked: 2026-10-16

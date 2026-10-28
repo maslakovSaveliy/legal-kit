@@ -2,7 +2,7 @@
 id: ru:klassifikaciya-informacionnoy-produkcii-436-fz
 title: "Информационная продукция и возрастная классификация по 436-ФЗ: виды вредной информации, категории 0+…18+, знак на сайтах и в приложениях"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["436-ФЗ ст. 1 ч. 2", "436-ФЗ ст. 2 пп. 5, 6, 9, 12", "436-ФЗ ст. 5 ч. 2–3", "436-ФЗ ст. 6 ч. 1–3, 6", "436-ФЗ ст. 7–10", "436-ФЗ ст. 11 ч. 1, 4, 5, 6", "436-ФЗ ст. 12 ч. 1, 3, 4, 5", "436-ФЗ ст. 14 ч. 2", "436-ФЗ ст. 15 ч. 1", "436-ФЗ ст. 17 ч. 1, 8", "436-ФЗ ст. 20 ч. 1–2", "149-ФЗ ст. 2 п. 13", "КоАП ст. 6.17 ч. 1, 3", "КоАП ст. 6.21.2 ч. 2", "Приказ РКН от 24.01.2022 № 14"]
 effective_from: mixed
 checked: 2026-10-01

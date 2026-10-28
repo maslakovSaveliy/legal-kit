@@ -2274,3 +2274,15 @@ def test_scan_repo_six_megabyte_repo_runs_well_under_ten_seconds(tmp_path):
     assert result.returncode == 0, result.stderr
     assert elapsed < 10, "scan took %.1f s" % elapsed
     assert "analytics.web_counter" in {f["id"] for f in json.loads(result.stdout)["features"]}
+
+
+# --------------------------------------------------------------------------
+# 0.2: bot product kind and direction O
+# --------------------------------------------------------------------------
+
+def test_products_include_bot():
+    assert load("_kb").PRODUCTS == ("site", "webapp", "ios", "android", "bot")
+
+
+def test_report_has_direction_o():
+    assert load("report").DIRECTIONS["O"] == ("Боты и мини-приложения в мессенджерах", "Bots and mini apps in messengers")

@@ -2,7 +2,7 @@
 id: ru:srok-peredachi-predoplachennogo-tovara
 title: "Срок передачи предоплаченного товара: неустойка, возврат предоплаты, доставка и риск"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ЗоЗПП ст. 23.1 пп. 1–5", "ГК ст. 314 п. 2, ст. 457 п. 1, ст. 458 п. 1–2, ст. 459 п. 1, ст. 487 п. 3–4, ст. 497 п. 3–4, ст. 500 п. 2", "ПП РФ от 30.05.2026 № 657, Правила пп. 16, 23, 43", "Пленум ВС РФ от 28.06.2012 № 17, пп. 28, 31, 32 «г», 34", "ЗоЗПП ст. 12 п. 2.2"]
 effective_from: mixed
 checked: 2026-10-16

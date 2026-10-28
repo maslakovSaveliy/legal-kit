@@ -2,7 +2,7 @@
 id: ru:celi-i-osnovaniya-obrabotki-pdn
 title: "Цели и правовые основания обработки ПДн, минимизация и сроки хранения"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: high
 volatility: warm
@@ -10,7 +10,7 @@ obligation: general
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["152-ФЗ ст. 5 ч. 1–7", "152-ФЗ ст. 6 ч. 1 пп. 1–11", "152-ФЗ ст. 6 ч. 1 п. 5 (ред. 266-ФЗ)", "152-ФЗ ст. 9 ч. 3"]
 effective_from: mixed
 checked: 2026-09-29

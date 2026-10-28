@@ -2,7 +2,7 @@
 id: ru:operator-pdn-po-statusu-vladelca
 title: "Владелец продукта как оператор ПДн: ЮЛ, ИП, самозанятый"
 category: concept
-updated: 2026-09-29
+updated: 2026-10-23
 verified: 2026-09-29
 legal_confidence: high
 volatility: warm
@@ -10,7 +10,7 @@ obligation: general
 source_kind: law
 subjects: [ul, ip, npd]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["152-ФЗ ст. 1 ч. 1", "152-ФЗ ст. 1 ч. 2 п. 1", "152-ФЗ ст. 3 п. 2", "152-ФЗ ст. 18.1 ч. 1, 2, 4", "152-ФЗ ст. 22.1 ч. 1", "422-ФЗ ст. 2 ч. 6"]
 effective_from: mixed
 checked: 2026-09-29

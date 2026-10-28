@@ -2,7 +2,7 @@
 id: ru:svedeniya-o-prodavce-v-reklame
 title: "Сведения о продавце в рекламе товаров при дистанционной продаже (38-ФЗ ст. 8)"
 category: concept
-updated: 2026-09-30
+updated: 2026-10-23
 verified: 2026-09-30
 legal_confidence: high
 volatility: warm
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd]
 models: [b2c, b2b]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["38-ФЗ ст. 8", "38-ФЗ ст. 3 п. 3", "38-ФЗ ст. 38 ч. 6, 7", "КоАП ст. 14.3 ч. 1"]
 effective_from: mixed
 checked: 2026-09-30

@@ -2,7 +2,7 @@
 id: ru:incidenty-s-pdn
 title: "Инциденты с ПДн: уведомление РКН за 24 и 72 часа и информирование ГосСОПКА"
 category: concept
-updated: 2026-09-30
+updated: 2026-10-23
 verified: 2026-09-30
 legal_confidence: high
 volatility: warm
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["152-ФЗ ст. 21 ч. 3.1", "152-ФЗ ст. 6 ч. 3", "152-ФЗ ст. 19 ч. 12–14", "152-ФЗ ст. 23 ч. 10–11", "Приказ РКН от 14.11.2022 № 187", "Приказ ФСБ от 13.02.2023 № 77", "Приказ ФСБ от 06.08.2026 № 297 (разграничение)", "Приказ ФСБ от 25.12.2025 № 547 (разграничение)"]
 effective_from: mixed
 checked: 2026-09-30

@@ -2,7 +2,7 @@
 id: ru:perevody-bez-soglasiya-klienta-161-fz
 title: "Антифрод при переводах: проверка признаков перевода без согласия клиента, приостановка, подтверждение и уведомления (161-ФЗ, приказ ЦБ № ОД-2506)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-15
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: sectoral
 source_kind: law
 subjects: [ul]
 models: [b2c, b2b]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["161-ФЗ ст. 3 п. 2, 35", "161-ФЗ ст. 8 ч. 3.1–3.15", "161-ФЗ ст. 9 ч. 4, 5, 11, 15", "161-ФЗ ст. 27 ч. 4", "Приказ Банка России от 05.11.2025 № ОД-2506", "Указание Банка России от 13.01.2026 № 7282-У п. 1.10, 4.2.3, 4.2.8, 4.3, 4.4, 4.8.2, 5.1, 5.3, 7.1–7.2", "210-ФЗ от 26.06.2026 ст. 7 пп. 2, 3, 6; ст. 11 ч. 3–4, 7–8 (будущие изменения)", "283-ФЗ от 04.08.2026 ст. 16 пп. 1, 3; ст. 23 ч. 1, 4"]
 effective_from: mixed
 checked: 2026-10-01
