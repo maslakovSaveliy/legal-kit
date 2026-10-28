@@ -23,6 +23,7 @@ STACKS = (
     "static-html",
     "generic-web",
     "no-code",
+    "bot",
 )
 
 # Stacks whose Legal pages section creates web pages. Mobile stacks only link
@@ -126,7 +127,7 @@ def payload_groups(text):
     return [g for g in brace_groups(text) if "subjectId" in g and "consentVersion" in g]
 
 
-def test_ten_stack_files_exist():
+def test_eleven_stack_files_exist():
     for stack in STACKS:
         assert (STACKS_DIR / f"{stack}.md").is_file(), f"missing {stack}.md"
 

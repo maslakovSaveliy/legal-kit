@@ -63,8 +63,11 @@ Use the guide of every stack in `stacks` of the repo scan; a NestJS backend with
 | `static-html` | [static-html.md](../stacks/static-html.md) |
 | `generic-web` | [generic-web.md](../stacks/generic-web.md) (Vue, Nuxt, Svelte, Angular, PHP and others) |
 | `no-code` | [no-code.md](../stacks/no-code.md) (Tilda, WordPress, 1C-Bitrix) |
+| `bot` | [bot.md](../stacks/bot.md) (Telegram and MAX bots, mini apps); a bot also has its language stack (`python`, `nestjs`), a mini app its web stack |
 
 Each guide has the sections Detect, Legal pages, Consent checkbox, Analytics gated by consent, Consent banner, Consent log, Footer, i18n, Verify.
+
+In a bot, a payment through a provider asks for the receipt contact (e-mail or phone) before the invoice; the receipt requirement is `ru:oplata-v-chat-bote-i-chek` ([bot.md](../stacks/bot.md#consent-checkbox-in-the-chat)).
 
 ## Legal pages and routes
 

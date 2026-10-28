@@ -22,7 +22,7 @@ The scanner reads `references/features/catalog.json`, skips `node_modules`, buil
 | Key | Content |
 |---|---|
 | `root` | the scanned directory; evidence paths are relative to it |
-| `stacks` | stack ids; each one names its guide `references/stacks/<stack>.md` |
+| `stacks` | stack ids; each one names its guide `references/stacks/<stack>.md`; `bot` comes together with the bot's language stack |
 | `frameworks` | finer framework names (for example `expo`) |
 | `features` | `[{id, evidence: [{file, line, match}]}]`, ids from the catalog |
 | `legal_pages` | existing legal pages `[{file, kind}]` |
