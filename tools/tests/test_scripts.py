@@ -2345,3 +2345,46 @@ def test_select_does_not_read_planned_from_answers(tmp_path, capsys):
     assert code == 0
     assert "ru:t-analytics" not in {i["id"] for i in out["applicable"]}
     assert out["inputs"]["planned"] == [] and out["feature_sources"] == {}
+
+
+# --------------------------------------------------------------------------
+# 0.2: answers.json schema — planned features, agent rules link
+# --------------------------------------------------------------------------
+
+def _answers_file(tmp_path, product=None, decisions=None):
+    data = {"version": 1, "product": dict({"kinds": ["site"]}, **(product or {}))}
+    if decisions is not None:
+        data["decisions"] = decisions
+    path = tmp_path / "answers.json"
+    path.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+    return path
+
+
+def test_answers_rejects_planned_features_without_quote(tmp_path, capsys):
+    path = _answers_file(tmp_path, {"planned_features": [{"id": "forms.contact"}]})
+    code, _ = run_main("select", select_args("--answers", path), capsys)
+    assert code == 2
+
+
+def test_answers_rejects_planned_features_that_are_not_a_list(tmp_path, capsys):
+    path = _answers_file(tmp_path, {"planned_features": "forms.contact"})
+    code, _ = run_main("select", select_args("--answers", path), capsys)
+    assert code == 2
+
+
+def test_answers_accepts_planned_features_with_quotes(tmp_path, capsys):
+    path = _answers_file(tmp_path, {"planned_features": [{"id": "forms.contact", "quote": "форма заявки"}]})
+    code, _ = run_main("select", select_args("--answers", path), capsys)
+    assert code == 0
+
+
+def test_answers_rejects_non_boolean_agent_rules_link(tmp_path, capsys):
+    path = _answers_file(tmp_path, decisions={"agent_rules_link": "yes"})
+    code, _ = run_main("select", select_args("--answers", path), capsys)
+    assert code == 2
+
+
+def test_answers_rejects_accepted_suggestions_that_are_not_strings(tmp_path, capsys):
+    path = _answers_file(tmp_path, decisions={"accepted_suggestions": [1]})
+    code, _ = run_main("select", select_args("--answers", path), capsys)
+    assert code == 2
