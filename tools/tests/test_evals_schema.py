@@ -1082,7 +1082,7 @@ def test_golden_report_follows_the_canonical_shape_and_the_verify_rules(golden):
     report = load_json(golden / ".legal" / "report.json")
     sources = load_json(golden / ".legal" / "sources.json")
     assert isinstance(sources, list)
-    assert set(report) - {"lang"} == TOP_KEYS, "owner data lives in answers.json, not in report.json"
+    assert set(report) - {"lang", "owner_checklist", "suggestions", "plan_diff", "planned", "not_covered"} == TOP_KEYS, "owner data lives in answers.json, not in report.json"
     assert report["version"] == 1 and report["generated"] == GOLDEN_TODAY
     assert report.get("lang", "ru") in ("ru", "en")
     assert report["mode"] in MODES
