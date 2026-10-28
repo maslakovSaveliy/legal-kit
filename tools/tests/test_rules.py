@@ -302,3 +302,16 @@ def test_rules_bad_report_exits_2(tmp_path):
     report = tmp_path / "report.json"
     report.write_text("{}", encoding="utf-8")
     assert run_rules(tmp_path, select_out(["ru:t-always"]), "--report", report).returncode == 2
+
+
+def test_rules_keep_product_scoped_rules_when_products_are_unknown(tmp_path):
+    # final review I3: select.py does not filter on unknown products, rules.py must not either
+    out = run_rules(tmp_path, select_out(["ru:t-always"], products=())).stdout
+    assert "Два действия в боте" in out
+
+
+def test_rules_how_link_does_not_depend_on_stacks_order(tmp_path):
+    data = select_out(["ru:t-always", "ru:t-analytics"], features=["analytics.web_counter"])
+    a = run_rules(tmp_path, data, "--stacks", "nextjs,bot").stdout
+    b = run_rules(tmp_path, data, "--stacks", "bot,nextjs").stdout
+    assert a == b

@@ -117,7 +117,7 @@ def pick(rules, select_out, requirements, rows=None):
             continue
         if not (rule["always"] or set(rule["features"]) & features):
             continue
-        if rule["products"] and not set(rule["products"]) & products:
+        if rule["products"] and products and not set(rule["products"]) & products:
             continue
         picked.append(dict(rule, label=effective_label(rule, requirements, applicable, rows),
                            applicable=[r for r in rule["reqs"] if r in applicable]))
@@ -129,7 +129,7 @@ def render(picked, lang, stacks, version, today, max_lines):
     head = [text["title"], text["head"] % (version, today), text["details"], ""]
     lines = []
     for rule in picked:
-        stack = next((s for s in stacks if s in rule["stacks"]), None)
+        stack = next((s for s in rule["stacks"] if s in stacks), None)
         where = ("legal-kit references/stacks/%s.md" % stack) if stack else ("legal-kit references/rules/%s.md" % rule["id"])
         title = rule["title_ru"] if lang == "ru" else rule["title_en"]
         lines.append("- %s — %s, %s; %s: %s" % (title, ", ".join(rule["applicable"]), text["labels"][rule["label"]],

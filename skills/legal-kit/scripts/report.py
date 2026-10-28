@@ -615,7 +615,10 @@ def plan_item(row, text):
     title = as_text(row.get("title")) or "—"
     if isinstance(row.get("req"), str) and row["req"]:
         title += " (`%s`)" % row["req"]
-    parts = [label(text["level"], row.get("level")), label(text["basis"], row.get("basis"))]
+    basis = row.get("basis")
+    if row.get("level") not in OBLIGATION_LEVELS and basis not in ("practice", "platform"):
+        basis = "interpretation"  # a soft row is never shown as a norm
+    parts = [label(text["level"], row.get("level")), label(text["basis"], basis)]
     if row.get("bucket") == "roadmap" and row.get("effective_from"):
         parts.append("%s %s" % (text["from"], row["effective_from"]))
     return "- %s — %s" % (title, "; ".join(p for p in parts if p))

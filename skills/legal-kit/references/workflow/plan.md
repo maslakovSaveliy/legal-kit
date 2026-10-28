@@ -44,7 +44,7 @@ Decide in phase 0, from the words of the request first and the project second.
 4. Phase 3: the confirmation block, at most 10 items, nothing already in the prompt. «Применять правки?» and «Коммитить `.legal/`?» are not asked: there is no code. Instead, only when `CLAUDE.md`, `AGENTS.md` or a `.cursor/rules/` folder exists, ask whether to add the link line ([below](#link-for-the-coding-agent)); `decisions.agent_rules_link`. Ask about holding counters when analytics is planned.
 5. Phase 5: drafts from the templates in `.legal/drafts/` as usual ([documents.md](documents.md#drafts-and-public-pages)). Unknown requisites stay placeholders; there are no public pages.
 6. Phase 6 is skipped: without code nothing is integrated.
-7. Phase 7: `report.json` with `mode: "plan"`, then verify, `render --plan`, `rules.py` and a short chat summary ([report.md](report.md#plan-mode)).
+7. Phase 7: `report.json` with `mode: "plan"`, then `report.py verify --select .legal/evidence/select.json`, `render --plan`, `rules.py` and a short chat summary ([report.md](report.md#plan-mode)).
 
 ## plan.md
 
@@ -66,7 +66,10 @@ Every item names its requirement id, its level and its basis (norm, practice, in
 
 ## RULES.md
 
-`rules.py --select .legal/evidence/select.json --report .legal/report.json --stacks <stack ids> --lang <lang> --today <date> > .legal/RULES.md` (after `report.py verify` exits 0).
+One canonical rebuild in every mode. `RULES.md` is for the code still to be written, so it needs the planned features too, which the audit's own `select.json` does not have:
+
+1. `select.py --planned <ids of product.planned_features> --features <found ids> --answers .legal/answers.json --today <date> > .legal/evidence/select-rules.json` (in mode `plan` the run's `select.json` already is this file);
+2. `rules.py --select .legal/evidence/select-rules.json --stacks <stack ids> --lang <lang> --today <date> [--report .legal/report.json] > .legal/RULES.md`, with `--report` whenever `.legal/report.json` exists (after `report.py verify` exits 0), so a requirement the run rated `interpretation` is never «норма».
 
 - It picks the rules of `references/rules/` ([the library](../rules/README.md)) whose requirements are applicable and whose features were found or planned, at most 60 lines.
 - A line: `- <rule> — <requirement ids>, <label>; как: legal-kit references/stacks/<stack>.md`. The label is never stronger than the requirements allow, nor than the level the run gave the row in `report.json`: a requirement the run rated `interpretation` (for example consent under a contract basis) is never «норма».
@@ -90,7 +93,7 @@ Every item names its requirement id, its level and its basis (norm, practice, in
 2. Read `answers.json` when it exists. When it does not, ask nothing: take the facts from the prompt and mark the rest «предполагаю: …». Create `.legal/answers.json` (only `product.planned_features` and the prompt's facts, the rest `null`), `.legal/.gitignore` and `.legal/sources.json`.
 3. Run `select.py --planned <ids> --features <found>` so the rules see what exists, for example the consent mechanism.
 4. Give the rules of this function in the chat, with links to the sections of the stack guide. When the agent writes the code in the same session, it writes it by these rules.
-5. Rebuild `.legal/RULES.md` with `rules.py` when it exists or the owner asks; update `state.json`.
+5. Rebuild `.legal/RULES.md` by the canonical rebuild ([RULES.md](#rulesmd)), with `--report` when `.legal/report.json` exists, when it exists or the owner asks; update `state.json`.
 
 It asks at most one question, and only when a rule cannot be chosen without the fact (B2C or B2B for a payment). It writes no `report.json` and edits no legal page. At the end it offers a full audit when `answers.json` has no owner or the last report is older than 90 days. The next audit shows the function as `planned_not_found` until it appears in the code.
 
@@ -101,7 +104,7 @@ When `product.planned_features` is not empty, the audit compares it with what re
 - `planned_not_found`: planned, not found in the code or on the site; it goes to the suggestions with the requirement ids of the feature;
 - `found_not_planned`: found, not planned; adding it to the plan is an item of the confirmation block (item 10), with the quote «найдено в коде, <file>».
 
-`report.json` carries them as `plan_diff`; `render` prints «План и факт». Answers come from `answers.json`, so no question is asked again; `RULES.md` is rebuilt for the new set of features without duplicates.
+`report.json` carries them as `plan_diff`; `render` prints «План и факт». Answers come from `answers.json`, so no question is asked again; `RULES.md` is rebuilt by the canonical rebuild ([RULES.md](#rulesmd)) for the planned and the found features together, with `--report`, without duplicates.
 
 ## Suggestions after the run
 

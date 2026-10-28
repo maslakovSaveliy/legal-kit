@@ -2528,3 +2528,15 @@ def test_render_audit_shows_plan_vs_fact(tmp_path, capsys):
 def test_render_audit_of_a_plan_report_shows_the_plan_bucket(tmp_path, capsys):
     md = render(tmp_path, plan_report(plan_row()), capsys, "--lang", "ru")
     assert "## План" in md and "Counters only after consent" in md.split("## План")[1]
+
+
+def test_render_plan_never_prints_norm_for_soft_rows(tmp_path, capsys):
+    # final review I1: level interpretation with basis norm passes verify; plan.md must not say «норма»
+    row = plan_row(req="ru:t-always", evidence=[{"select": "always"}], topic="consent", level="interpretation",
+                   basis="norm", title="Consent under a contract basis")
+    md = render(tmp_path, plan_report(row), capsys, "--plan", "--lang", "ru")
+    line = [l for l in md.splitlines() if "Consent under a contract basis" in l][0]
+    assert "норма" not in line and "трактовка" in line
+    md_en = render(tmp_path, plan_report(row), capsys, "--plan", "--lang", "en")
+    line_en = [l for l in md_en.splitlines() if "Consent under a contract basis" in l][0]
+    assert "norm" not in line_en.split("—", 1)[1]
