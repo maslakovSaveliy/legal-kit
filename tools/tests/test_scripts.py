@@ -2302,3 +2302,46 @@ def test_detect_stacks_adds_bot_for_grammy_and_max():
 def test_detect_stacks_no_bot_for_plain_site():
     stacks, _ = load("scan_repo").detect_stacks(["app/page.tsx", "package.json"], {"next": "15"}, "", "", "")
     assert "bot" not in stacks
+
+
+# --------------------------------------------------------------------------
+# 0.2: select.py --planned
+# --------------------------------------------------------------------------
+
+def test_select_planned_feature_has_its_own_reason(capsys):
+    code, out = run_json("select", select_args("--planned", "analytics.web_counter", "--subject", "ul",
+                                               "--models", "b2c", "--products", "site"), capsys)
+    assert code == 0
+    why = {i["id"]: i["why"] for i in out["applicable"]}
+    assert why["ru:t-analytics"] == ["planned:analytics.web_counter"]
+    assert out["feature_sources"] == {"analytics.web_counter": ["planned"]}
+    assert out["template_reasons"]["tpl-banner"] == ["planned:analytics.web_counter"]
+    assert out["inputs"]["planned"] == ["analytics.web_counter"]
+    assert list(out)[:2] == ["inputs", "feature_sources"]
+
+
+def test_select_planned_and_found_is_one_row_with_both_reasons(capsys):
+    code, out = run_json("select", select_args("--features", "analytics.web_counter",
+                                               "--planned", "analytics.web_counter"), capsys)
+    assert code == 0
+    rows = [i for i in out["applicable"] if i["id"] == "ru:t-analytics"]
+    assert len(rows) == 1 and rows[0]["why"] == ["feature:analytics.web_counter", "planned:analytics.web_counter"]
+    assert out["feature_sources"]["analytics.web_counter"] == ["found", "planned"]
+
+
+def test_select_unknown_planned_feature_only_warns(capsys):
+    code, out = run_json("select", select_args("--planned", "lottery.weekly"), capsys)
+    assert code == 0
+    assert any("lottery.weekly" in w for w in out["warnings"])
+    assert not any(r.startswith("planned:lottery") for i in out["applicable"] for r in i["why"])
+
+
+def test_select_does_not_read_planned_from_answers(tmp_path, capsys):
+    answers = tmp_path / "answers.json"
+    answers.write_text(json.dumps({"version": 1, "product": {
+        "kinds": ["site"], "planned_features": [{"id": "analytics.web_counter", "quote": "Метрика"}]}}),
+        encoding="utf-8")
+    code, out = run_json("select", select_args("--answers", answers), capsys)
+    assert code == 0
+    assert "ru:t-analytics" not in {i["id"] for i in out["applicable"]}
+    assert out["inputs"]["planned"] == [] and out["feature_sources"] == {}

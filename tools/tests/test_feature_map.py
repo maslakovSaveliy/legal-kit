@@ -113,14 +113,14 @@ def load_script(name):
     return module
 
 
-def make_inputs(features=(), subject=None, models=(), products=(), sectors=(), facts=()):
+def make_inputs(features=(), subject=None, models=(), products=(), sectors=(), facts=(), planned=()):
     facts = set(facts)
     if subject:
         facts.add("subject:" + subject)
     if "b2c" in models:
         facts.add("b2c")
-    return {"features": list(features), "subject": subject, "models": sorted(models), "products": sorted(products),
-            "sectors": sorted(sectors), "facts": sorted(facts)}
+    return {"features": list(features), "planned": list(planned), "subject": subject, "models": sorted(models),
+            "products": sorted(products), "sectors": sorted(sectors), "facts": sorted(facts)}
 
 
 def union(fmap, features=(), facts=(), sectors=()):
