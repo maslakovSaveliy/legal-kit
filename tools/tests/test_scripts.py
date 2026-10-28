@@ -107,6 +107,8 @@ def test_all_scripts_exist():
     assert not missing, f"missing scripts: {missing}"
 
 
+@pytest.mark.skipif(not hasattr(sys, "stdlib_module_names"), reason="needs Python 3.10+ to list the stdlib; "
+                    "the 3.9 job runs the scripts themselves")
 @pytest.mark.parametrize("name", SCRIPT_NAMES)
 def test_script_is_py39_syntax_and_stdlib_only(name):
     path = SCRIPTS / f"{name}.py"
@@ -1048,7 +1050,7 @@ def test_registry_egrul_captcha_is_manual(registry, monkeypatch, capsys):
     urllib.error.HTTPError("https://egrul.nalog.ru/", 403, "Forbidden", {}, None),
     urllib.error.URLError(socket.timeout("timed out")),
     socket.timeout("timed out"),
-])
+], ids=["http-403", "url-timeout", "socket-timeout"])  # explicit ids: Python 3.9 HTTPError breaks id generation
 def test_registry_blocked_or_timeout_is_manual(registry, monkeypatch, capsys, failure):
     monkeypatch.setattr(urllib.request, "urlopen", FakeUrlopen(failure))
     code, out = lookup(registry, capsys, "egrul", "0098765437")
