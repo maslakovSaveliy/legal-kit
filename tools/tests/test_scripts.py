@@ -41,7 +41,7 @@ CATALOG = FIX / "catalog.json"
 REAL_CATALOG = ROOT / "skills" / "legal-kit" / "references" / "features" / "catalog.json"
 ANSWERS = FIX / "docs" / "answers.json"
 TODAY = "2026-10-18"
-SCRIPT_NAMES = ["_kb", "scan_repo", "scan_url", "select", "registry", "check_docs", "report"]
+SCRIPT_NAMES = ["_kb", "scan_repo", "scan_url", "select", "registry", "check_docs", "report", "rules"]
 
 # Checksum vectors computed with the INN/OGRN algorithms; fictitious numbers
 # (region code 00 does not exist).

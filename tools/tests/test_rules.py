@@ -160,3 +160,118 @@ def test_load_rules_rejects_id_that_differs_from_file_name(tmp_path):
     (tmp_path / "one.md").write_text(text, encoding="utf-8")
     with pytest.raises(kb.KbError):
         kb.load_rules(str(tmp_path))
+
+
+# --------------------------------------------------------------------------
+# scripts/rules.py
+# --------------------------------------------------------------------------
+
+FIX_RULES = Path(__file__).resolve().parent / "fixtures" / "rules"
+FIX_KB = Path(__file__).resolve().parent / "fixtures" / "scripts" / "kb"
+
+
+def select_out(applicable, features=(), planned=(), products=("site",)):
+    return {"inputs": {"features": list(features), "planned": list(planned), "products": list(products)},
+            "applicable": [{"id": i, "why": ["always"]} for i in applicable]}
+
+
+def run_rules(tmp_path, select_data, *extra):
+    import subprocess
+    path = tmp_path / "select.json"
+    path.write_text(json.dumps(select_data), encoding="utf-8")
+    return subprocess.run([sys.executable, str(SCRIPTS / "rules.py"), "--select", str(path), "--kb", str(FIX_KB),
+                           "--rules", str(FIX_RULES), "--today", "2026-10-24", "--version", "0.2.0", *map(str, extra)],
+                          capture_output=True, text=True)
+
+
+def rule_lines(out):
+    return [line for line in out.splitlines() if line.startswith("- ")]
+
+
+def test_rules_cli_help_exits_0():
+    import subprocess
+    result = subprocess.run([sys.executable, str(SCRIPTS / "rules.py"), "--help"], capture_output=True, text=True)
+    assert result.returncode == 0 and "--select" in result.stdout
+
+
+def test_rules_picks_only_rules_with_applicable_requirements(tmp_path):
+    # Review focus 4: a self-employed owner — select did not return ru:t-npd-only, so its rule is absent
+    result = run_rules(tmp_path, select_out(["ru:t-always"], planned=["payments.yookassa"]))
+    assert result.returncode == 0, result.stderr
+    out = result.stdout
+    assert "Policy is published" not in out  # default lang ru
+    assert "Политика опубликована" in out and "Чек самозанятого" not in out
+
+
+def test_rules_needs_a_feature_or_always(tmp_path):
+    out = run_rules(tmp_path, select_out(["ru:t-always", "ru:t-analytics"])).stdout
+    assert "Счётчики после согласия" not in out  # requirement applicable, feature absent
+    out = run_rules(tmp_path, select_out(["ru:t-always", "ru:t-analytics"], planned=["analytics.web_counter"])).stdout
+    assert "Счётчики после согласия" in out
+
+
+def test_rules_respect_products(tmp_path):
+    assert "Два действия в боте" not in run_rules(tmp_path, select_out(["ru:t-always"])).stdout
+    assert "Два действия в боте" in run_rules(tmp_path, select_out(["ru:t-always"], products=["bot"])).stdout
+
+
+def test_rules_output_is_byte_identical_for_same_inputs(tmp_path):
+    # Review focus 3: state.json compares sha256, so a rerun with the same inputs must not differ
+    data = select_out(["ru:t-always", "ru:t-analytics", "ru:t-lowconf"], features=["analytics.web_counter"])
+    first, second = run_rules(tmp_path, data).stdout, run_rules(tmp_path, data).stdout
+    assert first == second and first
+
+
+def test_rules_never_exceeds_max_lines(tmp_path):
+    data = select_out(["ru:t-always", "ru:t-analytics", "ru:t-lowconf", "ru:t-ios"], features=["analytics.web_counter"])
+    out = run_rules(tmp_path, data, "--max-lines", "5").stdout
+    lines = out.rstrip("\n").splitlines()
+    assert len(lines) <= 5
+    assert "ещё" in lines[-1] and "plan.md" in lines[-1]
+
+
+def test_rules_default_limit_is_60_lines(tmp_path):
+    out = run_rules(tmp_path, select_out(["ru:t-always"])).stdout
+    assert len(out.rstrip("\n").splitlines()) <= 60
+
+
+def test_rules_label_downgrades_norm_for_low_confidence_requirement(tmp_path):
+    out = run_rules(tmp_path, select_out(["ru:t-lowconf", "ru:t-always"])).stdout
+    weak = [l for l in rule_lines(out) if "Слабая норма" in l][0]
+    strong = [l for l in rule_lines(out) if "Политика опубликована" in l][0]
+    assert "трактовка" in weak and "норма" not in weak.split("—", 1)[1].replace("Слабая норма", "")
+    assert ", норма" in strong
+
+
+def test_rules_platform_label_for_store_policy(tmp_path):
+    out = run_rules(tmp_path, select_out(["ru:t-ios"], products=["ios"])).stdout
+    line = [l for l in rule_lines(out) if "Удаление аккаунта" in l][0]
+    assert "правило платформы" in line
+
+
+def test_rules_lines_cite_requirements_and_order_norm_first(tmp_path):
+    data = select_out(["ru:t-always", "ru:t-analytics", "ru:t-lowconf"], features=["analytics.web_counter"])
+    lines = rule_lines(run_rules(tmp_path, data).stdout)
+    assert all("ru:t-" in l for l in lines)
+    assert "Политика опубликована" in lines[0]
+
+
+def test_rules_output_has_no_absolute_paths(tmp_path):
+    data = select_out(["ru:t-always", "ru:t-analytics"], features=["analytics.web_counter"])
+    out = run_rules(tmp_path, data, "--stacks", "nextjs").stdout
+    assert "/Us" + "ers/" not in out and "~" not in out and " /" not in out
+    assert "legal-kit references/stacks/nextjs.md" in out
+
+
+def test_rules_english_titles_with_lang_en(tmp_path):
+    out = run_rules(tmp_path, select_out(["ru:t-always"]), "--lang", "en").stdout
+    assert "Policy is published" in out and "norm" in out and "Generated by legal-kit 0.2.0" in out
+
+
+def test_rules_bad_select_exits_2(tmp_path):
+    import subprocess
+    bad = tmp_path / "select.json"
+    bad.write_text("[]", encoding="utf-8")
+    result = subprocess.run([sys.executable, str(SCRIPTS / "rules.py"), "--select", str(bad), "--kb", str(FIX_KB),
+                             "--rules", str(FIX_RULES)], capture_output=True, text=True)
+    assert result.returncode == 2
