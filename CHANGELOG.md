@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-28
+
+Bots as a product, plan and feature modes, rules library.
+
 ### Knowledge pack
 
 - 227 requirements and cards (base date 2026-10-23); new direction O «Боты и мини-приложения в мессенджерах»: documents and consent in a chat bot, in-chat payments and receipts, personal data through a foreign messenger, three platform-rule records for Telegram and MAX; NUC security certificates (from 2027-03-01) and acquirers' root-certificate practice.

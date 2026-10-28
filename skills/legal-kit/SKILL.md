@@ -3,7 +3,7 @@ name: legal-kit
 description: "Legal side of a website, app or Telegram/MAX bot under Russian law, in three modes: audit an existing product (code, live site, stores and registries; documents and consent UI in the project's design; a report), plan a product before it is built (a checklist .legal/plan.md and rules for the coding agent .legal/RULES.md), or give the rules for one feature being added now. Use for products with Russian users or a Russian owner (company, sole trader, self-employed): privacy policy, personal-data consent, cookie banner, public offer, receipts, requisites, consent log. Keywords: 152-FZ, ZoZPP, Roskomnadzor, new project, build checklist, adding payments, telegram bot, 152-ФЗ, ЗоЗПП, РКН, юридическое оформление сайта, создаю сайт, новый проект, до разработки, перед запуском, пишу форму, добавляю оплату, делаю бота, политика ПДн, согласие на обработку ПДн, cookie-баннер, публичная оферта. Russia only for now. Not for GDPR-, CCPA- or US-terms-only requests, contracts, tax questions, or styling an existing banner."
 license: MIT
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
 ---
 
 # legal-kit

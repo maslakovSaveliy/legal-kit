@@ -2,7 +2,7 @@
 
 Agent Skill для юридического оформления сайта или приложения. / An Agent Skill that sets up the legal side of a website or an app.
 
-Версия / version 0.1.0. [Русский](#русский) · [English](#english)
+Версия / version 0.2.0. [Русский](#русский) · [English](#english)
 
 ## Русский
 
