@@ -61,6 +61,7 @@ Template defaults are not placeholders to ask about: the edition date is the run
 
 ### Drafts and public pages
 
+- Mode `plan` drafts the documents before any code exists: drafts only, no public page ([plan.md](plan.md#plan-mode)).
 - `.legal/drafts/<doc>.md` are documents for the owner. They may keep placeholders only the owner can fill: signature, signing date, internal numbers, unknown facts and requisites. `check_docs.py` reports them with `"blocking": false`.
 - A public page is any text the product shows its users: a legal page, the footer or owner block, banner and checkbox texts, catalog entries, a Documents screen, and the paste artifacts in `.legal/paste/`. It carries no `{{…}}` except the requisites listed in `owner.withheld`, which stay visible and go to «Сделать вам».
 - A draft with any other unresolved requisite or document fact is not integrated: no page is created from it and an existing page is not rewritten with it. The draft stays in `.legal/drafts/`, and «Сделать вам» names the missing values and the page that waits for them; the next run integrates it once `answers.json` has them.

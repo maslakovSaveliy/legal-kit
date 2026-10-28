@@ -1,6 +1,6 @@
 ---
 name: legal-kit
-description: "Sets up the legal side of a website or mobile app: detects features from code, the live site, store listings and registries, selects applicable requirements, asks the owner only what it cannot see, writes documents and consent UI in the project's design, and reports what is left. Use for products with Russian users or a Russian owner (company, sole trader, self-employed) to make it legally compliant, audit it against Russian law, or add a privacy policy, personal-data consent, cookie banner, public offer, refund terms, owner requisites or a consent log. Keywords: 152-FZ, Roskomnadzor, ZoZPP, 152-ФЗ, ЗоЗПП, РКН, юридическое оформление сайта или приложения, проверка сайта по закону, политика обработки ПДн, согласие на обработку ПДн, cookie-баннер, публичная оферта, пользовательское соглашение, реквизиты продавца. Jurisdiction packs: Russia today; other jurisdictions are not covered yet. Not for GDPR-, CCPA- or US-terms-only requests, contracts, tax questions, or styling or debugging an existing cookie banner."
+description: "Legal side of a website, app or Telegram/MAX bot under Russian law, in three modes: audit an existing product (code, live site, stores and registries; documents and consent UI in the project's design; a report), plan a product before it is built (a checklist .legal/plan.md and rules for the coding agent .legal/RULES.md), or give the rules for one feature being added now. Use for products with Russian users or a Russian owner (company, sole trader, self-employed): privacy policy, personal-data consent, cookie banner, public offer, receipts, requisites, consent log. Keywords: 152-FZ, ZoZPP, Roskomnadzor, new project, build checklist, adding payments, telegram bot, 152-ФЗ, ЗоЗПП, РКН, юридическое оформление сайта, создаю сайт, новый проект, до разработки, перед запуском, пишу форму, добавляю оплату, делаю бота, политика ПДн, согласие на обработку ПДн, cookie-баннер, публичная оферта. Russia only for now. Not for GDPR-, CCPA- or US-terms-only requests, contracts, tax questions, or styling an existing banner."
 license: MIT
 metadata:
   version: "0.1.0"
@@ -8,7 +8,16 @@ metadata:
 
 # legal-kit
 
-One run sets up the legal side of a product: find out what it does (code, live site, app stores, public registries), select the requirements that apply, ask the owner only what cannot be seen, write the documents and the consent UI in the project's own design, and report what is left.
+One run sets up the legal side of a product (a site, a web or mobile app, or a bot or mini app in Telegram or MAX): find out what it does (code, live site, app stores, public registries), select the requirements that apply, ask the owner only what cannot be seen, write the documents and the consent UI in the project's own design, and report what is left.
+
+## Modes
+
+[plan.md](references/workflow/plan.md)
+
+- **Audit** (`repo+prod`, `repo-only`, `prod-only`): the product exists; the phases below run as written.
+- **Plan** (`plan`): the product is not built yet or the request is a new project («создаю сайт», «до разработки», "new project"). Features come from the owner's words (`product.planned_features`, `select.py --planned`); the run writes `.legal/plan.md` (`report.py render --plan`), `.legal/RULES.md` (`scripts/rules.py`) and drafts, and integrates nothing.
+- **Feature** (`feature`): one function is being added to an existing project («добавляю оплату», «пишу бота»). Give its rules from `references/rules/` in the chat, rebuild `RULES.md` when it exists, ask at most one question, write no report.
+- Every mode keeps the hard rules: a rule that is an interpretation, a practice or a platform rule is never presented as an obligation.
 
 Paths here and in the references are relative to this skill's folder (`<skill>` in commands). Run scripts as `python3 <skill>/scripts/<name>.py` from the user's project. They need Python 3.9+ and the standard library only. Without `python3`, every workflow file ends with a "Without python3" section that gives the manual equivalent.
 
@@ -45,7 +54,7 @@ Pack files used at run time (all under `references/jurisdictions/ru/`):
 | `documents/<doc>.md` | specs of 13 documents without a template |
 | [BASE.md](references/jurisdictions/ru/BASE.md) | the base date printed in the report |
 
-Neutral files: `references/features/catalog.json` (feature signals for code, hosts and DOM) and `references/stacks/<stack>.md` (how to build pages, consent UI and the consent log in each stack).
+Neutral files: `references/features/catalog.json` (feature signals for code, hosts and DOM), `references/stacks/<stack>.md` (how to build pages, consent UI and the consent log in each stack, a bot included) and `references/rules/` (one best-practice rule per file, each with the requirement ids it rests on).
 
 ## Files in the user's project
 
@@ -58,6 +67,8 @@ Everything the skill keeps lives in `.legal/`:
 | `sources.json` | runtime sources: `[{"url", "fetched_at", "quote", "kind"}]`, quote at most 25 words, kind `official`, `market` or `platform`; created as `[]` at intake |
 | `report.json`, `report-YYYY-MM-DD.md` | the report and its rendering |
 | `drafts/<doc>.md` | document drafts for the owner; they may keep placeholders, public pages may not |
+| `plan.md` | mode `plan`: the development checklist with requirement ids |
+| `RULES.md` | rules for the agent that writes the code; one link line in `CLAUDE.md`, `AGENTS.md` or `.cursor/rules/` with the owner's OK |
 | `paste/<platform>/` | paste-ready artifacts when there is no repo, the site runs on a no-code platform, or a mobile app has no website to host its documents |
 | `evidence/` | scanner output and screenshots |
 | `.gitignore` | created on the first write; lists `answers.json` and `evidence/` |
@@ -73,7 +84,8 @@ All print JSON (except `render`) and never change the project. Exact flags: `--h
 | `scripts/registry.py egrul\|npd\|whois\|cbr\|rkn ARG` | 1 | one registry lookup: `ok`, `not_found`, `manual` or `error` |
 | `scripts/select.py --answers .legal/answers.json --features …` | 2 | applicable and filtered requirements, templates and documents with their triggers, owner questions, owner checks |
 | `scripts/check_docs.py DRAFT… [--public PAGE]… --answers .legal/answers.json` | 5, 6 | placeholders (requisite, fact or runtime; blocking only on public pages), conditions, INN and OGRN checksums, mismatches, forbidden clauses (`risk` never blocks) |
-| `scripts/report.py verify\|render` | 7 | checks the report against the base; renders it as Markdown |
+| `scripts/report.py verify\|render` | 7 | checks the report against the base; renders it as Markdown, or `plan.md` with `--plan` |
+| `scripts/rules.py --select …` | 7 | `.legal/RULES.md`: the rules of `references/rules/` that apply, at most 60 lines |
 
 ## Workflow
 
@@ -86,7 +98,7 @@ Run the phases in order. Phases 0 to 4 never touch the project's files outside `
 - Detect the user's language: the dialog, the questions and the report use it; documents stay in Russian.
 - Load `.legal/answers.json`, `.legal/state.json` and the previous `.legal/report.json` (a rerun). Create `.legal/.gitignore` and `.legal/sources.json` (`[]`) if missing.
 - Write facts from the prompt into `answers.json` at once (status, name, INN, URLs, product kind, requisites the owner withholds into `owner.withheld`); unknown stays `null`, nothing is guessed. A value the prompt gives is never asked again: later it is shown as confirmed. A `localhost` URL is a recon target, never stored in `product.urls`.
-- Choose the jurisdiction (`ru` when the owner or the users are in Russia and nothing points to another country) and the mode: `repo+prod`, `repo-only` or `prod-only`. Store listings are not a live URL.
+- Choose the jurisdiction (`ru` when the owner or the users are in Russia and nothing points to another country) and the mode: `repo+prod`, `repo-only`, `prod-only`, or `plan` / `feature` by the words of the request ([plan.md](references/workflow/plan.md#choosing-the-mode)). Store listings are not a live URL.
 - Record whether the git tree is clean before anything is written.
 - **Gate:** if the prompt and `answers.json` lack the product, the owner or a URL or repo, ask the start questions for the keys still empty (at most 5, one message) and wait. Code or any URL, a local one included, answers what the product is and where it runs. If the owner is still unknown afterwards, continue with `null` and guess from the footer and WHOIS.
 
@@ -101,8 +113,8 @@ Run the phases in order. Phases 0 to 4 never touch the project's files outside `
 
 [applicability.md](references/workflow/applicability.md)
 
-- Confirmed features plus `answers.json` go into `scripts/select.py`, which reads `references/jurisdictions/ru/feature-map.json` and derives the owner facts itself.
-- A sector applies only with sector evidence and the owner's confirmation. Store rules are platform rules. A future date goes to the roadmap.
+- Confirmed features plus `answers.json` go into `scripts/select.py`, which reads `references/jurisdictions/ru/feature-map.json` and derives the owner facts itself. Features in the owner's words go only through `--planned`, in modes `plan` and `feature`; an audit compares them with the code instead («План и факт»).
+- A sector applies only with sector evidence and the owner's confirmation. Store rules and the rules of Telegram and MAX for bots are platform rules. A future date goes to the roadmap.
 - A mixed product is the union of its features: each requirement once, one set of documents.
 
 ### Phase 3. Confirmation block
@@ -141,6 +153,7 @@ Run the phases in order. Phases 0 to 4 never touch the project's files outside `
 - Pages at existing routes or `/legal/{privacy,offer,refund,requisites}`; consent checkbox unchecked and separate from accepting the offer; banner that holds counters until consent; owner block: a short footer (template section 3.2) that links to a requisites page with every element the template's element table requires for the owner's status (section 3.1); UI strings in the project's i18n catalogs, long documents may be content files per locale.
 - Consent log only on an existing backend and ORM, table `consent_log`; a migration file for every model change, never applied: by the project's tool when it does not need a non-local database, otherwise written by hand only for plain formats (Django, Alembic, Laravel, Prisma SQL); the command always in «Сделать вам».
 - Record managed files in `.legal/state.json`, run the project's typecheck, lint and build without installing anything, then `scripts/check_docs.py` with every changed page and file and the paste artifacts, each after its own `--public`; it must exit 0. Per-user values (buyer's name, order number) become the project's own interpolation. Commit nothing.
+- Mode `plan` skips this phase: without code nothing is integrated.
 - No repo or a no-code site: artifacts in `.legal/paste/<platform>/` and step-by-step placement instructions, whatever `apply_changes` says. A mobile app without a website: a hosting TODO and pages in `.legal/paste/html/`.
 
 ### Phase 7. Report
@@ -148,9 +161,10 @@ Run the phases in order. Phases 0 to 4 never touch the project's files outside `
 [report.md](references/workflow/report.md)
 
 - Before writing, re-locate every `{file, line}` in a file the run changed so lines point at the final files; a row about removed content cites the baseline line with `"note": "до правок"`. A row selected through a feature carries that feature's evidence in every status and bucket, and a disputed point about a detected feature carries the id of the requirement it concerns, never `req: null`: merged into that row when it is interpretive, else a separate `disputed` row with the same `req` ([report.md](references/workflow/report.md#evidence)).
-- Write `.legal/report.json` with `owner_checklist` and one «Предложения скилла» row for the proposals that reached a page, run `scripts/report.py verify` (with `--answers .legal/answers.json`, so sector rows need a confirmed sector) and fix the report until it exits 0 (exit 2 means bad input: fix the file, not the findings), then `scripts/report.py render` into `.legal/report-YYYY-MM-DD.md`.
+- Write `.legal/report.json` with `owner_checklist` and one «Предложения скилла» row for the proposals that reached a page, run `scripts/report.py verify` (with `--answers .legal/answers.json`, so sector rows need a confirmed sector) and fix the report until it exits 0 (exit 2 means bad input: fix the file, not the findings), then `scripts/report.py render` into `.legal/report-YYYY-MM-DD.md`. Mode `plan` adds `render --plan` into `.legal/plan.md` and `scripts/rules.py` into `.legal/RULES.md`.
+- End with «Что можно улучшить или добавить»: `suggestions`, at most 7, risk first; with nothing substantial, «Критичного нет» ([plan.md](references/workflow/plan.md#suggestions-after-the-run)).
 - Finish with a short summary in the chat in the user's language: what changed (uncommitted), what the owner must do, what is disputed, which registry checks wait for the user, and that this is not legal advice.
 
 ## Reruns
 
-A second run reads `answers.json` instead of asking again and uses `state.json` to update its own files in place: no second checkbox, banner, footer block, page or log model. A managed file whose sha256 no longer matches was changed by someone else: leave it untouched and list the difference in the report. Row statuses are compared with the previous report.
+A second run reads `answers.json` instead of asking again and uses `state.json` to update its own files in place: no second checkbox, banner, footer block, page or log model. A managed file whose sha256 no longer matches was changed by someone else: leave it untouched and list the difference in the report. Row statuses are compared with the previous report. With `product.planned_features`, the audit also compares the plan with the code and rebuilds `RULES.md` without duplicates.

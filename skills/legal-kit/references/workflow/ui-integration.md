@@ -144,6 +144,8 @@ Holding counters until consent is engineering practice, not a norm: its report r
 | `checkbox` | forms and server-side validation of consent |
 | `banner` | banner, consent store or loader, gated analytics and SDK wrappers, native config flags |
 | `footer` | footer, layout requisites, links |
+| `rules` | `.legal/RULES.md` ([plan.md](plan.md#rulesmd)) |
+| `agent-link` | the one link line in `CLAUDE.md` or `AGENTS.md`, or `.cursor/rules/legal-kit.mdc` ([plan.md](plan.md#link-for-the-coding-agent)) |
 | `consent-log` | log model, migration, service, endpoint |
 
 Catalogs and other shared files take the kind of their main change. On a rerun:

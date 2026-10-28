@@ -287,18 +287,18 @@ def test_every_expectation_date_in_a_requirement_context_matches_its_record():
 
 # --- triggers.json ----------------------------------------------------------------------------
 
-def test_triggers_json_has_ten_positive_and_ten_negative_queries():
+def test_triggers_json_has_sixteen_positive_and_fourteen_negative_queries():
     triggers = load_json(EVALS / "triggers.json")
-    assert isinstance(triggers, list) and len(triggers) == 20
+    assert isinstance(triggers, list) and len(triggers) == 30
     for item in triggers:
         assert set(item) == {"query", "should_trigger"}
         assert isinstance(item["query"], str) and item["query"].strip()
         assert isinstance(item["should_trigger"], bool)
     queries = [t["query"] for t in triggers]
-    assert len(set(queries)) == 20
+    assert len(set(queries)) == 30
     positive = [t for t in triggers if t["should_trigger"]]
     negative = [t for t in triggers if not t["should_trigger"]]
-    assert len(positive) == 10 and len(negative) == 10
+    assert len(positive) == 16 and len(negative) == 14
     for group in (positive, negative):
         russian = [t for t in group if re.search(r"[А-Яа-яЁё]", t["query"])]
         english = [t for t in group if not re.search(r"[А-Яа-яЁё]", t["query"])]
