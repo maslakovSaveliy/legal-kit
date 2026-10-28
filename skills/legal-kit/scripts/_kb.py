@@ -158,6 +158,52 @@ def load_forbidden_clauses(kb):
     return [item for item in data if isinstance(item, dict) and item.get("pattern_text")]
 
 
+RULE_KEYS = ("id", "title_ru", "title_en", "reqs", "basis", "features", "always", "products", "stacks")
+RULE_LISTS = ("reqs", "features", "products", "stacks")
+RULE_BASES = ("norm", "practice", "interpretation", "platform")
+
+
+def _rule_value(raw):
+    raw = raw.strip()
+    if raw.startswith("[") and raw.endswith("]"):
+        return [part.strip().strip('"') for part in raw[1:-1].split(",") if part.strip()]
+    if raw in ("true", "false"):
+        return raw == "true"
+    return raw[1:-1] if len(raw) >= 2 and raw[0] == raw[-1] == '"' else raw
+
+
+def load_rules(rules_dir):
+    """{id: rule} of references/rules/*.md (README.md excluded); the frontmatter is flat `key: value`
+    lines with `[a, b]` lists. A wrong key set, type or an id that differs from the file name raises KbError."""
+    if not os.path.isdir(rules_dir):
+        raise KbError("rules directory not found: %s" % rules_dir)
+    rules = {}
+    for name in sorted(os.listdir(rules_dir)):
+        if not name.endswith(".md") or name == "README.md":
+            continue
+        path = os.path.join(rules_dir, name)
+        text = read_text(path)
+        if not text.startswith("---\n") or "\n---\n" not in text[4:]:
+            raise KbError("%s: no frontmatter" % path)
+        rule = {}
+        for line in text[4:].split("\n---\n", 1)[0].splitlines():
+            if not line.strip():
+                continue
+            key, sep, value = line.partition(":")
+            if not sep:
+                raise KbError("%s: bad frontmatter line %r" % (path, line))
+            rule[key.strip()] = _rule_value(value)
+        if set(rule) != set(RULE_KEYS):
+            raise KbError("%s: frontmatter keys must be %s" % (path, ", ".join(RULE_KEYS)))
+        if any(not isinstance(rule[k], list) for k in RULE_LISTS) or not isinstance(rule["always"], bool):
+            raise KbError("%s: %s must be [lists] and always true or false" % (path, ", ".join(RULE_LISTS)))
+        if rule["basis"] not in RULE_BASES or rule["id"] != name[:-3]:
+            raise KbError("%s: basis must be %s and id must equal the file name" % (path, "|".join(RULE_BASES)))
+        rule["path"] = path
+        rules[rule["id"]] = rule
+    return rules
+
+
 def load_feature_map(kb):
     path = os.path.join(str(kb), "feature-map.json")
     data = load_json(path)
