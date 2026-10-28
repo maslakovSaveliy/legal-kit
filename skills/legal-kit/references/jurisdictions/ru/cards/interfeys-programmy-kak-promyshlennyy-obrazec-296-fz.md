@@ -2,7 +2,7 @@
 id: ru:interfeys-programmy-kak-promyshlennyy-obrazec-296-fz
 title: "Интерфейс программы как промышленный образец и новое определение программы (296-ФЗ, с 01.01.2027)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["296-ФЗ ст. 1 пп. 1–5, ст. 2", "ГК РФ ст. 1261 (ред. 296-ФЗ)", "ГК РФ ст. 1352 п. 1 (ред. 296-ФЗ)", "ГК РФ ст. 1350 пп. 1, 5", "ГК РФ ст. 1351 п. 1", "ГК РФ ст. 1358 п. 2 подп. 3", "ГК РФ ст. 1358 п. 3", "ГК РФ ст. 1352 пп. 2–4", "ГК РФ ст. 1353", "ГК РФ ст. 1363 пп. 1, 3", "ГК РФ ст. 1225 п. 1 подп. 9", "ГК РФ ст. 1232 пп. 1, 2", "Пленум ВС РФ от 23.04.2019 № 10 пп. 118, 120, 123"]
 effective_from: 2027-01-01
 checked: 2026-10-01

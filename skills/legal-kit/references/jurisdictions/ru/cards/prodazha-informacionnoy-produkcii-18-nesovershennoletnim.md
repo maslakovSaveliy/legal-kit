@@ -2,7 +2,7 @@
 id: ru:prodazha-informacionnoy-produkcii-18-nesovershennoletnim
 title: "Запрет продажи информационной продукции 18+ несовершеннолетним и проверка возраста (436-ФЗ ст. 16 ч. 6)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["436-ФЗ ст. 16 ч. 6, 7", "436-ФЗ ст. 5 ч. 2", "436-ФЗ ст. 6 ч. 3 п. 5", "436-ФЗ ст. 12 ч. 1 п. 5", "436-ФЗ ст. 2 пп. 5, 12", "436-ФЗ ст. 1 ч. 2", "436-ФЗ ст. 20 ч. 1", "569-ФЗ ст. 5 п. 2, ст. 8 ч. 1", "КоАП ст. 6.17 ч. 1"]
 effective_from: mixed
 checked: 2026-10-01

@@ -2,7 +2,7 @@
 id: ru:vozrastnaya-kategoriya-v-reklame
 title: "Возрастная категория в рекламе информационной продукции (38-ФЗ ст. 5 ч. 10.1)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: warm
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["38-ФЗ ст. 5 ч. 10.1", "38-ФЗ ст. 3 пп. 1, 2, 5, 7", "38-ФЗ ст. 2 ч. 1", "38-ФЗ ст. 38 ч. 6, 7", "436-ФЗ ст. 1 ч. 2", "436-ФЗ ст. 2 п. 5", "436-ФЗ ст. 6 ч. 3", "436-ФЗ ст. 12 ч. 1", "КоАП ст. 14.3 ч. 1", "КоАП ст. 4.5 ч. 1", "КоАП ст. 23.48"]
 effective_from: mixed
 checked: 2026-10-01

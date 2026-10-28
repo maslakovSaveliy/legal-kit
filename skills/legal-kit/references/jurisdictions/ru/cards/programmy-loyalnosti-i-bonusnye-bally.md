@@ -2,7 +2,7 @@
 id: ru:programmy-loyalnosti-i-bonusnye-bally
 title: "Программы лояльности и бонусные баллы: ЗоЗПП к маркетинговым программам (Обзор ВС 2022, п. 4) и ПП № 657 пп. 12–13"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: medium
 volatility: warm
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: court
 subjects: [ul, ip, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["Обзор судебной практики ВС РФ по делам о защите прав потребителей от 19.10.2022, п. 4 (Определение СК по гражданским делам ВС РФ от 08.02.2022 № 5-КГ21-191-К2)", "ЗоЗПП ст. 10 п. 1", "ГК РФ ст. 437 п. 1, 2", "ПП РФ от 30.05.2026 № 657 пп. 12, 13, 30"]
 effective_from: mixed
 checked: 2026-10-16

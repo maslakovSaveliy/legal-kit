@@ -2,7 +2,7 @@
 id: ru:ekstraterritorialnost-152-fz
 title: "Экстерриториальность 152-ФЗ: обработка ПДн граждан РФ иностранными лицами"
 category: concept
-updated: 2026-09-29
+updated: 2026-10-23
 verified: 2026-09-29
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["152-ФЗ ст. 1 ч. 1.1", "152-ФЗ ст. 18 ч. 5", "152-ФЗ ст. 6 ч. 6", "152-ФЗ ст. 23 ч. 3 п. 3.1", "149-ФЗ ст. 15.5", "236-ФЗ ст. 9, ст. 10 ч. 4", "ГПК РФ ст. 402 ч. 3 подп. 10"]
 effective_from: mixed
 checked: 2026-09-29

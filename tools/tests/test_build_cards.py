@@ -35,7 +35,7 @@ CONFIDENCE = {"high", "medium", "low"}
 VOLATILITY = {"hot", "warm", "cold"}
 SUBJECTS = {"ul", "ip", "npd", "foreign"}
 MODELS = {"b2b", "b2c"}
-PRODUCTS = {"site", "webapp", "ios", "android"}
+PRODUCTS = {"site", "webapp", "ios", "android", "bot"}
 TECH_KINDS = {"norm", "practice", "interpretation", "inference", "platform"}
 REQUIRED_KEYS = [
     "id", "dir", "title", "summary", "trigger", "obligation", "source_kind", "legal_confidence",
@@ -435,13 +435,13 @@ def source_cards():
 
 
 @needs_wiki
-def test_219_requirements_and_cards(pack):
+def test_227_requirements_and_cards(pack):
     out, _, records = pack
-    assert len(records) == 219
+    assert len(records) == 227
     assert [r["id"] for r in records] == sorted(r["id"] for r in records)
-    assert len({r["id"] for r in records}) == 219
+    assert len({r["id"] for r in records}) == 227
     cards = sorted(p.name for p in (out / "cards").iterdir())
-    assert len(cards) == 219
+    assert len(cards) == 227
     assert cards == sorted(f"{r['id'][3:]}.md" for r in records)
     assert all(r["card"] == f"cards/{r['id'][3:]}.md" for r in records)
 
@@ -505,7 +505,7 @@ def test_enum_fields_valid(pack):
         assert r["subjects"] and set(r["subjects"]) <= SUBJECTS, r["id"]
         assert r["models"] and set(r["models"]) <= MODELS, r["id"]
         assert r["products"] and set(r["products"]) <= PRODUCTS, r["id"]
-        assert re.fullmatch(r"[A-N]", r["dir"]), r["id"]
+        assert re.fullmatch(r"[A-O]", r["dir"]), r["id"]
         assert r["effective_from"] == "mixed" or re.fullmatch(r"\d{4}-\d\d-\d\d", r["effective_from"]), r["id"]
         assert r["title"] and r["summary"] and r["trigger"] and r["acts"], r["id"]
         assert r["tech"] and r["cannot_check"], r["id"]
@@ -570,10 +570,10 @@ def test_authority_positions_are_not_norms(pack, source_cards):
 
 
 @needs_wiki
-def test_eight_requirements_with_future_effective_from(pack):
+def test_nine_requirements_with_future_effective_from(pack):
     _, _, records = pack
     future = [r["id"] for r in records if r["effective_from"] != "mixed" and r["effective_from"] > LAUNCH_DATE]
-    assert len(future) == 8, future
+    assert len(future) == 9, future  # 0.2: + ru:sertifikaty-bezopasnosti-nuc (2027-03-01)
 
 
 @needs_wiki

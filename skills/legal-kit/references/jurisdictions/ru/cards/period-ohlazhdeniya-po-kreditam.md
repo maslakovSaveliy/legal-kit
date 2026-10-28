@@ -2,7 +2,7 @@
 id: ru:period-ohlazhdeniya-po-kreditam
 title: "«Период охлаждения» по потребкредитам и займам: проверка получателя по базе, задержка выдачи на 4 или 48 часов, право отказаться (353-ФЗ ст. 7 ч. 9.1–9.5 в ред. 9-ФЗ)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: sectoral
 source_kind: law
 subjects: [ul]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["353-ФЗ ст. 7 ч. 9.1–9.5", "353-ФЗ ст. 11 ч. 1 (слова, добавленные 9-ФЗ)", "353-ФЗ ст. 13 ч. 7–10", "9-ФЗ от 13.02.2025 ст. 6, ст. 7 ч. 2", "161-ФЗ ст. 27 ч. 5 (база данных)", "332-ФЗ от 04.08.2026 (ч. 9.6–9.11 ст. 7 353-ФЗ, с 01.10.2027)"]
 effective_from: 2025-09-01
 checked: 2026-10-01

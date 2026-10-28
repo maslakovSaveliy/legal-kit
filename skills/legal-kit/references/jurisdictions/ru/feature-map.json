@@ -135,6 +135,36 @@
       "ru:pravila-storov-akkaunty-i-vhod",
       "ru:sposoby-avtorizacii-polzovateley"
     ],
+    "bot.max": [
+      "ru:dokumenty-i-soglasiya-v-chat-bote",
+      "ru:lokalizaciya-pdn",
+      "ru:pdn-pri-sbore-cherez-inostrannyy-messendzher",
+      "ru:politika-obrabotki-pdn",
+      "ru:pravila-platform-botov-dannye-i-dopusk",
+      "ru:pravila-platform-botov-rassylki-i-soobshcheniya",
+      "ru:soglasie-na-obrabotku-pdn"
+    ],
+    "bot.mini_app": [
+      "ru:dokumenty-i-soglasiya-v-chat-bote",
+      "ru:lokalizaciya-pdn",
+      "ru:pdn-pri-sbore-cherez-inostrannyy-messendzher",
+      "ru:politika-obrabotki-pdn",
+      "ru:pravila-platform-botov-dannye-i-dopusk",
+      "ru:pravila-platform-botov-rassylki-i-soobshcheniya",
+      "ru:soglasie-na-obrabotku-pdn",
+      "ru:sposoby-avtorizacii-polzovateley"
+    ],
+    "bot.telegram": [
+      "ru:dokumenty-i-soglasiya-v-chat-bote",
+      "ru:lokalizaciya-pdn",
+      "ru:pdn-pri-sbore-cherez-inostrannyy-messendzher",
+      "ru:politika-obrabotki-pdn",
+      "ru:pravila-platform-botov-dannye-i-dopusk",
+      "ru:pravila-platform-botov-rassylki-i-soobshcheniya",
+      "ru:soglasie-na-obrabotku-pdn",
+      "ru:sposoby-avtorizacii-polzovateley",
+      "ru:transgranichnaya-peredacha-pdn"
+    ],
     "captcha.smartcaptcha": [
       "ru:postavshchiki-analitiki-i-sdk"
     ],
@@ -338,6 +368,12 @@
       "ru:servis-rassrochki-na-sayte-prodavca",
       "ru:svedeniya-o-prodavce-pri-distancionnoy-prodazhe"
     ],
+    "payments.bot_invoice": [
+      "ru:onlayn-kkt-i-elektronnyy-chek",
+      "ru:oplata-v-chat-bote-i-chek",
+      "ru:pravila-platform-botov-oplata",
+      "ru:svedeniya-o-prodavce-pri-distancionnoy-prodazhe"
+    ],
     "payments.cloudpayments": [
       "ru:cena-v-rublyah-i-polnaya-summa",
       "ru:cheki-pri-prodazhe-cherez-agentov-i-story",
@@ -384,7 +420,15 @@
       "ru:cheki-pri-prodazhe-cherez-agentov-i-story",
       "ru:edinaya-cena-nezavisimo-ot-sposoba-oplaty",
       "ru:onlayn-kkt-i-elektronnyy-chek",
-      "ru:svedeniya-o-prodavce-pri-distancionnoy-prodazhe"
+      "ru:svedeniya-o-prodavce-pri-distancionnoy-prodazhe",
+      "ru:trebovaniya-ekvayerov-k-sertifikatam-nuc"
+    ],
+    "payments.telegram_stars": [
+      "ru:cifrovoy-kontent-i-prava-potrebitelya",
+      "ru:onlayn-kkt-i-elektronnyy-chek",
+      "ru:oplata-v-chat-bote-i-chek",
+      "ru:pravila-platform-botov-oplata",
+      "ru:zapret-oplaty-cifrovoy-valyutoy"
     ],
     "payments.yookassa": [
       "ru:cena-v-rublyah-i-polnaya-summa",
@@ -633,6 +677,7 @@
         "ru:oficialnye-sayty-i-stranicy-gosorganov",
         "ru:peredacha-informacii-iz-gis-v-chastnye-is",
         "ru:podryadchik-operatora-gis",
+        "ru:sertifikaty-bezopasnosti-nuc",
         "ru:skzi-v-gis",
         "ru:ukaz-250-dopolnitelnye-mery-ib",
         "ru:zapret-inostrannogo-po-v-gossektore",
@@ -876,6 +921,7 @@
     "ru:sluzhba-zakaza-legkovogo-taksi": "Только служба заказа легкового такси из регионального реестра.",
     "ru:telemedicina-informaciya-dlya-pacienta": "Консультирующая медорганизация или оператор иной ИС, через которую идут телемедицинские консультации.",
     "ru:telemedicina-usloviya-okazaniya": "Только медорганизация или ИП с лицензией, оказывающие медпомощь с телемедицинскими технологиями.",
+    "ru:trebovaniya-ekvayerov-k-sertifikatam-nuc": "Требование банка, не норма: корень Минцифры в trust store бэка.",
     "ru:ukaz-250-dopolnitelnye-mery-ib": "Только субъекты КИИ, стратегические и системообразующие организации, госкорпорации.",
     "ru:upolnomochennoe-lico-v-bankovskom-prilozhenii": "Только банк, у которого есть клиенты-физлица.",
     "ru:vrachebnaya-tayna-v-medicinskih-servisah": "Медорганизации и лица, получившие сведения при исполнении обязанностей; любому оператору данных о здоровье — ru:specialnye-kategorii-pdn.",
@@ -885,6 +931,9 @@
     "ru:zashchita-informacii-v-gis": "Только оператор ГИС, иной ИС госоргана, ГУП или госучреждения; подрядчику — ru:podryadchik-operatora-gis."
   },
   "platform_rules": [
+    "ru:pravila-platform-botov-dannye-i-dopusk",
+    "ru:pravila-platform-botov-oplata",
+    "ru:pravila-platform-botov-rassylki-i-soobshcheniya",
     "ru:pravila-storov-akkaunty-i-vhod",
     "ru:pravila-storov-deti-i-vozrastnoy-reyting",
     "ru:pravila-storov-generativnyy-ii",
@@ -915,6 +964,9 @@
         "auth.telegram",
         "auth.vk_id",
         "auth.yandex_id",
+        "bot.max",
+        "bot.mini_app",
+        "bot.telegram",
         "chat.widget",
         "commerce.cart_physical",
         "commerce.checkout",
@@ -1073,6 +1125,7 @@
         "commerce.subscription",
         "mobile.iap",
         "payments.bnpl",
+        "payments.bot_invoice",
         "payments.cloudpayments",
         "payments.paddle",
         "payments.receipts_kkt",
@@ -1080,6 +1133,7 @@
         "payments.sbp",
         "payments.stripe",
         "payments.tbank",
+        "payments.telegram_stars",
         "payments.yookassa"
       ],
       "facts": [

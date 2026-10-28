@@ -6,7 +6,7 @@
 - [Run select.py](#run-selectpy)
 - [The feature map](#the-feature-map)
 - [Sectors](#sectors)
-- [Store rules](#store-rules)
+- [Platform rules](#platform-rules)
 - [Assess each requirement](#assess-each-requirement)
 - [Dates and the roadmap](#dates-and-the-roadmap)
 - [One package](#one-package)
@@ -64,9 +64,14 @@ A sector requirement applies only when both hold:
 
 Evidence without confirmation: the group is a blocking confirmation item, not a row, even when `business.sectors` is `[]`. Confirmation without evidence (the owner says so): the owner's word is the evidence; note it. A word outside the evidence list, such as «консультации» in a design studio, is no sign at all: do not propose the sector and do not run sector registries. After the confirmation rerun `select.py`; the stored groups come from `answers.json`. `report.py verify --answers` rejects a `mandatory` or `conditional` row of a sector requirement (status other than `n_a`) that no stored group lists ([report.md](report.md#verify)).
 
-## Store rules
+## Platform rules
 
-The store records (`ru:pravila-storov-*`, listed under `platform_rules`) apply when `product.kinds` has `ios` or `android` or a store listing exists, whether `select.py` returns them through a feature such as `mobile.app` or you add them because of the listing. They are reported as platform rules: `source` `base`, `basis` `platform`, `level` `recommended` or `interpretation` ([recon-stores.md](recon-stores.md#store-rules-in-the-report)).
+`platform_rules` lists two families. Both are contract terms of a platform, never Russian law:
+
+- Store records (`ru:pravila-storov-*`) apply when `product.kinds` has `ios` or `android` or a store listing exists, whether `select.py` returns them through a feature such as `mobile.app` or you add them because of the listing ([recon-stores.md](recon-stores.md#store-rules-in-the-report)).
+- Bot platform records (`ru:pravila-platform-botov-*`, Telegram and MAX) apply when `product.kinds` has `bot` or a `bot.*` feature is found.
+
+Both are reported as platform rules: `source` `base`, `basis` `platform`, `level` `recommended` or `interpretation`.
 
 ## Assess each requirement
 

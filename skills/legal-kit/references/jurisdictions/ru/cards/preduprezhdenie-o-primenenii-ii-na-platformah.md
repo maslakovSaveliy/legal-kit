@@ -2,7 +2,7 @@
 id: ru:preduprezhdenie-o-primenenii-ii-na-platformah
 title: "Возможность предупреждения о применении ИИ на крупных площадках с персональными страницами (243-ФЗ ст. 9 ч. 3)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["243-ФЗ ст. 9 ч. 3", "243-ФЗ ст. 3 п. 2", "243-ФЗ ст. 11", "243-ФЗ ст. 13 ч. 1, 2", "149-ФЗ ст. 10.6 ч. 1 (вводная часть), ч. 11 п. 2 — для сравнения"]
 effective_from: 2027-03-01
 checked: 2026-10-01

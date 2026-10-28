@@ -37,6 +37,7 @@ WORKFLOW_FILES = (
     "research-rules",
     "safety",
     "report",
+    "plan",
 )
 
 MAX_SKILL_BODY_LINES = 500

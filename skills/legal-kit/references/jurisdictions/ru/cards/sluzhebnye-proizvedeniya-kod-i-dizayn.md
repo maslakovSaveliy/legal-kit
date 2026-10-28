@@ -2,7 +2,7 @@
 id: ru:sluzhebnye-proizvedeniya-kod-i-dizayn
 title: "Служебные произведения: права на код и дизайн, созданные работниками (ГК РФ ст. 1295)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: high
 volatility: cold
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ГК РФ ст. 1295 пп. 1–4", "ГК РФ ст. 1228 пп. 2–3", "ГК РФ ст. 1255 п. 3", "ГК РФ ст. 1265 п. 1", "Пленум ВС РФ от 23.04.2019 № 10 пп. 54, 104–106"]
 effective_from: mixed
 checked: 2026-10-01

@@ -2,7 +2,7 @@
 id: ru:izobrazhenie-grazhdanina-v-kontente
 title: "Изображение гражданина в контенте сайта и приложения: согласие на фото и видео людей (ГК РФ ст. 152.1, 152.2 п. 1; Пленум ВС № 25)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: high
 volatility: warm
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ГК РФ ст. 152.1 пп. 1–3", "ГК РФ ст. 152.2 пп. 1–2, 4–5", "ГК РФ ст. 150 п. 1–2", "149-ФЗ ст. 9 ч. 5", "Пленум ВС РФ от 23.06.2015 № 25 пп. 43–49", "152-ФЗ ст. 10.1 ч. 1, 2, 8", "152-ФЗ ст. 11 ч. 1"]
 effective_from: mixed
 checked: 2026-10-01

@@ -11,6 +11,8 @@
 - [Rows without a requirement id](#rows-without-a-requirement-id)
   - [Proposals of the skill](#proposals-of-the-skill)
 - [Registries, owner_checklist and not_checked](#registries-owner_checklist-and-not_checked)
+- [Plan mode](#plan-mode)
+- [Suggestions and plan vs fact](#suggestions-and-plan-vs-fact)
 - [Verify](#verify)
 - [Render](#render)
 - [Chat summary](#chat-summary)
@@ -34,10 +36,10 @@
 }
 ```
 
-- Every key is required except `lang` and `owner_checklist`.
+- Every key is required except `lang`, `owner_checklist`, `suggestions`, `plan_diff`, `planned` and `not_covered`.
 - `generated` is the run date, the same date passed to `select.py` and `report.py verify`.
 - `lang` is `ru` or `en` ([intake.md](intake.md#language)); titles, notes and checklist items are written in it.
-- `mode` is `repo+prod`, `prod-only` or `repo-only` ([intake.md](intake.md#mode)).
+- `mode` is `repo+prod`, `prod-only`, `repo-only` or `plan` ([intake.md](intake.md#mode), [plan.md](plan.md#choosing-the-mode)).
 - No owner block: the owner's data stays in `answers.json`.
 
 ## Rows
@@ -97,6 +99,7 @@ Never an obligation level: basis `interpretation`, `practice`, `inference` or `p
 | `owner` («Сделать вам») | `missing`, `partial` and `not_visible` rows the owner must act on or answer; `manual` registry checks; withheld or unknown requisites; pages kept in `.legal/drafts/` with the values they wait for; migration commands; managed files someone else changed; placement steps when no edits were made |
 | `disputed` («Спорно») | interpretation-level questions, `risk` clauses, disputed points about detected features, choices the skill made for the owner (section 6 variants, defaults, the notice instead of a consent checkbox), text addressed to AI agents |
 | `roadmap` («Дорожная карта») | norms whose `effective_from` is after the run date, with that date |
+| `plan` («План», mode `plan` only) | `planned` rows: what to build during development |
 
 ## Rows without a requirement id
 
@@ -118,12 +121,30 @@ Every document fact the skill proposed (a business default from the confirmation
 - `owner_checklist`: short items for the owner to check or provide. Fill it from two sources: the items of owner-questions.md, section «Сводный запрос документов», that concern the applicable requirements, and the entries of `not_detectable` in the `select.py` output (what to ask the owner about requirements no scan can establish). `render` prints it as «Запрос документов».
 - `not_checked`: one short line per thing the run could not see, with the reason: «Cookies и запросы до согласия: JS не выполнялся», «Поведение приложения на устройстве не проверялось», «build not run: dependencies not installed (`npm ci`)», contracts, console settings.
 
+## Plan mode
+
+A report with `mode: "plan"` describes a product that is not built yet ([plan.md](plan.md#plan-mode)).
+
+- Rows of applicable requirements get status `planned` and bucket `plan`, or `roadmap` for future norms; `owner` and `disputed` keep their meaning.
+- Evidence of a `planned` row is `{"owner": "<the owner's quote>"}` for a requirement selected through a planned feature, or `{"select": "always" | "owner:<fact>" | "sector:<s>"}` for one selected otherwise; files and URLs are allowed too. These two kinds exist only in mode `plan` and only for `planned`.
+- Optional row key `topic` (`pages`, `consent`, `gating`, `payments`, `requisites`, `other`) places the row in a section of `plan.md`.
+- Optional top-level keys `planned` (`[{id, quote}]`, catalog ids) and `not_covered` (strings) list the owner's features.
+- Levels follow the same rules as in the audit: a `planned` row of an interpretation is never `mandatory`.
+
+## Suggestions and plan vs fact
+
+- `suggestions`: at most 7 objects `{text, req, level, effort, auto}`; `level` is `recommended` or `interpretation`, `effort` is `small` or `work`, `auto` is true when the skill can do it on a rerun. An empty list renders as «Критичного нет» ([plan.md](plan.md#suggestions-after-the-run)).
+- `plan_diff`: `{planned_not_found: [ids], found_not_planned: [ids]}` with catalog ids, written by an audit when `product.planned_features` is not empty ([plan.md](plan.md#plan-vs-fact-on-a-rerun)).
+
 ## Verify
 
 ```sh
 python3 <skill>/scripts/report.py verify .legal/report.json --kb <skill>/references/jurisdictions/ru \
-  --sources .legal/sources.json --answers .legal/answers.json --today <YYYY-MM-DD>
+  --sources .legal/sources.json --answers .legal/answers.json --today <YYYY-MM-DD> \
+  [--select .legal/evidence/select.json]
 ```
+
+`--select` (mode `plan`) checks that each `{"select": …}` evidence is a reason `select.py` gave for the row's requirement and that `{"owner": …}` rows were selected through a planned feature.
 
 `--answers` is optional for the script but always passed here: it switches on the sector gate ([Sectors](applicability.md#sectors)). The command prints a JSON list of issues and exits 1 while the list is not empty. Fix each issue in the report and run it again until it exits 0. Exit 2 means bad input (an unreadable or missing file, broken JSON, `rows` not a list): fix the file itself, for example create `.legal/sources.json` as `[]`, never by removing findings.
 
@@ -140,6 +161,10 @@ python3 <skill>/scripts/report.py verify .legal/report.json --kb <skill>/referen
 | `missing_evidence` | add the file and line or the URL; without evidence the status is `not_visible` |
 | `future_not_roadmap` | move the row to `roadmap`, or set `effective_from` to the in-force date it relies on |
 | `effective_from_unknown` | use one of the requirement's own dates |
+| `planned_outside_plan` | status `planned` or bucket `plan` in a report whose mode is not `plan`: use the audit statuses |
+| `planned_evidence` | give the `planned` row `{owner}` or `{select}` evidence that matches `select.json` |
+| `suggestion_level` | suggestions: at most 7, level `recommended` or `interpretation` only |
+| `unknown_feature` | `plan_diff` and `planned` take catalog ids only |
 | `sectoral_unconfirmed` | a `mandatory` or `conditional` row of a requirement whose `obligation` is `sectoral` (status other than `n_a`) rests on no sector group of `business.sectors` that lists the id in `feature-map.json`: ask the owner to confirm the sector in the confirmation block and rerun `select.py`, or lower the row to `interpretation`, or set `n_a` when the sector is ruled out |
 
 Never pass verification by deleting a true finding or by changing a fact.
@@ -151,7 +176,7 @@ python3 <skill>/scripts/report.py render .legal/report.json --kb <skill>/referen
   --lang <ru|en> > .legal/report-<YYYY-MM-DD>.md
 ```
 
-The rendering has the product, mode and date, one plain line with the base date from `BASE.md`, a summary by direction, the four buckets, «Реестры», «Запрос документов» (from `owner_checklist`), «Что не проверялось» and the disclaimer. Add nothing about the age of the base and do not edit the rendered file. A rerun on the same day overwrites it.
+The rendering has the product, mode and date, one plain line with the base date from `BASE.md`, a summary by direction, the four buckets (and «План» in mode `plan`), «Реестры», «Что можно улучшить или добавить» (from `suggestions`), «План и факт» (from `plan_diff`), «Запрос документов» (from `owner_checklist`), «Что не проверялось» and the disclaimer. `render --plan > .legal/plan.md` renders the development checklist instead ([plan.md](plan.md#planmd)). Add nothing about the age of the base and do not edit the rendered file. A rerun on the same day overwrites it.
 
 ## Chat summary
 

@@ -2,7 +2,7 @@
 id: ru:identifikator-reklamy-erid
 title: "Идентификатор рекламы (erid): присвоение до показа и размещение в интернет-рекламе (38-ФЗ ст. 18.1 ч. 17, приказ РКН № 68)"
 category: concept
-updated: 2026-09-30
+updated: 2026-10-23
 verified: 2026-09-30
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["38-ФЗ ст. 18.1 ч. 17", "Приказ РКН от 25.03.2025 № 68", "КоАП ст. 14.3 ч. 16"]
 effective_from: mixed
 checked: 2026-09-30

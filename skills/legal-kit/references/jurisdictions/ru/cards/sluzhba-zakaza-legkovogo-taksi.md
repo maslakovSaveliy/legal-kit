@@ -2,7 +2,7 @@
 id: ru:sluzhba-zakaza-legkovogo-taksi
 title: "Служба заказа легкового такси: реестр, сведения на сайте, данные в РФ и запрет передачи ПДн за рубеж (580-ФЗ)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: sectoral
 source_kind: law
 subjects: [ul, ip]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["580-ФЗ (2022) ст. 2 пп. 2, 5", "580-ФЗ (2022) ст. 11 ч. 1 пп. 7, 9–10, ч. 3, 5", "580-ФЗ (2022) ст. 14 ч. 1–4, 7", "580-ФЗ (2022) ст. 16 ч. 1", "580-ФЗ (2022) ст. 18 ч. 4", "580-ФЗ (2022) ст. 19 ч. 1–5", "580-ФЗ (2022) ст. 21", "580-ФЗ (2022) ст. 29 ч. 2", "580-ФЗ (2022) ст. 30 ч. 2", "580-ФЗ (2022) ст. 36 ч. 1–2", "580-ФЗ от 29.12.2025 ст. 1, 3", "116-ФЗ от 23.05.2025 ст. 1–2", "152-ФЗ ст. 12 ч. 3, ст. 18 ч. 5"]
 effective_from: mixed
 checked: 2026-10-01

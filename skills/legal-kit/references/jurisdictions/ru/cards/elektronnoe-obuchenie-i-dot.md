@@ -2,7 +2,7 @@
 id: ru:elektronnoe-obuchenie-i-dot
 title: "Электронное обучение и ДОТ: ГИС и многофункциональный сервис, идентификация через ЕСИА и ЕБС, прокторинг, ПО"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: sectoral
 source_kind: bylaw
 subjects: [ul, ip]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["273-ФЗ ст. 16 ч. 1–5", "273-ФЗ ст. 82 ч. 2.1", "28-ФЗ ст. 1 пп. 1, 5; ст. 4 ч. 2", "539-ФЗ ст. 1 п. 1; ст. 2 ч. 1", "ПП РФ от 11.10.2023 № 1678, Правила пп. 1–4.1, 9, 11, 14–22", "ПП РФ от 06.05.2026 № 517"]
 effective_from: mixed
 checked: 2026-10-01

@@ -2,7 +2,7 @@
 id: ru:loterei-v-internete-i-vozrast-uchastnika
 title: "Лотереи в интернете: запрет, кроме лотерей по ч. 4 ст. 3, бестиражные билеты, возраст участника 18+ и публикация условий (138-ФЗ ст. 6.1, 20)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["138-ФЗ ст. 2 пп. 5, 5.1, 5.2, 9, 10", "138-ФЗ ст. 3 ч. 4", "138-ФЗ ст. 6.1 ч. 2, 4, 5, 6", "138-ФЗ ст. 12 ч. 3", "138-ФЗ ст. 20 ч. 6.1, 10", "569-ФЗ ст. 4, ст. 8 ч. 1", "38-ФЗ ст. 27 ч. 4", "115-ФЗ ст. 5", "149-ФЗ ст. 15.1 ч. 5 п. 1 подп. «д»", "138-ФЗ ст. 2 пп. 1, 6, 15; ст. 3 ч. 3, 5–8 (утратили силу)", "416-ФЗ ст. 4, 7 ч. 3", "КоАП ст. 14.27 ч. 1, 6"]
 effective_from: mixed
 checked: 2026-10-16

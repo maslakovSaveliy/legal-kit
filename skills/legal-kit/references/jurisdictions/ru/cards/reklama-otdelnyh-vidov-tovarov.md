@@ -2,7 +2,7 @@
 id: ru:reklama-otdelnyh-vidov-tovarov
 title: "Реклама отдельных видов товаров: алкоголь, табак и никотин, лекарства и медуслуги, БАД, оружие (38-ФЗ ст. 7 п. 8, ст. 21, 24–26)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["38-ФЗ ст. 7 п. 8", "38-ФЗ ст. 21 ч. 1, ч. 2 п. 8, ч. 3, ч. 5", "38-ФЗ ст. 24 ч. 1, 3, 7, 8", "38-ФЗ ст. 25 ч. 1, 1.1", "38-ФЗ ст. 26 ч. 1, 5", "38-ФЗ ст. 38 ч. 6, 7", "15-ФЗ ст. 16 ч. 1 п. 1 «а»–«з», п. 2, ч. 5", "171-ФЗ ст. 26 п. 2.1", "272-ФЗ от 26.07.2026", "КоАП ст. 14.3 ч. 1, 5", "КоАП ст. 14.3.1 ч. 1, 4"]
 effective_from: mixed
 checked: 2026-10-16

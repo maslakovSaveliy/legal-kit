@@ -2,7 +2,7 @@
 id: ru:audiovizualnyy-servis
 title: "Аудиовизуальный сервис: статус, обязанности владельца и защита детей (149-ФЗ ст. 10.5; 436-ФЗ ст. 14 ч. 3–4)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["149-ФЗ ст. 10.5 ч. 1 пп. 1–10, ч. 1.1, 1.2, 2–17", "324-ФЗ ст. 1 п. 1, ст. 3", "436-ФЗ ст. 6 ч. 1, 3; ст. 11 ч. 4 п. 6; ст. 12 ч. 1, 5; ст. 14 ч. 3–4", "478-ФЗ ст. 7 п. 3, ст. 8", "266-ФЗ от 01.07.2021 ст. 3 п. 2", "КоАП ст. 13.35, 13.36, 13.37, 19.7.10-2, 19.7.10 ч. 1–2", "294-ФЗ от 04.08.2026 ст. 1 п. 9, ст. 2 (будущая ч. 3 ст. 13.37 КоАП)", "168-ФЗ от 10.06.2026 ст. 1 пп. 1–2 (ст. 1.8 ч. 3, 2.6 ч. 2.1 КоАП)"]
 effective_from: mixed
 checked: 2026-10-01

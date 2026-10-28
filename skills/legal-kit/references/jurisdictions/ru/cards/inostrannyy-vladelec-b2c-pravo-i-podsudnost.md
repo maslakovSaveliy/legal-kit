@@ -2,7 +2,7 @@
 id: ru:inostrannyy-vladelec-b2c-pravo-i-podsudnost
 title: "Иностранный владелец продукта: применимое право и подсудность споров с потребителями из РФ (B2C), компетенция арбитражных судов РФ (B2B)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-15
 legal_confidence: medium
 volatility: cold
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ГК РФ ст. 1212 п. 1–5", "ГПК РФ ст. 402 ч. 1, 2", "ГПК РФ ст. 402 ч. 3 подп. 1, 2, 6, 10", "ГПК РФ ст. 403, 404", "ГПК РФ ст. 29 ч. 7, 10; ст. 30 ч. 4; ст. 32", "ЗоЗПП ст. 17 п. 2", "ЗоЗПП ст. 16 п. 1, п. 2 подп. 2", "АПК РФ ст. 247, 248 ч. 1 подп. 3, 248.1 ч. 1, 4, 249", "Постановление Пленума ВС РФ от 27.06.2017 № 23, п. 6, 7, 12, 14–16 (толкование, не норма)"]
 effective_from: mixed
 checked: 2026-10-15

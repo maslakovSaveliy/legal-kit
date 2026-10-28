@@ -2,7 +2,7 @@
 id: ru:otvetstvennost-informacionnogo-posrednika
 title: "Ответственность информационного посредника за чужой контент (ГК РФ ст. 1253.1, 149-ФЗ ст. 17 ч. 3–4)"
 category: concept
-updated: 2026-09-30
+updated: 2026-10-23
 verified: 2026-09-30
 legal_confidence: high
 volatility: cold
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ГК РФ ст. 1253.1 пп. 1–5", "149-ФЗ ст. 17 ч. 3, 4", "149-ФЗ ст. 2 п. 17", "Пленум ВС РФ от 23.04.2019 № 10 пп. 77, 78"]
 effective_from: 2013-08-01
 checked: 2026-09-30

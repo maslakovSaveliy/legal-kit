@@ -2,7 +2,7 @@
 id: ru:vozvrat-tovara-pri-distancionnoy-prodazhe
 title: "Отказ от товара надлежащего качества и возврат денег при дистанционной продаже"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: general
 source_kind: law
 subjects: [ul, ip, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ЗоЗПП ст. 26.1 п. 3–5", "ПП РФ от 30.05.2026 № 657, Правила пп. 24 абз. 3, 25–27", "Обзор судебной практики ВС РФ по делам о защите прав потребителей от 19.10.2022, п. 3", "Пленум ВС РФ от 28.06.2012 № 17 п. 43", "ЗоЗПП ст. 16 п. 2", "ЗоЗПП ст. 25 п. 1–2", "ГК ст. 502", "ПП РФ № 657, приложение 2 и Правила пп. 44, 48, 53", "Постановление КС РФ от 17.02.2026 № 7-П"]
 effective_from: mixed
 checked: 2026-10-16

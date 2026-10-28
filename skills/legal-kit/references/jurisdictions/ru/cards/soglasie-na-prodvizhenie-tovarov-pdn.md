@@ -2,7 +2,7 @@
 id: ru:soglasie-na-prodvizhenie-tovarov-pdn
 title: "Предварительное согласие на обработку ПДн для продвижения товаров путём прямых контактов"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: high
 volatility: warm
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["152-ФЗ ст. 15 ч. 1–2", "152-ФЗ ст. 9 ч. 1", "152-ФЗ ст. 6 ч. 1 п. 9", "156-ФЗ ст. 1 ч. 8–9 (смежное)"]
 effective_from: mixed
 checked: 2026-09-29

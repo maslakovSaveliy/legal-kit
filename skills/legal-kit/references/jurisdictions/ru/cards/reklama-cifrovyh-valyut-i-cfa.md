@@ -2,7 +2,7 @@
 id: ru:reklama-cifrovyh-valyut-i-cfa
 title: "Реклама цифровых валют, ЦФА и услуг по организации обращения цифровых валют (38-ФЗ ст. 7 п. 13–14, ст. 29.1, 29.2)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["38-ФЗ ст. 7 п. 13–14", "38-ФЗ ст. 29.1 ч. 1–3", "38-ФЗ ст. 29.2 ч. 1–2", "38-ФЗ ст. 2 ч. 1, ч. 3.1", "38-ФЗ ст. 38 ч. 6, 7", "282-ФЗ ст. 7 ч. 2", "282-ФЗ ст. 2 ч. 1 п. 2, 20", "283-ФЗ (2026) ст. 13, ст. 23 ч. 1", "КоАП ст. 14.3 ч. 1"]
 effective_from: mixed
 checked: 2026-10-01

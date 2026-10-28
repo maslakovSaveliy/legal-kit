@@ -2,7 +2,7 @@
 id: ru:issledovanie-obema-auditorii
 title: "Исследование объёма аудитории: обязанность обеспечить измерение уполномоченной организацией"
 category: concept
-updated: 2026-09-29
+updated: 2026-10-23
 verified: 2026-09-29
 legal_confidence: high
 volatility: cold
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["149-ФЗ ст. 12.2 ч. 1–7", "149-ФЗ ст. 10.4 ч. 1 п. 13", "149-ФЗ ст. 10.5 ч. 1 п. 8", "266-ФЗ от 01.07.2021 ст. 3 п. 1–3, ст. 5 ч. 2"]
 effective_from: 2021-10-01
 checked: 2026-09-29

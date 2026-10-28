@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "updated": "2026-10-28T09:00:00Z",
+  "product": {
+    "name": "Тёплый дом — бот",
+    "summary": "Telegram-бот магазина домашнего текстиля: каталог, заказ с оплатой через ЮKassa в чате, электронная книга за Telegram Stars. Тестовый стенд, владелец и реквизиты вымышлены.",
+    "kinds": [
+      "bot"
+    ],
+    "urls": [],
+    "stores": {
+      "app_store": null,
+      "google_play": null,
+      "rustore": null,
+      "appgallery": null
+    },
+    "repo": ".",
+    "planned_features": []
+  },
+  "owner": {
+    "status": "ul",
+    "name": "ООО \"Ромашка-тест\"",
+    "inn": "0012345017",
+    "ogrn": "1220000000010",
+    "country": "RU",
+    "address": "119000, г. Москва, ул. Тестовая, д. 1",
+    "email": "info@romashka.test",
+    "phone": "+7 495 000-00-00",
+    "pd_officer": "Орлов Дмитрий Сергеевич, генеральный директор, privacy@romashka.test",
+    "withheld": []
+  },
+  "audience": {
+    "b2c": true,
+    "b2b": false,
+    "minors": "none",
+    "countries": [
+      "RU"
+    ]
+  },
+  "business": {
+    "sectors": [],
+    "revenue_over_20m": false,
+    "rkn_notified": null
+  },
+  "decisions": {
+    "block_counters": null,
+    "apply_changes": true,
+    "commit_legal_dir": false,
+    "agent_rules_link": null,
+    "accepted_suggestions": [],
+    "consent_at_forms": []
+  },
+  "document_facts": {}
+}

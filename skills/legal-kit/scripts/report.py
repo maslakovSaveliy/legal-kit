@@ -37,11 +37,11 @@ import _kb  # noqa: E402  (must come first: it protects the stdlib `select` modu
 import argparse  # noqa: E402
 
 ENUMS = {
-    "status": ("present", "missing", "partial", "not_visible", "n_a"),
+    "status": ("present", "missing", "partial", "not_visible", "n_a", "planned"),
     "level": ("mandatory", "conditional", "recommended", "interpretation"),
     "confidence": ("high", "medium", "low"),
     "source": ("base", "official_runtime", "market", "platform"),
-    "bucket": ("done", "owner", "disputed", "roadmap"),
+    "bucket": ("done", "owner", "disputed", "roadmap", "plan"),
     "basis": ("norm", "practice", "interpretation", "inference", "platform"),
 }
 REQUIRED = ("req", "title", "status", "level", "confidence", "source", "bucket", "basis")
@@ -56,7 +56,10 @@ SOURCE_KINDS = ("official", "market", "platform")
 # --------------------------------------------------------------------------
 
 TOP_REQUIRED = ("version", "generated", "product", "mode", "rows", "registries", "not_checked")
-MODES = ("repo+prod", "prod-only", "repo-only")
+MODES = ("repo+prod", "prod-only", "repo-only", "plan")
+TOPICS = ("pages", "consent", "gating", "payments", "requisites", "other")
+EFFORTS = ("small", "work")
+MAX_SUGGESTIONS = 7
 LANGS = ("ru", "en")
 REGISTRY_STATUSES = ("ok", "not_found", "manual", "error")
 OBLIGATION_LEVELS = ("mandatory", "conditional")
@@ -71,8 +74,15 @@ def load_report(path):
     return data
 
 
-def valid_evidence(item):
-    return isinstance(item, dict) and any(isinstance(item.get(key), str) and item[key] for key in ("file", "url"))
+def valid_evidence(item, keys=("file", "url")):
+    return isinstance(item, dict) and any(isinstance(item.get(key), str) and item[key] for key in keys)
+
+
+def catalog_ids():
+    try:
+        return {f.id for f in _kb.load_catalog(_kb.DEFAULT_CATALOG).features}
+    except _kb.KbError:
+        return set()
 
 
 def is_str_list(value):
@@ -107,9 +117,52 @@ def verify_top(report):
                 if not isinstance(entry, dict) or entry.get("status") not in REGISTRY_STATUSES:
                     issue("bad_enum", "registries[%d] needs an object with status %s" % (
                         number, "|".join(REGISTRY_STATUSES)), "registries")
-    for key in ("not_checked", "owner_checklist"):
+    for key in ("not_checked", "owner_checklist", "not_covered"):
         if key in report and not is_str_list(report[key]):
             issue("bad_type", "%s must be a list of strings" % key, key)
+    if "suggestions" in report:
+        suggestions = report["suggestions"]
+        if not isinstance(suggestions, list) or not all(isinstance(x, dict) for x in suggestions):
+            issue("bad_type", "suggestions must be a list of objects", "suggestions")
+        else:
+            if len(suggestions) > MAX_SUGGESTIONS:
+                issue("suggestion_level", "at most %d suggestions, got %d" % (MAX_SUGGESTIONS, len(suggestions)),
+                      "suggestions")
+            for number, item in enumerate(suggestions):
+                if not (isinstance(item.get("text"), str) and item["text"]):
+                    issue("bad_type", "suggestions[%d].text must be a non-empty string" % number, "suggestions")
+                if item.get("req") is not None and not isinstance(item.get("req"), str):
+                    issue("bad_type", "suggestions[%d].req must be a string or null" % number, "suggestions")
+                if item.get("level") not in SOFT_LEVELS:
+                    issue("suggestion_level", "suggestions[%d].level must be %s" % (number, "|".join(SOFT_LEVELS)),
+                          "suggestions")
+                if item.get("effort") not in EFFORTS:
+                    issue("bad_enum", "suggestions[%d].effort must be %s" % (number, "|".join(EFFORTS)),
+                          "suggestions")
+                if not isinstance(item.get("auto"), bool):
+                    issue("bad_type", "suggestions[%d].auto must be true or false" % number, "suggestions")
+    known = None
+    if "plan_diff" in report:
+        diff = report["plan_diff"]
+        lists = (diff.get("planned_not_found"), diff.get("found_not_planned")) if isinstance(diff, dict) else ()
+        if len(lists) != 2 or not all(is_str_list(x) for x in lists):
+            issue("bad_type", "plan_diff needs planned_not_found and found_not_planned lists", "plan_diff")
+        else:
+            known = catalog_ids()
+            for feature in lists[0] + lists[1]:
+                if feature not in known:
+                    issue("unknown_feature", "plan_diff names %r, not a catalog feature" % feature, "plan_diff")
+    if "planned" in report:
+        planned = report["planned"]
+        if not isinstance(planned, list) or not all(
+                isinstance(x, dict) and isinstance(x.get("id"), str) and isinstance(x.get("quote"), str)
+                for x in planned):
+            issue("bad_type", "planned must be a list of {id, quote}", "planned")
+        else:
+            known = catalog_ids() if known is None else known
+            for item in planned:
+                if item["id"] not in known:
+                    issue("unknown_feature", "planned names %r, not a catalog feature" % item["id"], "planned")
     return issues
 
 
@@ -126,8 +179,12 @@ def confirmed_sectoral_ids(answers_path, kb):
     return ids
 
 
-def verify_row(index, row, requirements, elements, today, sectoral_ids=None):
-    """Issues of one row; sectoral_ids (confirmed sectoral requirement ids) switches the sector gate on."""
+def verify_row(index, row, requirements, elements, today, sectoral_ids=None, mode=None, select_why=None):
+    """Issues of one row; sectoral_ids (confirmed sectoral requirement ids) switches the sector gate on.
+
+    mode is the report's mode: status planned and bucket plan exist only in mode "plan". select_why
+    (requirement id -> why list of select.json) checks that a planned row's {"select": ...} evidence is
+    the reason the requirement was selected."""
     issues = []
 
     def issue(rule, message):
@@ -227,6 +284,25 @@ def verify_row(index, row, requirements, elements, today, sectoral_ids=None):
             if not check(url):
                 issue("source_not_allowlisted", "%s is not on %s" % (url, where))
 
+    if row.get("status") == "planned" or row.get("bucket") == "plan":
+        if mode != "plan":
+            issue("planned_outside_plan", "status planned and bucket plan belong to mode plan only")
+    if row.get("status") == "planned" and mode == "plan":
+        evidence = row.get("evidence")
+        items = evidence if isinstance(evidence, list) else []
+        if not items or not all(valid_evidence(e, ("file", "url", "owner", "select")) for e in items):
+            issue("planned_evidence", "a planned row needs evidence: {owner: quote}, {select: reason}, {file} or {url}")
+        elif select_why is not None and isinstance(row.get("req"), str):
+            reasons = select_why.get(row["req"], [])
+            for item in items:
+                if isinstance(item.get("select"), str) and item["select"] not in reasons:
+                    issue("planned_evidence", "select.json does not list %r among the reasons for %s"
+                          % (item["select"], row["req"]))
+                if isinstance(item.get("owner"), str) and not any(r.startswith("planned:") for r in reasons):
+                    issue("planned_evidence", "select.json did not select %s through a planned feature" % row["req"])
+    if "topic" in row and row["topic"] not in TOPICS:
+        issue("bad_enum", "topic %r is not one of %s" % (row["topic"], "|".join(TOPICS)))
+
     if row.get("status") in NEEDS_EVIDENCE:
         evidence = row.get("evidence")
         if not isinstance(evidence, list) or not evidence or not all(valid_evidence(e) for e in evidence):
@@ -280,12 +356,20 @@ def cmd_verify(args):
     requirements = _kb.load_requirements(args.kb)
     elements = _kb.load_elements(args.kb)
     sectoral_ids = confirmed_sectoral_ids(args.answers, args.kb) if args.answers else None
+    select_why = None
+    if args.select:
+        data = _kb.load_json(args.select)
+        applicable = data.get("applicable") if isinstance(data, dict) else None
+        if not isinstance(applicable, list):
+            raise _kb.KbError("%s: no applicable list (select.py output expected)" % args.select)
+        select_why = {i.get("id"): list(i.get("why") or []) for i in applicable if isinstance(i, dict)}
     issues = verify_top(report)
     for index, row in enumerate(report["rows"]):
         if not isinstance(row, dict):
             issues.append({"row": index, "req": None, "rule": "bad_type", "message": "row is not an object"})
             continue
-        issues.extend(verify_row(index, row, requirements, elements, today, sectoral_ids))
+        issues.extend(verify_row(index, row, requirements, elements, today, sectoral_ids,
+                                 mode=report.get("mode"), select_why=select_why))
     if args.sources:
         issues.extend(verify_sources(args.sources))
     _kb.emit(issues)
@@ -311,6 +395,7 @@ DIRECTIONS = {
     "L": ("Магазины приложений и предустановка", "App stores and preinstallation"),
     "M": ("Права владельца на контент и ПО", "Owner's rights to content and software"),
     "N": ("Новые технологии", "New technologies"),
+    "O": ("Боты и мини-приложения в мессенджерах", "Bots and mini apps in messengers"),
 }
 OTHER = "?"
 
@@ -321,7 +406,7 @@ TEXT = {
         "other": "Прочее", "none": "Нет.", "registries": "Реестры", "not_checked": "Что не проверялось",
         "checklist": "Запрос документов",
         "disclaimer": "Не юридическая консультация.",
-        "buckets": {"done": "Сделано", "owner": "Сделать вам", "disputed": "Спорно", "roadmap": "Дорожная карта"},
+        "buckets": {"done": "Сделано", "owner": "Сделать вам", "disputed": "Спорно", "roadmap": "Дорожная карта", "plan": "План"},
         "columns": ("Требование", "Статус", "Уровень", "Норма", "Уверенность", "Источник", "Доказательства"),
         "from": "С даты",
         "reg_columns": ("Реестр", "Статус", "Адрес", "Примечание"),
@@ -332,6 +417,19 @@ TEXT = {
         "source": {"base": "база", "official_runtime": "официальный источник", "market": "практика рынка",
                    "platform": "правила платформы"},
         "confidence": {"high": "высокая", "medium": "средняя", "low": "низкая"},
+        "suggestions": "Что можно улучшить или добавить", "nothing_critical": "Критичного нет.",
+        "effort": {"small": "мелочь", "work": "работа"}, "auto": "скилл сделает сам на повторном прогоне",
+        "plan_diff": "План и факт", "planned_not_found": "Запланировано, в коде не найдено",
+        "found_not_planned": "Найдено в коде, в плане не было",
+        "plan_title": "План юридической части", "planned": "Что запланировано",
+        "not_covered": "Не покрыто каталогом функций", "said": "со слов владельца",
+        "topics": {"pages": "Страницы и документы", "consent": "Согласия",
+                   "gating": "Что грузить только после согласия",
+                   "payments": "Оплата, подписки, автосписания, чеки", "requisites": "Реквизиты",
+                   "other": "Прочие требования"},
+        "later": "Нормы, которые вступят позже", "owner_disputed": "Сделать вам и спорно",
+        "basis": {"norm": "норма", "practice": "практика", "interpretation": "трактовка",
+                  "inference": "вывод", "platform": "правило платформы"},
     },
     "en": {
         "title": "Legal setup report", "product": "Product", "mode": "Mode", "date": "Date",
@@ -339,7 +437,7 @@ TEXT = {
         "other": "Other", "none": "None.", "registries": "Registries", "not_checked": "Not checked",
         "checklist": "Documents to provide",
         "disclaimer": "Not legal advice.",
-        "buckets": {"done": "Done", "owner": "To do (owner)", "disputed": "Disputed", "roadmap": "Roadmap"},
+        "buckets": {"done": "Done", "owner": "To do (owner)", "disputed": "Disputed", "roadmap": "Roadmap", "plan": "Plan"},
         "columns": ("Requirement", "Status", "Level", "Norm", "Confidence", "Source", "Evidence"),
         "from": "From",
         "reg_columns": ("Registry", "Status", "Address", "Note"),
@@ -350,6 +448,19 @@ TEXT = {
         "source": {"base": "knowledge base", "official_runtime": "official source", "market": "market practice",
                    "platform": "platform rules"},
         "confidence": {"high": "high", "medium": "medium", "low": "low"},
+        "suggestions": "What can be improved or added", "nothing_critical": "Nothing critical.",
+        "effort": {"small": "small", "work": "work"}, "auto": "the skill can do it on a rerun",
+        "plan_diff": "Plan vs fact", "planned_not_found": "Planned, not found in the code",
+        "found_not_planned": "Found in the code, not in the plan",
+        "plan_title": "Legal plan", "planned": "What is planned",
+        "not_covered": "Not covered by the feature catalog", "said": "in the owner's words",
+        "topics": {"pages": "Pages and documents", "consent": "Consents",
+                   "gating": "Load only after consent",
+                   "payments": "Payments, subscriptions, auto-renewal, receipts", "requisites": "Requisites",
+                   "other": "Other requirements"},
+        "later": "Norms that take effect later", "owner_disputed": "To do (owner) and disputed",
+        "basis": {"norm": "norm", "practice": "practice", "interpretation": "interpretation",
+                  "inference": "inference", "platform": "platform rule"},
     },
 }
 
@@ -412,6 +523,7 @@ def render(report, requirements, base, lang):
     kinds = ", ".join(as_text(k) for k in as_list(product.get("kinds")))
     urls = " ".join(as_text(u) for u in as_list(product.get("urls")))
     order = sorted({direction_of(r, requirements) for r in rows}, key=lambda d: (d == OTHER, d))
+    buckets = ("done", "owner", "disputed", "roadmap") + (("plan",) if report.get("mode") == "plan" else ())
     out = ["# %s: %s" % (text["title"], as_text(product.get("name")) or "—"), ""]
     details = [(text["product"], ", ".join(filter(None, [kinds, urls])) or "—"),
                (text["mode"], as_text(report.get("mode")) or "—"),
@@ -422,16 +534,16 @@ def render(report, requirements, base, lang):
         out.extend(["%s: %s" % (text["base"], base), ""])
 
     out.extend(["## " + text["summary"], ""])
-    head = [text["direction"]] + [text["buckets"][b] for b in ("done", "owner", "disputed", "roadmap")]
+    head = [text["direction"]] + [text["buckets"][b] for b in buckets]
     counts = []
     for letter in order:
         in_dir = [r for r in rows if direction_of(r, requirements) == letter]
         counts.append([direction_title(letter, lang, text)] + [sum(1 for r in in_dir if r.get("bucket") == b)
-                                                               for b in ("done", "owner", "disputed", "roadmap")])
+                                                               for b in buckets])
     out.extend(table(head, counts) if counts else [text["none"]])
     out.append("")
 
-    for bucket in ("done", "owner", "disputed", "roadmap"):
+    for bucket in buckets:
         out.extend(["## " + text["buckets"][bucket], ""])
         in_bucket = [r for r in rows if r.get("bucket") == bucket]
         if not in_bucket:
@@ -464,6 +576,7 @@ def render(report, requirements, base, lang):
         out.extend(table(text["reg_columns"], reg_rows))
     else:
         out.append(text["none"])
+    out.extend(extra_sections(report, text))
     checklist = [as_text(item) for item in as_list(report.get("owner_checklist"))]
     if checklist:
         out.extend(["", "## " + text["checklist"], ""])
@@ -475,13 +588,89 @@ def render(report, requirements, base, lang):
     return "\n".join(out)
 
 
+def extra_sections(report, text):
+    """'What can be improved' (when the report carries suggestions) and 'Plan vs fact' (plan_diff)."""
+    out = []
+    if isinstance(report.get("suggestions"), list):
+        out.extend(["", "## " + text["suggestions"], ""])
+        items = [x for x in report["suggestions"] if isinstance(x, dict)]
+        if not items:
+            out.append(text["nothing_critical"])
+        for x in items:
+            parts = [label(text["level"], x.get("level")), label(text["effort"], x.get("effort"))]
+            if x.get("auto") is True:
+                parts.append(text["auto"])
+            req = " (`%s`)" % x["req"] if isinstance(x.get("req"), str) else ""
+            out.append("- %s%s — %s" % (as_text(x.get("text")), req, "; ".join(p for p in parts if p)))
+    diff = report.get("plan_diff")
+    if isinstance(diff, dict):
+        out.extend(["", "## " + text["plan_diff"], ""])
+        for key in ("planned_not_found", "found_not_planned"):
+            ids = [as_text(i) for i in as_list(diff.get(key))]
+            out.append("- %s: %s" % (text[key], ", ".join("`%s`" % i for i in ids) if ids else "—"))
+    return out
+
+
+def plan_item(row, text):
+    title = as_text(row.get("title")) or "—"
+    if isinstance(row.get("req"), str) and row["req"]:
+        title += " (`%s`)" % row["req"]
+    basis = row.get("basis")
+    if row.get("level") not in OBLIGATION_LEVELS and basis not in ("practice", "platform"):
+        basis = "interpretation"  # a soft row is never shown as a norm
+    parts = [label(text["level"], row.get("level")), label(text["basis"], basis)]
+    if row.get("bucket") == "roadmap" and row.get("effective_from"):
+        parts.append("%s %s" % (text["from"], row["effective_from"]))
+    return "- %s — %s" % (title, "; ".join(p for p in parts if p))
+
+
+def render_plan(report, requirements, base, lang):
+    """.legal/plan.md: the development checklist of mode plan, grouped by topic."""
+    text = TEXT[lang]
+    rows = [r for r in report["rows"] if isinstance(r, dict)]
+    product = report.get("product") if isinstance(report.get("product"), dict) else {}
+    out = ["# %s: %s" % (text["plan_title"], as_text(product.get("name")) or "—"), ""]
+    out.extend(["- %s: %s" % (text["date"], as_text(report.get("generated")) or "—")])
+    if base:
+        out.append("- %s: %s" % (text["base"], base))
+    out.extend(["", text["disclaimer"], ""])
+    out.extend(["## " + text["planned"], ""])
+    planned = [x for x in as_list(report.get("planned")) if isinstance(x, dict)]
+    out.extend("- `%s` — %s: «%s»" % (as_text(x.get("id")), text["said"], as_text(x.get("quote"))) for x in planned)
+    if not planned:
+        out.append(text["none"])
+    covered = [as_text(x) for x in as_list(report.get("not_covered"))]
+    if covered:
+        out.extend(["", "%s:" % text["not_covered"]])
+        out.extend("- " + x for x in covered)
+    current = [r for r in rows if r.get("bucket") == "plan"]
+    for topic in TOPICS:
+        out.extend(["", "## " + text["topics"][topic], ""])
+        group = [r for r in current if (r.get("topic") if r.get("topic") in TOPICS else "other") == topic]
+        out.extend(plan_item(r, text) for r in group)
+        if not group:
+            out.append(text["none"])
+    for heading, buckets in ((text["later"], ("roadmap",)), (text["owner_disputed"], ("owner", "disputed"))):
+        out.extend(["", "## " + heading, ""])
+        group = [r for r in rows if r.get("bucket") in buckets]
+        out.extend(plan_item(r, text) for r in group)
+        if not group:
+            out.append(text["none"])
+    if "suggestions" not in report:
+        report = dict(report, suggestions=[])
+    out.extend(extra_sections({"suggestions": report["suggestions"]}, text))
+    out.extend(["", text["disclaimer"], ""])
+    return "\n".join(out)
+
+
 def cmd_render(args):
     report = load_report(args.report)
     lang = args.lang or report.get("lang") or "ru"
     if lang not in TEXT:
         raise _kb.KbError("lang must be ru or en, got %r" % (lang,))
     requirements = _kb.load_requirements(args.kb)
-    sys.stdout.write(render(report, requirements, _kb.base_date(args.kb), lang))
+    draw = render_plan if args.plan else render
+    sys.stdout.write(draw(report, requirements, _kb.base_date(args.kb), lang))
     return 0
 
 
@@ -494,12 +683,14 @@ def build_parser():
     verify.add_argument("--sources", help=".legal/sources.json")
     verify.add_argument("--answers", help=".legal/answers.json: turns on the check that sector requirements "
                                           "rest on a sector the owner confirmed")
+    verify.add_argument("--select", help=".legal/evidence/select.json: checks the reasons cited by planned rows")
     verify.add_argument("--today", help="YYYY-MM-DD (default: today)")
     verify.set_defaults(run=cmd_verify)
     render_parser = sub.add_parser("render", help="render a report as Markdown")
     render_parser.add_argument("report")
     render_parser.add_argument("--kb", default=_kb.DEFAULT_KB, help="jurisdiction pack directory (default: bundled ru)")
     render_parser.add_argument("--lang", choices=sorted(TEXT), help="default: the report's \"lang\", else ru")
+    render_parser.add_argument("--plan", action="store_true", help="render the development checklist (.legal/plan.md)")
     render_parser.set_defaults(run=cmd_render)
     return parser
 

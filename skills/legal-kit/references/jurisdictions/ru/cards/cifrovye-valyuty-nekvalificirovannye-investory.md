@@ -2,7 +2,7 @@
 id: ru:cifrovye-valyuty-nekvalificirovannye-investory
 title: "Покупка цифровых валют неквалифицированными инвесторами: тестирование, уведомление о рисках, годовой лимит, запрет оферт (282-ФЗ ст. 1 ч. 11, ст. 31, 32)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: sectoral
 source_kind: law
 subjects: [ul, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["282-ФЗ ст. 31 ч. 1–4, 8, 10, 12, 13", "282-ФЗ ст. 32 ч. 1–6", "282-ФЗ ст. 30 ч. 2", "282-ФЗ ст. 1 ч. 3, 11, 12", "282-ФЗ ст. 2 ч. 1 п. 2", "282-ФЗ ст. 56 ч. 1–2", "115-ФЗ ст. 5, ст. 7 п. 1.12-5", "283-ФЗ (2026) ст. 7, ст. 23 ч. 1, 14"]
 effective_from: mixed
 checked: 2026-10-01

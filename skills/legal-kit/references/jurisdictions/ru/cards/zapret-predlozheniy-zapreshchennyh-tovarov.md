@@ -2,7 +2,7 @@
 id: ru:zapret-predlozheniy-zapreshchennyh-tovarov
 title: "Запрет размещать предложения о продаже запрещённых, незарегистрированных и немаркированных товаров (381-ФЗ ст. 11.1)"
 category: concept
-updated: 2026-10-11
+updated: 2026-10-23
 verified: 2026-09-30
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["381-ФЗ ст. 11.1 (ред. 290-ФЗ от 31.07.2025 ст. 2 п. 1)", "381-ФЗ ст. 16 ч. 4 (ред. 290-ФЗ ст. 2 п. 2)", "290-ФЗ ст. 4", "289-ФЗ ст. 7 ч. 2, 4", "ПП РФ от 02.07.2026 № 821"]
 effective_from: 2026-10-01
 checked: 2026-09-30

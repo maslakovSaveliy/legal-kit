@@ -2,7 +2,7 @@
 id: ru:cena-v-rublyah-i-polnaya-summa
 title: "Цена в рублях и полная сумма при оплате позже (ЗоЗПП ст. 10 п. 2, ст. 26.1 п. 2)"
 category: concept
-updated: 2026-09-30
+updated: 2026-10-23
 verified: 2026-09-30
 legal_confidence: high
 volatility: warm
@@ -10,7 +10,7 @@ obligation: general
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ЗоЗПП ст. 10 п. 1, п. 2 абз. 4 (ред. 363-ФЗ)", "ЗоЗПП ст. 26.1 п. 2–3", "ЗоЗПП ст. 12 п. 1", "КоАП ст. 14.8 ч. 1", "КоАП ст. 14.7 ч. 1–2"]
 effective_from: mixed
 checked: 2026-09-30

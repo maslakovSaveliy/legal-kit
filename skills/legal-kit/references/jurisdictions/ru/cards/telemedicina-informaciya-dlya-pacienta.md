@@ -2,7 +2,7 @@
 id: ru:telemedicina-informaciya-dlya-pacienta
 title: "Информация для пациента о телемедицинской консультации (приказ Минздрава № 193н п. 37)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: sectoral
 source_kind: bylaw
 subjects: [ul, ip]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["Приказ Минздрава от 11.04.2025 № 193н, п. 37 «а»–«д» Порядка", "Приказ № 193н, сноски 8, 9", "323-ФЗ ст. 36.2 ч. 1", "323-ФЗ ст. 20 ч. 7", "ПП РФ от 30.05.2026 № 659, пп. 5, 8 «б»"]
 effective_from: 2025-09-01
 checked: 2026-10-01

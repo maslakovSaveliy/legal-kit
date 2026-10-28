@@ -2,7 +2,7 @@
 id: ru:esia-identifikaciya-na-ploshchadkah
 title: "ЕСИА-идентификация продавцов на сервисах объявлений и агрегаторах (41-ФЗ ст. 15 ч. 2; ЗоЗПП ст. 9 п. 1.4–1.6)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: sectoral
 source_kind: law
 subjects: [ul, ip, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["41-ФЗ ст. 15 ч. 1 п. 7, ч. 2", "41-ФЗ ст. 16 ч. 5", "ЗоЗПП ст. 9 п. 1.4–1.6 (ред. 41-ФЗ ст. 3 п. 1)", "149-ФЗ ст. 10.7 ч. 1 п. 7", "ПП РФ от 28.04.2023 № 672", "572-ФЗ ст. 10"]
 effective_from: mixed
 checked: 2026-10-01

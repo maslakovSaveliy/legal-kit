@@ -2,7 +2,7 @@
 id: ru:zapret-distancionnoy-prodazhi-alkogolya
 title: "Запрет дистанционной розничной продажи алкоголя и распространения предложений о ней (171-ФЗ ст. 16 п. 2 подп. 14, ст. 26 п. 2.1)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["171-ФЗ ст. 16 п. 2 подп. 14", "171-ФЗ ст. 16 п. 1, 4", "171-ФЗ ст. 16 п. 3, 6", "171-ФЗ ст. 26 п. 2.1", "171-ФЗ ст. 11 п. 1", "171-ФЗ ст. 26 п. 1", "171-ФЗ ст. 16 п. 2 подп. 11 (ред. 569-ФЗ)", "Закон о СМИ ст. 4 ч. 8", "149-ФЗ ст. 15.1 ч. 5 п. 1 подп. «е»", "149-ФЗ ст. 10.6 ч. 1 п. 5 подп. «д»", "КоАП ст. 13.15 ч. 8", "КоАП ст. 14.16 ч. 2.1, 3", "КоАП ст. 14.17.1"]
 effective_from: mixed
 checked: 2026-10-01

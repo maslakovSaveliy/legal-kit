@@ -2,7 +2,7 @@
 id: ru:podryadchik-operatora-gis
 title: "Подрядчик оператора ГИС: обязанности подрядной организации по приказу ФСТЭК № 117"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: bylaw
 subjects: [ul, ip]
 models: [b2b]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["Приказ ФСТЭК от 11.04.2025 № 117, пп. 14 «д», 16, 24, 26, 34 «р», 50, 58", "Приказ ФСТЭК от 08.05.2026 № 137, пп. 6, 7, 17 приложения", "149-ФЗ ст. 16 ч. 5", "99-ФЗ ст. 12 ч. 1 п. 5", "КоАП ст. 13.12 ч. 1, 5"]
 effective_from: mixed
 checked: 2026-09-30

@@ -287,18 +287,18 @@ def test_every_expectation_date_in_a_requirement_context_matches_its_record():
 
 # --- triggers.json ----------------------------------------------------------------------------
 
-def test_triggers_json_has_ten_positive_and_ten_negative_queries():
+def test_triggers_json_has_sixteen_positive_and_fourteen_negative_queries():
     triggers = load_json(EVALS / "triggers.json")
-    assert isinstance(triggers, list) and len(triggers) == 20
+    assert isinstance(triggers, list) and len(triggers) == 30
     for item in triggers:
         assert set(item) == {"query", "should_trigger"}
         assert isinstance(item["query"], str) and item["query"].strip()
         assert isinstance(item["should_trigger"], bool)
     queries = [t["query"] for t in triggers]
-    assert len(set(queries)) == 20
+    assert len(set(queries)) == 30
     positive = [t for t in triggers if t["should_trigger"]]
     negative = [t for t in triggers if not t["should_trigger"]]
-    assert len(positive) == 10 and len(negative) == 10
+    assert len(positive) == 16 and len(negative) == 14
     for group in (positive, negative):
         russian = [t for t in group if re.search(r"[А-Яа-яЁё]", t["query"])]
         english = [t for t in group if not re.search(r"[А-Яа-яЁё]", t["query"])]
@@ -467,7 +467,8 @@ def test_answers_withheld_and_document_facts_have_their_types(path):
 
 def test_answers_fixtures_exist_for_every_fixture_except_the_two_without():
     expected = {"landing-static", "landing-injection", "store-nextjs", "saas-nest-react", "mobile-expo",
-                "courses-django", "services-flutter", "services-flutter-dentistry", "shop-swift"}
+                "courses-django", "services-flutter", "services-flutter-dentistry", "shop-swift",
+                "bot-aiogram-shop", "plan-nextjs-partial"}
     assert {p.parts[-3] for p in ANSWER_FILES} == expected
     assert not (FIXTURES / "landing-minimal" / ".legal").exists()
 
@@ -557,7 +558,7 @@ def test_expected_fixture_directories_exist():
     assert {p.name for p in FIXTURE_DIRS} == {
         "landing-static", "landing-injection", "landing-minimal", "store-nextjs", "saas-nest-react",
         "mobile-expo", "mobile-expo-store-page", "courses-django", "services-flutter",
-        "services-flutter-dentistry", "shop-swift",
+        "services-flutter-dentistry", "shop-swift", "bot-aiogram-shop", "plan-nextjs-empty", "plan-nextjs-partial",
     }
 
 
@@ -1081,7 +1082,7 @@ def test_golden_report_follows_the_canonical_shape_and_the_verify_rules(golden):
     report = load_json(golden / ".legal" / "report.json")
     sources = load_json(golden / ".legal" / "sources.json")
     assert isinstance(sources, list)
-    assert set(report) - {"lang"} == TOP_KEYS, "owner data lives in answers.json, not in report.json"
+    assert set(report) - {"lang", "owner_checklist", "suggestions", "plan_diff", "planned", "not_covered"} == TOP_KEYS, "owner data lives in answers.json, not in report.json"
     assert report["version"] == 1 and report["generated"] == GOLDEN_TODAY
     assert report.get("lang", "ru") in ("ru", "en")
     assert report["mode"] in MODES

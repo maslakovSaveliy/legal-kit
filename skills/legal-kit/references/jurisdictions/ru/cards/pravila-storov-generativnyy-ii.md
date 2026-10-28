@@ -2,8 +2,8 @@
 id: ru:pravila-storov-generativnyy-ii
 title: "Правила сторов о генеративном ИИ: Google Play AI-Generated Content, Apple 5.1.2(i) и 4.7, AppGallery 3.6; у RuStore правил нет"
 category: concept
-updated: 2026-10-01
-verified: 2026-10-01
+updated: 2026-10-23
+verified: 2026-10-23
 legal_confidence: medium
 volatility: hot
 obligation: conditional
@@ -70,6 +70,7 @@ summary: "Правила магазинов приложений, не зако�
   - изменение пользователем изображений, аудио, видео (Google Manipulated Media).
 - **Продукты.** iOS (Apple), Android (Google Play, AppGallery; у RuStore ИИ-правил нет).
 - **Даты.** Apple — «Last Updated: June 8, 2026». Google — дата не указана. AppGallery: раздел 3 — V2 (2026-01-07); справка «Releasing an App (APK)» — V43 (2026-06-01); FAQ 50111-10 — V3 (2025-11-14). RuStore — дата не указана. Снято 2026-10-01.
+- **Применимость к боту:** нет — это правила магазинов приложений (App Store, Google Play, RuStore, AppGallery); бот и Mini App внутри мессенджера в магазин не подаются, правила платформы мессенджера — отдельный слой.
 
 ## Исключения
 

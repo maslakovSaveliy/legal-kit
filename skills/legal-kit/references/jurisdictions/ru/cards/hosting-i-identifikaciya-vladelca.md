@@ -2,7 +2,7 @@
 id: ru:hosting-i-identifikaciya-vladelca
 title: "Хостинг: реестр провайдеров и идентификация владельца продукта"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-15
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["149-ФЗ ст. 10.2-1 ч. 4.1, 5, 5.1, 6, 11", "149-ФЗ ст. 2 п. 18", "ПП РФ от 29.11.2023 № 2011", "41-ФЗ ст. 11 п. 2, ст. 16 ч. 5", "ПП РФ от 27.02.2026 № 200 п. 2; Положение пп. 9 подп. «е», 11, 14, 15", "236-ФЗ ст. 4 ч. 2 п. 1", "236-ФЗ ст. 8 ч. 4–5"]
 effective_from: mixed
 checked: 2026-10-15

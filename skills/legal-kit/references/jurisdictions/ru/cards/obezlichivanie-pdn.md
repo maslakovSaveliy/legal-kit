@@ -2,7 +2,7 @@
 id: ru:obezlichivanie-pdn
 title: "Обезличивание ПДн: требования РКН (приказ № 140) и передача составов данных по ст. 13.1"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: bylaw
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["152-ФЗ ст. 3 п. 9", "152-ФЗ ст. 5 ч. 7", "152-ФЗ ст. 6 ч. 1 п. 9", "152-ФЗ ст. 13.1", "152-ФЗ ст. 23 ч. 12", "Приказ РКН от 19.06.2025 № 140", "ПП РФ от 01.08.2025 № 1154", "ПП РФ от 26.06.2025 № 961", "123-ФЗ ст. 1 ч. 3, ст. 4 ч. 4, 6, 7", "123-ФЗ ст. 6.1, 6.2 (ред. 233-ФЗ)"]
 effective_from: 2025-09-01
 checked: 2026-10-01

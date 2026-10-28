@@ -2,7 +2,7 @@
 id: ru:servis-razmeshcheniya-obyavleniy
 title: "Сервис размещения объявлений: статус и обязанности владельца (149-ФЗ ст. 10.7)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-15
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["149-ФЗ ст. 10.7 ч. 1 пп. 1–8, ч. 2–15", "584-ФЗ ст. 2 ч. 1", "41-ФЗ ст. 11 п. 4, ст. 16 ч. 5", "156-ФЗ ст. 4, ст. 7 ч. 1", "ПП РФ от 28.04.2023 № 672", "ПП РФ от 27.02.2026 № 200 п. 2; Положение пп. 9 подп. «з», 11, 12, 14, 15", "41-ФЗ ст. 1 ч. 6 (ред. 210-ФЗ, с 01.03.2027)", "КоАП ст. 19.7.10 ч. 1–2"]
 effective_from: mixed
 checked: 2026-10-15

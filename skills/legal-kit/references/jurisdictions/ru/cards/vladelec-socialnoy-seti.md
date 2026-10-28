@@ -2,7 +2,7 @@
 id: ru:vladelec-socialnoy-seti
 title: "Владелец социальной сети: статус, реестр РКН, обязательные документы и формы (149-ФЗ ст. 10.6)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["149-ФЗ ст. 10.6 ч. 1 (вводная часть), пп. 6–10", "149-ФЗ ст. 10.6 ч. 2, 3, 11–17", "149-ФЗ ст. 17 ч. 5", "Приказ РКН от 30.03.2021 № 37", "Приказ РКН от 02.04.2021 № 45", "Приказ РКН от 02.04.2021 № 47", "Приказ РКН от 12.04.2021 № 52", "КоАП ст. 13.50 ч. 1", "КоАП ст. 19.7.10 ч. 1, 2"]
 effective_from: mixed
 checked: 2026-10-01

@@ -1,0 +1,20 @@
+{
+  "name": "uyut-shop-test",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Test fixture for legal-kit evals: an empty Next.js project before development. The shop and its owner are fictitious.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "15.1.3",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "@types/react": "^19.0.2"
+  }
+}

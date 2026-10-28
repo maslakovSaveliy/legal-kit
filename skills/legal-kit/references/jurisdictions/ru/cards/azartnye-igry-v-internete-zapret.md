@@ -2,7 +2,7 @@
 id: ru:azartnye-igry-v-internete-zapret
 title: "Запрет азартных игр в интернете, кроме интерактивных ставок букмекеров и тотализаторов (244-ФЗ ст. 5 ч. 3, 6, 10)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["244-ФЗ ст. 1 ч. 2", "244-ФЗ ст. 4 пп. 1, 3.1, 4, 5, 10", "244-ФЗ ст. 5 ч. 3, 6, 10", "244-ФЗ ст. 6.1 ч. 1 п. 1 подп. «б», ч. 2.1, 3", "244-ФЗ ст. 14.2 ч. 1, 7", "244-ФЗ ст. 15 ч. 3.14", "115-ФЗ ст. 5; ст. 7 п. 1.11, 1.13", "КоАП ст. 14.1.1 ч. 1", "КоАП ст. 14.1.1-1 ч. 1", "149-ФЗ ст. 15.1 ч. 5 п. 1 подп. «д»"]
 effective_from: mixed
 checked: 2026-10-01

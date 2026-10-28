@@ -2,7 +2,7 @@
 id: ru:prodazha-tovarov-s-vozrastnym-ogranicheniem-onlayn
 title: "Продажа товаров с возрастным ограничением онлайн: энергетики, газосодержащие товары и проверка возраста (304-ФЗ; 124-ФЗ ст. 10.1; 569-ФЗ)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["304-ФЗ ст. 1, 2, 3 ч. 1–2, ст. 4–6, 8", "КоАП ст. 14.16.1", "ПП № 657 пп. 11, 13", "124-ФЗ ст. 10.1 п. 1–3", "438-ФЗ ст. 4", "569-ФЗ ст. 3, 7, ст. 8 ч. 1", "КоАП ст. 14.53 ч. 3", "171-ФЗ ст. 16 п. 2 подп. 11", "15-ФЗ ст. 20 ч. 2–3", "436-ФЗ ст. 16 ч. 6", "138-ФЗ ст. 20 ч. 6.1"]
 effective_from: mixed
 checked: 2026-10-01

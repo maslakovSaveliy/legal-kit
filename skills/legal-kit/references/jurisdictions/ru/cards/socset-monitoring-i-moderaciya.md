@@ -2,7 +2,7 @@
 id: ru:socset-monitoring-i-moderaciya
 title: "Социальная сеть: мониторинг запрещённой информации, модерация и обжалование (149-ФЗ ст. 10.6 ч. 1 пп. 1–5, 11, 15–17, ч. 4–10, 18)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-15
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["149-ФЗ ст. 10.6 ч. 1 пп. 1–5, 11, 15–17", "149-ФЗ ст. 10.6 ч. 4–10, 18", "ПП РФ от 15.07.2021 № 1191", "Приказ РКН от 02.04.2021 № 46", "Приказ РКН от 12.04.2021 № 52 пп. 16–19", "ПП РФ от 27.02.2026 № 200 п. 2; Положение пп. 9 подп. «ж», 11, 12, 14, 15", "41-ФЗ ст. 1 ч. 6 (ред. 210-ФЗ, с 01.03.2027)", "КоАП ст. 13.50 ч. 2, 3", "КоАП ст. 19.7.10-4"]
 effective_from: mixed
 checked: 2026-10-15

@@ -2,7 +2,7 @@
 id: ru:registraciya-programm-i-baz-dannyh
 title: "Добровольная регистрация программ для ЭВМ и баз данных и её последствия (ГК РФ ст. 1262, 1232)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: high
 volatility: warm
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ГК РФ ст. 1262 пп. 1–6", "ГК РФ ст. 1259 п. 4", "ГК РФ ст. 1232 пп. 2, 3, 6, 7", "ГК РФ ст. 1234 п. 4", "ГК РФ ст. 1334 п. 3", "193-ФЗ ст. 1 п. 1", "Пленум ВС РФ от 23.04.2019 № 10 пп. 37, 103, 109"]
 effective_from: mixed
 checked: 2026-10-01

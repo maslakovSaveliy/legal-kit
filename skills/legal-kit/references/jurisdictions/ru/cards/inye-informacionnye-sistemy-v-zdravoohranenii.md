@@ -2,7 +2,7 @@
 id: ru:inye-informacionnye-sistemy-v-zdravoohranenii
 title: "«Иные информационные системы» в здравоохранении: условия взаимодействия с ЕГИСЗ и МИС (323-ФЗ ст. 91 ч. 5–6; ПП № 447)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-15
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: bylaw
 subjects: [ul, ip, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["323-ФЗ ст. 91 ч. 1–6", "323-ФЗ ст. 79 ч. 1 п. 16", "323-ФЗ ст. 91.1 ч. 2, 6 пп. 6–7, ч. 11", "ПП РФ от 12.04.2018 № 447, Правила пп. 1–14, 16–23", "ПП РФ от 09.02.2022 № 140, п. 4; Положение пп. 36–39, 44–53, 56, 58, 60; прил. № 1 пп. 19–29; прил. № 2 пп. 17–22", "Приказ Минздрава от 25.03.2026 № 209н, пп. 1, 5, 6 Порядка", "Приказ Минздрава от 11.04.2025 № 193н, пп. 10, 37, 45 Порядка", "КоАП ст. 13.51"]
 effective_from: mixed
 checked: 2026-10-11

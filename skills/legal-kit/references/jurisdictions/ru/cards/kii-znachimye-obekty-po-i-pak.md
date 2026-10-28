@@ -2,7 +2,7 @@
 id: ru:kii-znachimye-obekty-po-i-pak
 title: "Значимые объекты КИИ: система безопасности, российское ПО и доверенные ПАК (187-ФЗ ст. 9 ч. 3, ст. 10; Указ № 166; ПП № 1478, № 1912)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: sectoral
 source_kind: law
 subjects: [ul]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["187-ФЗ ст. 9 ч. 3 пп. 1–7 (ред. 58-ФЗ)", "187-ФЗ ст. 10", "187-ФЗ ст. 11 ч. 1", "187-ФЗ ст. 6 ч. 2 пп. 6–8 (ред. 58-ФЗ)", "58-ФЗ ст. 2 ч. 3, 3.1–3.11 (ред. 325-ФЗ), 4 (ред. 265-ФЗ)", "Указ Президента РФ от 30.03.2022 № 166 п. 1 (ред. № 887, № 214)", "ПП № 1478, Требования пп. 1, 2", "ПП № 1912 пп. 2, 3, 5; Правила пп. 2, 7, 9, 10, 21", "КоАП ст. 13.12.1 ч. 1", "КоАП ст. 13.12.2"]
 effective_from: mixed
 checked: 2026-09-30

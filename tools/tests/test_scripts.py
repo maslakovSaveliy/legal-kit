@@ -41,7 +41,7 @@ CATALOG = FIX / "catalog.json"
 REAL_CATALOG = ROOT / "skills" / "legal-kit" / "references" / "features" / "catalog.json"
 ANSWERS = FIX / "docs" / "answers.json"
 TODAY = "2026-10-18"
-SCRIPT_NAMES = ["_kb", "scan_repo", "scan_url", "select", "registry", "check_docs", "report"]
+SCRIPT_NAMES = ["_kb", "scan_repo", "scan_url", "select", "registry", "check_docs", "report", "rules"]
 
 # Checksum vectors computed with the INN/OGRN algorithms; fictitious numbers
 # (region code 00 does not exist).
@@ -2274,3 +2274,269 @@ def test_scan_repo_six_megabyte_repo_runs_well_under_ten_seconds(tmp_path):
     assert result.returncode == 0, result.stderr
     assert elapsed < 10, "scan took %.1f s" % elapsed
     assert "analytics.web_counter" in {f["id"] for f in json.loads(result.stdout)["features"]}
+
+
+# --------------------------------------------------------------------------
+# 0.2: bot product kind and direction O
+# --------------------------------------------------------------------------
+
+def test_products_include_bot():
+    assert load("_kb").PRODUCTS == ("site", "webapp", "ios", "android", "bot")
+
+
+def test_report_has_direction_o():
+    assert load("report").DIRECTIONS["O"] == ("Боты и мини-приложения в мессенджерах", "Bots and mini apps in messengers")
+
+
+def test_detect_stacks_adds_bot_for_aiogram():
+    stacks, _ = load("scan_repo").detect_stacks(["bot.py", "requirements.txt"], {}, "aiogram==3.13.1\n", "", "")
+    assert {"python", "bot"} <= set(stacks)
+
+
+def test_detect_stacks_adds_bot_for_grammy_and_max():
+    scan = load("scan_repo")
+    assert "bot" in scan.detect_stacks(["src/bot.ts", "package.json"], {"grammy": "^1"}, "", "", "")[0]
+    assert "bot" in scan.detect_stacks(["src/bot.ts", "package.json"], {"@maxhub/max-bot-api": "^0.2"}, "", "", "")[0]
+
+
+def test_detect_stacks_no_bot_for_plain_site():
+    stacks, _ = load("scan_repo").detect_stacks(["app/page.tsx", "package.json"], {"next": "15"}, "", "", "")
+    assert "bot" not in stacks
+
+
+# --------------------------------------------------------------------------
+# 0.2: select.py --planned
+# --------------------------------------------------------------------------
+
+def test_select_planned_feature_has_its_own_reason(capsys):
+    code, out = run_json("select", select_args("--planned", "analytics.web_counter", "--subject", "ul",
+                                               "--models", "b2c", "--products", "site"), capsys)
+    assert code == 0
+    why = {i["id"]: i["why"] for i in out["applicable"]}
+    assert why["ru:t-analytics"] == ["planned:analytics.web_counter"]
+    assert out["feature_sources"] == {"analytics.web_counter": ["planned"]}
+    assert out["template_reasons"]["tpl-banner"] == ["planned:analytics.web_counter"]
+    assert out["inputs"]["planned"] == ["analytics.web_counter"]
+    assert list(out)[:2] == ["inputs", "feature_sources"]
+
+
+def test_select_planned_and_found_is_one_row_with_both_reasons(capsys):
+    code, out = run_json("select", select_args("--features", "analytics.web_counter",
+                                               "--planned", "analytics.web_counter"), capsys)
+    assert code == 0
+    rows = [i for i in out["applicable"] if i["id"] == "ru:t-analytics"]
+    assert len(rows) == 1 and rows[0]["why"] == ["feature:analytics.web_counter", "planned:analytics.web_counter"]
+    assert out["feature_sources"]["analytics.web_counter"] == ["found", "planned"]
+
+
+def test_select_unknown_planned_feature_only_warns(capsys):
+    code, out = run_json("select", select_args("--planned", "lottery.weekly"), capsys)
+    assert code == 0
+    assert any("lottery.weekly" in w for w in out["warnings"])
+    assert not any(r.startswith("planned:lottery") for i in out["applicable"] for r in i["why"])
+
+
+def test_select_does_not_read_planned_from_answers(tmp_path, capsys):
+    answers = tmp_path / "answers.json"
+    answers.write_text(json.dumps({"version": 1, "product": {
+        "kinds": ["site"], "planned_features": [{"id": "analytics.web_counter", "quote": "Метрика"}]}}),
+        encoding="utf-8")
+    code, out = run_json("select", select_args("--answers", answers), capsys)
+    assert code == 0
+    assert "ru:t-analytics" not in {i["id"] for i in out["applicable"]}
+    assert out["inputs"]["planned"] == [] and out["feature_sources"] == {}
+
+
+# --------------------------------------------------------------------------
+# 0.2: answers.json schema — planned features, agent rules link
+# --------------------------------------------------------------------------
+
+def _answers_file(tmp_path, product=None, decisions=None):
+    data = {"version": 1, "product": dict({"kinds": ["site"]}, **(product or {}))}
+    if decisions is not None:
+        data["decisions"] = decisions
+    path = tmp_path / "answers.json"
+    path.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+    return path
+
+
+def test_answers_rejects_planned_features_without_quote(tmp_path, capsys):
+    path = _answers_file(tmp_path, {"planned_features": [{"id": "forms.contact"}]})
+    code, _ = run_main("select", select_args("--answers", path), capsys)
+    assert code == 2
+
+
+def test_answers_rejects_planned_features_that_are_not_a_list(tmp_path, capsys):
+    path = _answers_file(tmp_path, {"planned_features": "forms.contact"})
+    code, _ = run_main("select", select_args("--answers", path), capsys)
+    assert code == 2
+
+
+def test_answers_accepts_planned_features_with_quotes(tmp_path, capsys):
+    path = _answers_file(tmp_path, {"planned_features": [{"id": "forms.contact", "quote": "форма заявки"}]})
+    code, _ = run_main("select", select_args("--answers", path), capsys)
+    assert code == 0
+
+
+def test_answers_rejects_non_boolean_agent_rules_link(tmp_path, capsys):
+    path = _answers_file(tmp_path, decisions={"agent_rules_link": "yes"})
+    code, _ = run_main("select", select_args("--answers", path), capsys)
+    assert code == 2
+
+
+def test_answers_rejects_accepted_suggestions_that_are_not_strings(tmp_path, capsys):
+    path = _answers_file(tmp_path, decisions={"accepted_suggestions": [1]})
+    code, _ = run_main("select", select_args("--answers", path), capsys)
+    assert code == 2
+
+
+# --------------------------------------------------------------------------
+# 0.2: report.py — plan mode, suggestions, plan vs fact
+# --------------------------------------------------------------------------
+
+def plan_row(**overrides):
+    row = good_row(req="ru:t-analytics", element=None, status="planned", bucket="plan", level="recommended",
+                   basis="practice", evidence=[{"owner": "Яндекс Метрика"}], title="Counters only after consent",
+                   topic="gating")
+    row.update(overrides)
+    return row
+
+
+def plan_report(*rows, **extra):
+    return make_report(*rows, mode="plan", **extra)
+
+
+def issue_rules(issues):
+    return sorted({i["rule"] for i in issues})
+
+
+def test_verify_plan_mode_accepts_planned_rows_with_owner_evidence(tmp_path, capsys):
+    report = plan_report(plan_row(), plan_row(req="ru:t-always", evidence=[{"select": "always"}], topic="pages",
+                                              level="mandatory", basis="norm", element="tpl-policy:А1"),
+                         planned=[{"id": "analytics.web_counter", "quote": "Яндекс Метрика"}])
+    code, issues = verify(tmp_path, report, capsys)
+    assert code == 0 and issues == []
+
+
+def test_verify_planned_status_outside_plan_mode(tmp_path, capsys):
+    code, issues = verify(tmp_path, make_report(plan_row()), capsys)
+    assert code == 1 and "planned_outside_plan" in issue_rules(issues)
+
+
+def test_verify_plan_bucket_outside_plan_mode(tmp_path, capsys):
+    code, issues = verify(tmp_path, make_report(good_row(bucket="plan")), capsys)
+    assert "planned_outside_plan" in issue_rules(issues)
+
+
+def test_verify_plan_mode_still_rejects_mandatory_interpretation(tmp_path, capsys):
+    code, issues = verify(tmp_path, plan_report(plan_row(level="mandatory", basis="interpretation")), capsys)
+    assert code == 1 and "level_basis_mismatch" in issue_rules(issues)
+
+
+def test_verify_planned_row_needs_owner_or_select_evidence(tmp_path, capsys):
+    code, issues = verify(tmp_path, plan_report(plan_row(evidence=[])), capsys)
+    assert "planned_evidence" in issue_rules(issues)
+
+
+def test_verify_planned_select_evidence_matches_select_json(tmp_path, capsys):
+    select_json = tmp_path / "select.json"
+    select_json.write_text(json.dumps({"applicable": [
+        {"id": "ru:t-analytics", "why": ["planned:analytics.web_counter"]},
+        {"id": "ru:t-always", "why": ["always"]}]}), encoding="utf-8")
+    bad = plan_report(plan_row(evidence=[{"select": "always"}]))
+    code, issues = verify(tmp_path, bad, capsys, "--select", select_json)
+    assert "planned_evidence" in issue_rules(issues)
+    good = plan_report(plan_row(), plan_row(req="ru:t-always", evidence=[{"select": "always"}]))
+    assert verify(tmp_path, good, capsys, "--select", select_json) == (0, [])
+
+
+def test_verify_owner_evidence_is_not_accepted_for_present_rows(tmp_path, capsys):
+    code, issues = verify(tmp_path, plan_report(good_row(evidence=[{"owner": "форма"}])), capsys)
+    assert "missing_evidence" in issue_rules(issues)
+
+
+def test_verify_suggestions_level_and_count(tmp_path, capsys):
+    one = {"text": "Добавить ссылку на политику в меню", "req": "ru:t-always", "level": "recommended",
+           "effort": "small", "auto": True}
+    assert verify(tmp_path, make_report(good_row(), suggestions=[one]), capsys) == (0, [])
+    _, issues = verify(tmp_path, make_report(good_row(), suggestions=[dict(one, level="mandatory")]), capsys)
+    assert "suggestion_level" in issue_rules(issues)
+    _, issues = verify(tmp_path, make_report(good_row(), suggestions=[one] * 8), capsys)
+    assert "suggestion_level" in issue_rules(issues)
+    _, issues = verify(tmp_path, make_report(good_row(), suggestions=[dict(one, effort="huge")]), capsys)
+    assert "bad_enum" in issue_rules(issues)
+
+
+def test_verify_plan_diff_ids_are_catalog_ids(tmp_path, capsys):
+    good = {"planned_not_found": ["payments.yookassa"], "found_not_planned": ["forms.contact"]}
+    assert verify(tmp_path, make_report(good_row(), plan_diff=good), capsys) == (0, [])
+    _, issues = verify(tmp_path, make_report(good_row(), plan_diff={"planned_not_found": ["lottery.weekly"],
+                                                                    "found_not_planned": []}), capsys)
+    assert "unknown_feature" in issue_rules(issues)
+
+
+def test_verify_planned_ids_and_topic_enum(tmp_path, capsys):
+    _, issues = verify(tmp_path, plan_report(plan_row(), planned=[{"id": "lottery.weekly", "quote": "лотерея"}]),
+                       capsys)
+    assert "unknown_feature" in issue_rules(issues)
+    _, issues = verify(tmp_path, plan_report(plan_row(topic="banner")), capsys)
+    assert "bad_enum" in issue_rules(issues)
+
+
+def test_render_plan_has_ten_sections_and_no_mandatory_word_for_soft_rows(tmp_path, capsys):
+    report = plan_report(
+        plan_row(),
+        plan_row(req="ru:t-always", evidence=[{"select": "always"}], topic="pages", level="mandatory",
+                 basis="norm", element="tpl-policy:А1", title="Privacy policy page"),
+        plan_row(req="ru:t-future", topic="other", bucket="roadmap", effective_from="2027-03-01",
+                 title="Future notice"),
+        planned=[{"id": "analytics.web_counter", "quote": "Яндекс Метрика"}],
+        not_covered=["лотерея для подписчиков"],
+        suggestions=[])
+    md = render(tmp_path, report, capsys, "--plan", "--lang", "ru")
+    headings = [l for l in md.splitlines() if l.startswith("## ")]
+    assert len(headings) >= 10, headings
+    assert "«Яндекс Метрика»" in md and "лотерея для подписчиков" in md and "2027-03-01" in md
+    gating = md.split("## Что грузить только после согласия")[1].split("\n## ")[0]
+    assert "Counters only after consent" in gating and "обязательно" not in gating.lower()
+    pages = md.split("## Страницы и документы")[1].split("\n## ")[0]
+    assert "Privacy policy page" in pages and "обязательно" in pages.lower()
+    assert "Критичного нет" in md
+    assert [l for l in md.splitlines() if l.strip()][-1] == "Не юридическая консультация."
+
+
+def test_render_audit_shows_nothing_critical_when_suggestions_empty(tmp_path, capsys):
+    md = render(tmp_path, make_report(good_row(), suggestions=[]), capsys, "--lang", "ru")
+    assert "## Что можно улучшить или добавить" in md and "Критичного нет" in md
+    md_en = render(tmp_path, make_report(good_row(), suggestions=[]), capsys, "--lang", "en")
+    assert "Nothing critical" in md_en
+
+
+def test_render_audit_without_suggestions_key_has_no_section(tmp_path, capsys):
+    md = render(tmp_path, make_report(good_row()), capsys, "--lang", "ru")
+    assert "Что можно улучшить" not in md and "План и факт" not in md
+
+
+def test_render_audit_shows_plan_vs_fact(tmp_path, capsys):
+    report = make_report(good_row(), plan_diff={"planned_not_found": ["payments.yookassa"],
+                                                "found_not_planned": ["forms.contact"]})
+    md = render(tmp_path, report, capsys, "--lang", "ru")
+    section = md.split("## План и факт")[1].split("\n## ")[0]
+    assert "payments.yookassa" in section and "forms.contact" in section
+
+
+def test_render_audit_of_a_plan_report_shows_the_plan_bucket(tmp_path, capsys):
+    md = render(tmp_path, plan_report(plan_row()), capsys, "--lang", "ru")
+    assert "## План" in md and "Counters only after consent" in md.split("## План")[1]
+
+
+def test_render_plan_never_prints_norm_for_soft_rows(tmp_path, capsys):
+    # final review I1: level interpretation with basis norm passes verify; plan.md must not say «норма»
+    row = plan_row(req="ru:t-always", evidence=[{"select": "always"}], topic="consent", level="interpretation",
+                   basis="norm", title="Consent under a contract basis")
+    md = render(tmp_path, plan_report(row), capsys, "--plan", "--lang", "ru")
+    line = [l for l in md.splitlines() if "Consent under a contract basis" in l][0]
+    assert "норма" not in line and "трактовка" in line
+    md_en = render(tmp_path, plan_report(row), capsys, "--plan", "--lang", "en")
+    line_en = [l for l in md_en.splitlines() if "Consent under a contract basis" in l][0]
+    assert "norm" not in line_en.split("—", 1)[1]

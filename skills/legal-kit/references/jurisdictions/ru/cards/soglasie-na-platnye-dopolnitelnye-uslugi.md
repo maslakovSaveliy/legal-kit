@@ -2,7 +2,7 @@
 id: ru:soglasie-na-platnye-dopolnitelnye-uslugi
 title: "Согласие на платные дополнительные товары и услуги, запрет автоматических отметок (ЗоЗПП ст. 16 п. 3.1)"
 category: concept
-updated: 2026-09-30
+updated: 2026-10-23
 verified: 2026-09-30
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: general
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ЗоЗПП ст. 16 п. 3.1 абз. 1, 2, 5, 6, 7 (69-ФЗ)", "ЗоЗПП ст. 16 п. 2 пп. 6", "69-ФЗ ст. 2", "КоАП ст. 14.8 ч. 2, 2.1"]
 effective_from: 2025-09-01
 checked: 2026-09-30

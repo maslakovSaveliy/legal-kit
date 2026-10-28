@@ -2,7 +2,7 @@
 id: ru:kii-subekty-i-kategorirovanie
 title: "Субъекты КИИ и категорирование объектов КИИ (187-ФЗ ст. 2, 7 в ред. 58-ФЗ; ПП № 127)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: sectoral
 source_kind: law
 subjects: [ul]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["187-ФЗ ст. 2 пп. 3, 7, 8 (ред. 58-ФЗ)", "187-ФЗ ст. 7 ч. 1, 3–6, 8, 11–14 (ред. 58-ФЗ)", "187-ФЗ ст. 8 ч. 1 п. 1 (ред. 58-ФЗ)", "58-ФЗ ст. 1 п. 1, 4, 5; ст. 2 ч. 1, 2", "ПП № 127 (ред. ПП № 1762) Правила пп. 2, 3, 5, 6, 6.1, 11, 16, 17, 18, 19.1, 20–22", "КоАП ст. 19.7.15 ч. 1, 3"]
 effective_from: mixed
 checked: 2026-09-30

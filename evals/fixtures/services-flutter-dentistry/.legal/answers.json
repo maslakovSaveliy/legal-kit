@@ -12,7 +12,8 @@
       "rustore": null,
       "appgallery": null
     },
-    "repo": "."
+    "repo": ".",
+    "planned_features": []
   },
   "owner": {
     "status": "ul",
@@ -41,6 +42,8 @@
     "block_counters": true,
     "apply_changes": true,
     "commit_legal_dir": false,
+    "agent_rules_link": null,
+    "accepted_suggestions": [],
     "consent_at_forms": []
   },
   "document_facts": {}

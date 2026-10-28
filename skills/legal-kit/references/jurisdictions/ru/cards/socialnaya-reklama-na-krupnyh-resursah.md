@@ -2,7 +2,7 @@
 id: ru:socialnaya-reklama-na-krupnyh-resursah
 title: "Социальная реклама на ресурсах, сервисах объявлений и агрегаторах с аудиторией более 200 000 в сутки (38-ФЗ ст. 10 ч. 3.1, 3.13, 3.13-1, 3.19)"
 category: concept
-updated: 2026-09-30
+updated: 2026-10-23
 verified: 2026-09-30
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["38-ФЗ ст. 10 ч. 3.1, 3.13, 3.13-1, 3.13-2, 3.13-3, 3.19, 3.20", "38-ФЗ ст. 18.1 ч. 3, 17", "38-ФЗ ст. 38 ч. 4, 7, 7.1, 7.2", "КоАП ст. 14.3 ч. 11–14"]
 effective_from: 2025-03-01
 checked: 2026-09-30

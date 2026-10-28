@@ -2,7 +2,7 @@
 id: ru:obyazatelnoe-primenenie-suverennyh-modeley-ii
 title: "Случаи обязательного применения только суверенных или национальных моделей ИИ (243-ФЗ ст. 5 ч. 2 п. 3, ст. 13 ч. 3)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["243-ФЗ ст. 5 ч. 2 п. 3", "243-ФЗ ст. 13 ч. 2, 3", "243-ФЗ ст. 5 ч. 2 п. 4", "243-ФЗ ст. 6 ч. 2, 3", "243-ФЗ ст. 1 ч. 3"]
 effective_from: 2027-03-01
 checked: 2026-10-01

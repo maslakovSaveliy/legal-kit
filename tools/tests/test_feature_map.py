@@ -27,7 +27,7 @@ SEED_SCRIPT = ROOT / "tools" / "seed_feature_map.py"
 SCRIPTS = ROOT / "skills" / "legal-kit" / "scripts"
 TODAY = datetime.date(2026, 10, 18)
 
-EXPECTED_REQUIREMENTS = 219
+EXPECTED_REQUIREMENTS = 227
 TOP_KEYS = {"_doc", "always", "features", "owner_facts", "sectoral", "not_detectable", "notes", "platform_rules",
             "templates", "documents"}
 # Features that are evidence only and may map to no requirement (see the map's "_doc").
@@ -113,14 +113,14 @@ def load_script(name):
     return module
 
 
-def make_inputs(features=(), subject=None, models=(), products=(), sectors=(), facts=()):
+def make_inputs(features=(), subject=None, models=(), products=(), sectors=(), facts=(), planned=()):
     facts = set(facts)
     if subject:
         facts.add("subject:" + subject)
     if "b2c" in models:
         facts.add("b2c")
-    return {"features": list(features), "subject": subject, "models": sorted(models), "products": sorted(products),
-            "sectors": sorted(sectors), "facts": sorted(facts)}
+    return {"features": list(features), "planned": list(planned), "subject": subject, "models": sorted(models),
+            "products": sorted(products), "sectors": sorted(sectors), "facts": sorted(facts)}
 
 
 def union(fmap, features=(), facts=(), sectors=()):
@@ -468,6 +468,15 @@ GOLDENS = {
         templates=({"oferta-uslugi-i-podpiska", "soglasie-na-rasprostranenie-pdn"},
                    {"publichnaya-oferta-tovary", "usloviya-vozvrata-i-obmena"}),
         documents=({"image-consent", "cross-border-notification"}, set())),
+    "bot-shop": dict(
+        inputs=dict(features=("bot.telegram", "payments.bot_invoice", "payments.telegram_stars"),
+                    subject="ul", models=("b2c",), products=("bot",)),
+        include=rid("dokumenty-i-soglasiya-v-chat-bote", "oplata-v-chat-bote-i-chek",
+                    "pdn-pri-sbore-cherez-inostrannyy-messendzher", "onlayn-kkt-i-elektronnyy-chek",
+                    "zapret-oplaty-cifrovoy-valyutoy", "pravila-platform-botov-oplata", "soglasie-na-obrabotku-pdn"),
+        exclude=rid("pravila-storov-oplata-i-podpiski", "soglasie-na-analitiku-i-cookies"),
+        templates=({"soglasie-na-obrabotku-pdn", "politika-obrabotki-pdn"}, {"cookie-banner-i-uvedomlenie"}),
+        documents=({"kkt-checklist"}, set())),
 }
 
 
@@ -482,8 +491,13 @@ def test_golden_requirements(name):
     assert not extra, "%s: must exclude %s" % (name, extra)
     if not golden["inputs"].get("sectors"):
         assert not applicable & ids_of(obligation="sectoral"), name
+    platform = set(feature_map()["platform_rules"])
+    store_rules = {i for i in platform if i.startswith("ru:pravila-storov-")}
+    bot_rules = platform - store_rules
     if not set(golden["inputs"]["products"]) & {"ios", "android"}:
-        assert not applicable & set(feature_map()["platform_rules"]), name
+        assert not applicable & store_rules, name
+    if "bot" not in golden["inputs"]["products"]:
+        assert not applicable & bot_rules, name
 
 
 @pytest.mark.parametrize("name", sorted(GOLDENS))

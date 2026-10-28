@@ -2,7 +2,7 @@
 id: ru:zapret-prodazhi-radioelektronnyh-sredstv-sputnikovoy-svyazi
 title: "Запрет продажи радиоэлектронных средств для связи с иностранными спутниками без решения ГКРЧ (ЗоЗПП п. 4.3 ст. 4; 126-ФЗ ст. 71 п. 3; с 01.03.2027)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ЗоЗПП ст. 4 п. 4.3 (210-ФЗ ст. 3 п. 1)", "210-ФЗ ст. 11 ч. 3", "126-ФЗ ст. 71 п. 3", "41-ФЗ от 01.04.2025 ст. 9 п. 7 подп. «в», ст. 16 ч. 3", "ЗоЗПП преамбула (понятие продавца)", "КоАП ст. 14.2 (возможная квалификация)"]
 effective_from: 2027-03-01
 checked: 2026-10-01

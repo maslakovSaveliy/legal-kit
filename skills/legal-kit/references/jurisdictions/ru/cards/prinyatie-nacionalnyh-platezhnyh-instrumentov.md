@@ -2,7 +2,7 @@
 id: ru:prinyatie-nacionalnyh-platezhnyh-instrumentov
 title: "Приём оплаты национальными платёжными инструментами и наличными по выбору потребителя"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-15
 legal_confidence: medium
 volatility: warm
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ЗоЗПП ст. 16.1 п. 1 абз. 1–4", "ЗоЗПП ст. 16.1 п. 2, 3, 5", "ЗоЗПП ст. 16 п. 2 подп. 7", "161-ФЗ ст. 30.1 ч. 2", "КоАП ст. 14.8 ч. 4", "161-ФЗ ст. 8 ч. 20–22, ст. 30.6-2 ч. 1 (ред. 248-ФЗ, с 01.09.2026; смежные)", "Положение Банка России от 03.12.2025 № 876-П, п. 1.2, 1.3 (СБП; адресовано банкам; смежное)"]
 effective_from: mixed
 checked: 2026-10-15

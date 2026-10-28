@@ -2,7 +2,7 @@
 id: ru:sankcii-za-narusheniya-v-oblasti-pdn
 title: "Санкции за нарушения в области ПДн: КоАП ст. 13.11, 13.12, 19.7, 4.1 ч. 3.4-2 и УК ст. 272.1"
 category: concept
-updated: 2026-09-29
+updated: 2026-10-23
 verified: 2026-09-29
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: general
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["КоАП ст. 13.11 ч. 1–18 и прим. 1–5", "КоАП ст. 4.1 ч. 3.4-2", "КоАП ст. 19.7", "КоАП ст. 13.12 ч. 2, 6", "УК ст. 272.1", "420-ФЗ ст. 2", "421-ФЗ", "104-ФЗ ст. 3"]
 effective_from: mixed
 checked: 2026-09-29

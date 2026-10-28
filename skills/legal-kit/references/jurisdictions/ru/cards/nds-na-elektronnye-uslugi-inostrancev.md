@@ -2,7 +2,7 @@
 id: ru:nds-na-elektronnye-uslugi-inostrancev
 title: "НДС на электронные услуги иностранных организаций и на товары продавцов ЕАЭС через электронные площадки: когда применяется"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-15
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["НК РФ ст. 174.2 п. 1, 2, 3, 10, 10.1", "НК РФ ст. 148 п. 1 подп. 4, п. 5", "НК РФ ст. 83 п. 4.6", "НК РФ ст. 306 п. 14", "422-ФЗ ст. 2 ч. 9, 10", "НК РФ ст. 174.3 п. 1 подп. 3, п. 2, 3, 6", "НК РФ ст. 147 п. 1 подп. 2 абз. 2, подп. 4", "100-ФЗ от 29.05.2024 ст. 4 ч. 1, 2", "425-ФЗ от 28.11.2025 ст. 2 п. 15, ст. 25 ч. 3, 13"]
 effective_from: mixed
 checked: 2026-10-11

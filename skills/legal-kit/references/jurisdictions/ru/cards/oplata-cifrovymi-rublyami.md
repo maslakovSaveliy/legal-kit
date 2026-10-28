@@ -2,7 +2,7 @@
 id: ru:oplata-cifrovymi-rublyami
 title: "Приём оплаты цифровыми рублями (ЗоЗПП ст. 16.1 п. 1 абз. 5–7, поэтапно с 01.09.2026)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-15
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ЗоЗПП ст. 16.1 п. 1 абз. 5–7", "248-ФЗ от 23.07.2025 ст. 1, ст. 4 ч. 1, 6–9", "290-ФЗ от 31.07.2025 ст. 1 п. 1", "161-ФЗ ст. 3 п. 42–43, ст. 7.1 ч. 3.1–3.3, ст. 8 ч. 20–22, ст. 30.6-2, ст. 30.7 ч. 18.1 (ред. 248-ФЗ ст. 3)", "248-ФЗ ст. 4 ч. 2–5", "КоАП ст. 14.8 ч. 4 (применимость не подтверждена)"]
 effective_from: 2026-09-01
 checked: 2026-09-30

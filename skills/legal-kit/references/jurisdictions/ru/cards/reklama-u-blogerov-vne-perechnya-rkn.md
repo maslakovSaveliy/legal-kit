@@ -2,7 +2,7 @@
 id: ru:reklama-u-blogerov-vne-perechnya-rkn
 title: "Запрет рекламы на страницах блогеров с аудиторией более 10 000, не включённых в перечень РКН (38-ФЗ ст. 5 ч. 10.6; 149-ФЗ ст. 10.6 ч. 1.1–1.3)"
 category: concept
-updated: 2026-09-30
+updated: 2026-10-23
 verified: 2026-09-30
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["38-ФЗ ст. 5 ч. 10.6", "149-ФЗ ст. 10.6 ч. 1.1–1.3", "38-ФЗ ст. 38 ч. 6, 7"]
 effective_from: 2025-01-01
 checked: 2026-09-30

@@ -2,7 +2,7 @@
 id: ru:zaprosy-subektov-pdn
 title: "Запросы субъектов ПДн: доступ к сведениям и сроки ответа"
 category: concept
-updated: 2026-09-29
+updated: 2026-10-23
 verified: 2026-09-29
 legal_confidence: high
 volatility: warm
@@ -10,7 +10,7 @@ obligation: general
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["152-ФЗ ст. 14 ч. 1–8", "152-ФЗ ст. 20 ч. 1, 2, 3, 4", "152-ФЗ ст. 22.1 ч. 4 п. 3"]
 effective_from: 2022-09-01
 checked: 2026-09-29

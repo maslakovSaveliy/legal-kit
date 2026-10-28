@@ -2,7 +2,7 @@
 id: ru:biometriya-pri-autentifikacii
 title: "Биометрия при входе и идентификации: только через ЕБС и аккредитованные системы (572-ФЗ, 152-ФЗ ст. 11)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["152-ФЗ ст. 11 ч. 1–3", "572-ФЗ ст. 1 ч. 2 п. 2", "572-ФЗ ст. 3 ч. 4, 11–13, 19, 19.1, 21", "572-ФЗ ст. 10 ч. 1–3", "572-ФЗ ст. 15 ч. 1–2", "572-ФЗ ст. 16 ч. 1–12, 17", "572-ФЗ ст. 17 ч. 1–2", "572-ФЗ ст. 26 ч. 2, 3, 9, 10", "572-ФЗ ст. 27", "ПП РФ от 01.04.2024 № 408", "ПП РФ от 22.05.2023 № 810", "ПП РФ от 25.05.2023 № 815", "519-ФЗ от 28.12.2024 ст. 1", "121-ФЗ от 23.05.2025 ст. 3"]
 effective_from: mixed
 checked: 2026-10-15

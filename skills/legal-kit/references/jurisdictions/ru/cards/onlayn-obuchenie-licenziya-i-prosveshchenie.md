@@ -2,7 +2,7 @@
 id: ru:onlayn-obuchenie-licenziya-i-prosveshchenie
 title: "Онлайн-обучение: лицензия как триггер, ИП без лицензии, сведения ИП и просветительская деятельность"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["273-ФЗ ст. 2 пп. 9, 17–20, 35", "273-ФЗ ст. 91 ч. 1–2", "273-ФЗ ст. 32 ч. 1–5", "273-ФЗ ст. 12 ч. 4", "273-ФЗ ст. 60 ч. 1", "273-ФЗ ст. 76 ч. 3", "273-ФЗ ст. 12.2 ч. 1, 1.1, 2, 3", "273-ФЗ ст. 54 ч. 1", "273-ФЗ ст. 31 ч. 1, 5, 6", "99-ФЗ ст. 12 ч. 1 п. 40", "ПП РФ от 01.07.2022 № 1195 пп. 2–15", "ПП РФ от 27.01.2026 № 47", "ПП РФ от 15.09.2020 № 1441, п. 2; Правила пп. 2, 7, 9–22", "ПП РФ от 21.08.2026 № 1053", "КоАП ст. 14.1 ч. 2–4", "КоАП ст. 19.20 ч. 1–3", "КоАП ст. 19.30 ч. 1"]
 effective_from: mixed
 checked: 2026-10-01

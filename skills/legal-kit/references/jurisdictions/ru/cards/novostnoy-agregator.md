@@ -2,7 +2,7 @@
 id: ru:novostnoy-agregator
 title: "Новостной агрегатор: статус и обязанности владельца (149-ФЗ ст. 10.4)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: high
 volatility: warm
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["149-ФЗ ст. 10.4 ч. 1 пп. 1–13, ч. 2–13", "266-ФЗ от 01.07.2021 ст. 3 п. 1, ст. 5 ч. 2", "КоАП ст. 13.32", "КоАП ст. 19.7.10-1 ч. 1–2", "КоАП ст. 19.7.10 ч. 1–2"]
 effective_from: mixed
 checked: 2026-10-01

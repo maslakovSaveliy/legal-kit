@@ -2,7 +2,7 @@
 id: ru:reklama-inoagentov-i-lic-236-fz
 title: "Реклама на ресурсах иноагентов и иностранных лиц по 236-ФЗ и реклама их ресурсов (38-ФЗ ст. 5 ч. 10.4, 10.5; ст. 7 п. 11, 12)"
 category: concept
-updated: 2026-09-30
+updated: 2026-10-23
 verified: 2026-09-30
 legal_confidence: high
 volatility: warm
@@ -10,7 +10,7 @@ obligation: general
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["38-ФЗ ст. 5 ч. 10.4, 10.5", "38-ФЗ ст. 7 п. 11, 12", "38-ФЗ ст. 38 ч. 6, 7", "236-ФЗ ст. 12, 13", "255-ФЗ ст. 11 ч. 20", "КоАП ст. 14.3 ч. 7–10"]
 effective_from: mixed
 checked: 2026-09-30

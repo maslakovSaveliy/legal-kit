@@ -83,7 +83,8 @@ Write what the prompt states into `answers.json` before any question, so nothing
 
 - Code is available when the working directory or the given path holds the product's source. The live URL is the production address or a URL the prompt gives for the running website (a local one included).
 - Store listings are not a live URL: a mobile repo whose only pages are store listings is `repo-only`; the listings are still inspected ([recon-stores.md](recon-stores.md)).
-- Without code and without a URL there is nothing to inspect: ask start question 2 or 3.
+- Without code and without a URL there is nothing to inspect: ask start question 2 or 3 — unless the owner describes a product to build, which is mode `plan`.
+- Mode `plan` (no product yet, or the request says it is a new project) and mode `feature` (one function being added now) are chosen by the words of the request: [plan.md](plan.md#choosing-the-mode). Plan requested over code that already has features: offer the audit in one line.
 
 ### Git tree
 

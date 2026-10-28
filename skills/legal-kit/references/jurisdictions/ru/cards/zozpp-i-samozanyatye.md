@@ -2,7 +2,7 @@
 id: ru:zozpp-i-samozanyatye
 title: "Применимость ЗоЗПП к самозанятому владельцу продукта"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-15
 legal_confidence: low
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [npd]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ЗоЗПП преамбула (изготовитель, исполнитель, продавец, владелец агрегатора)", "ГК РФ ст. 23 п. 1, 3, 4", "422-ФЗ ст. 2 ч. 6", "Пленум ВС РФ от 28.06.2012 № 17 п. 12", "290-ФЗ ст. 1 п. 1 (с 01.10.2026)"]
 effective_from: mixed
 checked: 2026-09-29

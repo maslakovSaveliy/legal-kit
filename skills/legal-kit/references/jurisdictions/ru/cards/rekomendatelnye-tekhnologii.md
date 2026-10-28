@@ -2,7 +2,7 @@
 id: ru:rekomendatelnye-tekhnologii
 title: "Рекомендательные технологии: информирование пользователей и правила применения"
 category: concept
-updated: 2026-10-15
+updated: 2026-10-23
 verified: 2026-10-15
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["149-ФЗ ст. 10.2-2 ч. 1–7, 14, 15, 16", "408-ФЗ ст. 1, ст. 2 ч. 1, 2", "Приказ РКН от 06.10.2023 № 149", "Приказ РКН от 06.10.2023 № 150 пп. 1–14", "КоАП ст. 13.56 ч. 1–6 (введена 199-ФЗ от 26.06.2026)", "КоАП ст. 23.44 ч. 1"]
 effective_from: mixed
 checked: 2026-10-15

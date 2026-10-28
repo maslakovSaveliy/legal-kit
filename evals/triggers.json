@@ -18,5 +18,15 @@
   {"query": "Составь договор аренды квартиры в Москве между двумя физлицами и акт приёма-передачи", "should_trigger": false},
   {"query": "Нужен трудовой договор для разработчика, который работает удалённо из России, с испытательным сроком", "should_trigger": false},
   {"query": "Баннер cookie на сайте не закрывается в iOS Safari, найди баг в компоненте CookieBanner.tsx", "should_trigger": false},
-  {"query": "Нарисуй макет страницы с тарифами в Figma и сверстай её на Tailwind", "should_trigger": false}
+  {"query": "Нарисуй макет страницы с тарифами в Figma и сверстай её на Tailwind", "should_trigger": false},
+  {"query": "Создаю сайт интернет-магазина на Next.js, кода пока нет — что учесть по закону до разработки?", "should_trigger": true},
+  {"query": "New project for Russian customers: give me a legal build checklist before we start coding", "should_trigger": true},
+  {"query": "Добавляю оплату через ЮKassa в мой магазин — что нужно сделать с чеками и офертой?", "should_trigger": true},
+  {"query": "Пишу Telegram-бота для записи клиентов в салон: какие согласия и документы нужны?", "should_trigger": true},
+  {"query": "Before launch, check what our MAX bot mini app needs under Russian personal data law", "should_trigger": true},
+  {"query": "I'm adding a lead form and Yandex Metrica to the landing page, what consent rules should the code follow?", "should_trigger": true},
+  {"query": "Оптимизируй бандл Next.js и ускорь загрузку страницы каталога", "should_trigger": false},
+  {"query": "Fix the aiogram webhook that returns 502 behind nginx", "should_trigger": false},
+  {"query": "Напиши Telegram-бота, который присылает прогноз погоды в чат", "should_trigger": false},
+  {"query": "Set up a GDPR cookie banner for our EU-only marketing site", "should_trigger": false}
 ]

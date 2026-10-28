@@ -2,7 +2,7 @@
 id: ru:nedopustimye-usloviya-oferty
 title: "Недопустимые условия в оферте и пользовательском соглашении (ЗоЗПП ст. 16 п. 1–3)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-09-30
 legal_confidence: high
 volatility: warm
@@ -10,7 +10,7 @@ obligation: general
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ЗоЗПП ст. 16 п. 1, п. 2 пп. 1–15, п. 3 абз. 3 (ред. 135-ФЗ)", "135-ФЗ (2022) ст. 2", "ЗоЗПП ст. 32", "КоАП ст. 14.8 ч. 2"]
 effective_from: 2022-09-01
 checked: 2026-09-30

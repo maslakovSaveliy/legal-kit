@@ -2,7 +2,7 @@
 id: ru:stimuliruyushchie-meropriyatiya-v-reklame
 title: "Реклама стимулирующих мероприятий: сроки и источник сведений о правилах, граница с лотереей (38-ФЗ ст. 9, ст. 5 ч. 3 п. 15; ГК ст. 1055–1058; 138-ФЗ)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: medium
 volatility: cold
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["38-ФЗ ст. 9", "38-ФЗ ст. 5 ч. 3 п. 15", "38-ФЗ ст. 3 п. 2, 3", "38-ФЗ ст. 38 ч. 6, 7", "ГК РФ ст. 1055–1058, 1062, 1063", "138-ФЗ ст. 2 пп. 1, 6, 9, 15", "416-ФЗ ст. 4, 7 ч. 3", "КоАП ст. 14.3 ч. 1", "КоАП ст. 14.27 ч. 1"]
 effective_from: mixed
 checked: 2026-10-16

@@ -2,7 +2,7 @@
 id: ru:normy-yazyka-i-inostrannye-slova
 title: "Нормы русского литературного языка и иностранные слова в информации для потребителей (53-ФЗ)"
 category: concept
-updated: 2026-09-30
+updated: 2026-10-23
 verified: 2026-09-30
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: general
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["53-ФЗ ст. 1 ч. 3, 6", "53-ФЗ ст. 3 ч. 1 п. 9.4, ч. 1.1, 2, 3", "53-ФЗ ст. 6 ч. 2", "ПП РФ от 01.07.2023 № 1092", "Распоряжение Правительства РФ от 30.04.2025 № 1102-р"]
 effective_from: mixed
 checked: 2026-09-30

@@ -2,7 +2,7 @@
 id: ru:russkiy-yazyk-informacii-dlya-potrebiteley
 title: "Русский язык обязательной информации для потребителей (ЗоЗПП ст. 8 п. 2)"
 category: concept
-updated: 2026-09-30
+updated: 2026-10-23
 verified: 2026-09-30
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: general
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ЗоЗПП ст. 8 п. 1–2 (ред. 168-ФЗ)", "ЗоЗПП ст. 9, ст. 10 п. 2", "ЗоЗПП ст. 12 п. 1–2", "53-ФЗ ст. 3 ч. 1 п. 9.4", "КоАП ст. 14.8 ч. 1"]
 effective_from: mixed
 checked: 2026-09-30

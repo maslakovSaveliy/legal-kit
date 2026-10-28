@@ -16,6 +16,14 @@ legal-kit за один запуск разбирается, что делает
 4. **Документы и интерфейс согласий.** Политика обработки ПДн, согласия, cookie-баннер, оферта, условия возврата, сведения о продавце и другие документы (9 шаблонов и 13 описаний документов без шаблона). Страницы, отдельный чекбокс согласия, баннер, блок в футере и журнал согласий делаются в дизайне и каталогах i18n проекта; журнал согласий только при готовых бэкенде и ORM.
 5. **Отчёт.** `.legal/report-YYYY-MM-DD.md` с разделами «Сделано», «Сделать вам», «Спорно» и «Дорожная карта».
 
+### Три режима
+
+- **Аудит и оформление** — продукт уже есть: всё, что описано выше.
+- **План** — продукта ещё нет или кода почти нет («создаю сайт», «новый проект», «до разработки»). Функции берутся со слов владельца, скилл пишет `.legal/plan.md` — чек-лист для разработки с id требований — и `.legal/RULES.md`, короткие правила для агента, который пишет код. Готовит черновики документов, но в код ничего не встраивает. С вашего согласия добавляет в `CLAUDE.md`, `AGENTS.md` или `.cursor/rules` одну строку со ссылкой на `RULES.md`.
+- **Фича** — в проект прямо сейчас добавляют одну функцию («добавляю оплату ЮKassa», «пишу Telegram-бота»): скилл отдаёт правила для неё из библиотеки `references/rules/`, без полного отчёта.
+
+Боты и мини-приложения в Telegram и MAX — отдельный тип продукта (`bot`). Повторный аудит сравнивает план с кодом («План и факт»), а в конце каждого прогона скилл предлагает, что ещё можно улучшить, или пишет «Критичного нет».
+
 ### Чего не делает
 
 - Это не юридическая консультация. Документы и решения стоит проверить с юристом.
@@ -61,6 +69,14 @@ npx skills add maslakovSaveliy/legal-kit
 
 > Приложение на Flutter лежит в текущей папке, страница в App Store: [ссылка]. Нужно юридическое оформление для российских пользователей: пользовательское соглашение, политика, согласие на push.
 
+План до разработки:
+
+> Делаю сайт магазина на Next.js: форма заявки, Яндекс Метрика, оплата ЮKassa, подписка. Кода пока нет — что учесть по закону?
+
+Одна функция:
+
+> Добавляю оплату через ЮKassa в Telegram-бота магазина — что сделать с чеком и согласиями?
+
 ### Что появится в проекте
 
 Всё, что скилл хранит, лежит в `.legal/`:
@@ -70,6 +86,8 @@ npx skills add maslakovSaveliy/legal-kit
 | `.legal/answers.json` | факты о владельце, скрытые реквизиты, факты для документов и решения; повторный запуск читает его вместо повторных вопросов |
 | `.legal/report-YYYY-MM-DD.md` | отчёт (машинный вид: `.legal/report.json`) |
 | `.legal/drafts/` | черновики документов для владельца; в них могут остаться плейсхолдеры, в публичные страницы они не попадают |
+| `.legal/plan.md` | режим «план»: чек-лист для разработки с id требований |
+| `.legal/RULES.md` | правила для агента, который пишет код (не больше 60 строк) |
 | `.legal/paste/<platform>/` | готовые к вставке материалы, если репозитория нет, сайт на конструкторе или у приложения нет сайта для документов |
 | `.legal/.gitignore` | создаётся при первой записи; скрывает `answers.json` и `evidence/` |
 
@@ -77,7 +95,7 @@ npx skills add maslakovSaveliy/legal-kit
 
 ### База знаний
 
-Требования, шаблоны и справочники лежат в `skills/legal-kit/references/jurisdictions/ru/`: 219 требований с карточками, 9 шаблонов документов, 322 элемента шаблонов со статусом и видом метода. **Дата базы: 2026-10-16** (`BASE.md`; отчёт печатает её одной строкой). Источники — официальные тексты (pravo.gov.ru и другие официальные сайты), для правил сторов — документация самих площадок. База — снимок на эту дату. Нормы, сроки и суммы берутся только из неё или из официального текста со ссылкой. «Обязательно» ставится только для нормы с источником в базе или по официальному адресу; трактовки, практика и правила сторов подаются как рекомендации или спорные места.
+Требования, шаблоны и справочники лежат в `skills/legal-kit/references/jurisdictions/ru/`: 227 требований с карточками, 9 шаблонов документов, 322 элемента шаблонов со статусом и видом метода. Библиотека правил для разработки — `skills/legal-kit/references/rules/`: 32 правила, у каждого id требований из базы. **Дата базы: 2026-10-23** (`BASE.md`; отчёт печатает её одной строкой). Источники — официальные тексты (pravo.gov.ru и другие официальные сайты), для правил сторов — документация самих площадок. База — снимок на эту дату. Нормы, сроки и суммы берутся только из неё или из официального текста со ссылкой. «Обязательно» ставится только для нормы с источником в базе или по официальному адресу; трактовки, практика и правила сторов подаются как рекомендации или спорные места.
 
 Пересборка сгенерированных файлов (требования, карточки, шаблоны, элементы, плейсхолдеры, запрещённые формулировки):
 
@@ -126,6 +144,14 @@ legal-kit sets up the legal side of a product in one run: it finds out what the 
 3. **One confirmation block.** Whatever the skill cannot see (owner status, B2C or B2B, requisites, facts for the documents) is asked in a single message, each item with the skill's guess and its source. The run waits only for blocking items.
 4. **Documents and consent UI.** Privacy policy, consents, cookie banner, public offer, refund terms, seller details and other documents (9 templates and 13 specs of documents without a template). Pages, a separate consent checkbox, a banner, a footer block and a consent log follow the project's design and i18n catalogs; the consent log only on an existing backend and ORM.
 5. **Report.** `.legal/report-YYYY-MM-DD.md` with the sections «Сделано» (done), «Сделать вам» (to do on your side), «Спорно» (disputed) and «Дорожная карта» (roadmap).
+
+### Three modes
+
+- **Audit and setup**: the product exists; everything described above.
+- **Plan**: the product is not built yet or the code is nearly empty ("new project", "build checklist", «создаю сайт»). Features come from the owner's words; the skill writes `.legal/plan.md`, a development checklist with requirement ids, and `.legal/RULES.md`, short rules for the agent that writes the code. It drafts documents but integrates nothing. With your OK it adds one line linking `RULES.md` to `CLAUDE.md`, `AGENTS.md` or `.cursor/rules`.
+- **Feature**: one function is being added now ("adding YooKassa payments", "writing a Telegram bot"): the skill gives the rules for it from the `references/rules/` library, without a full report.
+
+Bots and mini apps in Telegram and MAX are a product kind of their own (`bot`). A rerun audit compares the plan with the code ("plan vs fact"), and every run ends with what can be improved, or says "nothing critical".
 
 ### What it does not do
 
@@ -181,6 +207,8 @@ Everything the skill keeps lives in `.legal/`:
 | `.legal/answers.json` | owner facts, withheld requisites, document facts and decisions; a rerun reads it instead of asking again |
 | `.legal/report-YYYY-MM-DD.md` | the report (machine form: `.legal/report.json`) |
 | `.legal/drafts/` | document drafts for the owner; they may keep placeholders, public pages may not |
+| `.legal/plan.md` | plan mode: the development checklist with requirement ids |
+| `.legal/RULES.md` | rules for the agent that writes the code (at most 60 lines) |
 | `.legal/paste/<platform>/` | paste-ready artifacts when there is no repo, the site runs on a no-code platform, or the app has no website for its documents |
 | `.legal/.gitignore` | created on the first write; hides `answers.json` and `evidence/` |
 
@@ -188,7 +216,7 @@ Also `.legal/state.json` (the files the skill created or edited), `.legal/source
 
 ### Knowledge base
 
-Requirements, templates and reference files live in `skills/legal-kit/references/jurisdictions/ru/`: 219 requirements with cards, 9 document templates, 322 template elements with a status and a method kind. **Base date: 2026-10-16** (`BASE.md`; the report prints it in one line). Sources are official texts (pravo.gov.ru and other official sites) and, for store rules, the platforms' own documentation. The base is a snapshot of that date. Norms, deadlines and amounts come only from it or from an official text with its URL. "Mandatory" is set only for a norm whose source is the base or an official URL; interpretations, practice and store rules are presented as recommendations or disputed points.
+Requirements, templates and reference files live in `skills/legal-kit/references/jurisdictions/ru/`: 227 requirements with cards, 9 document templates, 322 template elements with a status and a method kind; the rules library for development is `skills/legal-kit/references/rules/` (32 rules, each with requirement ids from the base). **Base date: 2026-10-23** (`BASE.md`; the report prints it in one line). Sources are official texts (pravo.gov.ru and other official sites) and, for store rules, the platforms' own documentation. The base is a snapshot of that date. Norms, deadlines and amounts come only from it or from an official text with its URL. "Mandatory" is set only for a norm whose source is the base or an official URL; interpretations, practice and store rules are presented as recommendations or disputed points.
 
 To regenerate the generated files (requirements, cards, templates, elements, placeholders, forbidden clauses):
 

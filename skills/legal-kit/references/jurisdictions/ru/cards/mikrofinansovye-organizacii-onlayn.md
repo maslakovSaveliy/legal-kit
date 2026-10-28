@@ -2,7 +2,7 @@
 id: ru:mikrofinansovye-organizacii-onlayn
 title: "МФО онлайн: идентификация только через ЕСИА и ЕБС, сайт в национальной доменной зоне, выдача займа только самому заёмщику"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-15
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: sectoral
 source_kind: law
 subjects: [ul]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["115-ФЗ ст. 7 п. 1.5-2, 1.12-1 абз. 2, 5.8-2", "151-ФЗ ст. 2 п. 2–2.2", "151-ФЗ ст. 9 ч. 2 пп. 2, 2.1, ч. 3, 5, 14", "41-ФЗ ст. 7, 12, ст. 16 ч. 5–6", "9-ФЗ (2025) ст. 4, ст. 6 п. 3, ст. 7 ч. 2", "353-ФЗ ст. 13 ч. 7–10", "353-ФЗ ст. 7 ч. 4.1–4.7 (самозапрет)", "Указание Банка России от 13.01.2026 № 7282-У (порядки по ч. 11–13 ст. 9 151-ФЗ)", "Положение Банка России № 757-П подп. 1.4.4, п. 1.9.2, 1.13 в ред. Указания № 7219-У (с 01.01.2027)"]
 effective_from: mixed
 checked: 2026-10-01

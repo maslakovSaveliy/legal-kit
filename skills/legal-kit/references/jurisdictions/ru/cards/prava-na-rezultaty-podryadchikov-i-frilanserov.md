@@ -2,7 +2,7 @@
 id: ru:prava-na-rezultaty-podryadchikov-i-frilanserov
 title: "Права на код и дизайн, созданные подрядчиками и фрилансерами (ГК РФ ст. 1288, 1296, 1297, 1233–1235, 1240)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: high
 volatility: cold
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ГК РФ ст. 1288 пп. 1–4", "ГК РФ ст. 1296 пп. 1–5", "ГК РФ ст. 1297 пп. 1–3", "ГК РФ ст. 1233 пп. 3–4", "ГК РФ ст. 1234 пп. 2–4", "ГК РФ ст. 1235 пп. 1–6", "ГК РФ ст. 1240 пп. 1–4", "ГК РФ ст. 162 п. 2, 166 п. 1, 168", "Пленум ВС РФ от 23.04.2019 № 10 пп. 37, 87, 107"]
 effective_from: mixed
 checked: 2026-10-01

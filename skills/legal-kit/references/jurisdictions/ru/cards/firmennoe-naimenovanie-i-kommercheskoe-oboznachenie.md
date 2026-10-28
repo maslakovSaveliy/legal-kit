@@ -2,7 +2,7 @@
 id: ru:firmennoe-naimenovanie-i-kommercheskoe-oboznachenie
 title: "Фирменное наименование и коммерческое обозначение на сайте и в приложении (ГК РФ ст. 1473–1476, 1538–1541, 1252 п. 6)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: cold
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ГК РФ ст. 1473 пп. 1–5", "ГК РФ ст. 1474 пп. 1–4", "ГК РФ ст. 1475", "ГК РФ ст. 1476", "ГК РФ ст. 1252 п. 6", "ГК РФ ст. 1538 пп. 1–2", "ГК РФ ст. 1539 пп. 1–5", "ГК РФ ст. 1540", "ГК РФ ст. 1541", "ГК РФ ст. 1252.1 п. 1", "ГК РФ ст. 132", "Пленум ВС РФ от 23.04.2019 № 10 пп. 147–153, 177, 178"]
 effective_from: mixed
 checked: 2026-10-01

@@ -43,7 +43,7 @@ PLATFORM_DOMAINS = ("developer.apple.com", "support.google.com", "rustore.ru", "
 
 SUBJECTS = ("ul", "ip", "npd", "foreign")
 MODELS = ("b2b", "b2c")
-PRODUCTS = ("site", "webapp", "ios", "android")
+PRODUCTS = ("site", "webapp", "ios", "android", "bot")
 DEFAULT_KB = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "references",
                           "jurisdictions", "ru")
 DEFAULT_CATALOG = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "references", "features",
@@ -158,6 +158,52 @@ def load_forbidden_clauses(kb):
     return [item for item in data if isinstance(item, dict) and item.get("pattern_text")]
 
 
+RULE_KEYS = ("id", "title_ru", "title_en", "reqs", "basis", "features", "always", "products", "stacks")
+RULE_LISTS = ("reqs", "features", "products", "stacks")
+RULE_BASES = ("norm", "practice", "interpretation", "platform")
+
+
+def _rule_value(raw):
+    raw = raw.strip()
+    if raw.startswith("[") and raw.endswith("]"):
+        return [part.strip().strip('"') for part in raw[1:-1].split(",") if part.strip()]
+    if raw in ("true", "false"):
+        return raw == "true"
+    return raw[1:-1] if len(raw) >= 2 and raw[0] == raw[-1] == '"' else raw
+
+
+def load_rules(rules_dir):
+    """{id: rule} of references/rules/*.md (README.md excluded); the frontmatter is flat `key: value`
+    lines with `[a, b]` lists. A wrong key set, type or an id that differs from the file name raises KbError."""
+    if not os.path.isdir(rules_dir):
+        raise KbError("rules directory not found: %s" % rules_dir)
+    rules = {}
+    for name in sorted(os.listdir(rules_dir)):
+        if not name.endswith(".md") or name == "README.md":
+            continue
+        path = os.path.join(rules_dir, name)
+        text = read_text(path)
+        if not text.startswith("---\n") or "\n---\n" not in text[4:]:
+            raise KbError("%s: no frontmatter" % path)
+        rule = {}
+        for line in text[4:].split("\n---\n", 1)[0].splitlines():
+            if not line.strip():
+                continue
+            key, sep, value = line.partition(":")
+            if not sep:
+                raise KbError("%s: bad frontmatter line %r" % (path, line))
+            rule[key.strip()] = _rule_value(value)
+        if set(rule) != set(RULE_KEYS):
+            raise KbError("%s: frontmatter keys must be %s" % (path, ", ".join(RULE_KEYS)))
+        if any(not isinstance(rule[k], list) for k in RULE_LISTS) or not isinstance(rule["always"], bool):
+            raise KbError("%s: %s must be [lists] and always true or false" % (path, ", ".join(RULE_LISTS)))
+        if rule["basis"] not in RULE_BASES or rule["id"] != name[:-3]:
+            raise KbError("%s: basis must be %s and id must equal the file name" % (path, "|".join(RULE_BASES)))
+        rule["path"] = path
+        rules[rule["id"]] = rule
+    return rules
+
+
 def load_feature_map(kb):
     path = os.path.join(str(kb), "feature-map.json")
     data = load_json(path)
@@ -186,8 +232,9 @@ def answers_sections(answers, source="answers.json"):
     """(owner, audience, business, product) of answers.json, type-checked.
 
     Each section is an object or null (null -> empty). owner.status and audience.minors are strings or null,
-    product.urls, product.kinds, business.sectors and owner.withheld are lists of strings or null. A wrong
-    type raises KbError, so the scripts exit with a clear message instead of a traceback.
+    product.urls, product.kinds, business.sectors and owner.withheld are lists of strings or null;
+    product.planned_features is a list of {id, quote} or null; decisions.agent_rules_link is a boolean or null and
+    decisions.accepted_suggestions a list of strings or null. A wrong type raises KbError, so the scripts exit with a clear message instead of a traceback.
     """
     sections = []
     for name in ("owner", "audience", "business", "product"):
@@ -205,6 +252,19 @@ def answers_sections(answers, source="answers.json"):
         value = section.get(key)
         if value is not None and not (isinstance(value, list) and all(isinstance(v, str) for v in value)):
             raise KbError("%s: %s must be a list of strings or null" % (source, key))
+    planned = product.get("planned_features")
+    if planned is not None and not (isinstance(planned, list) and all(
+            isinstance(item, dict) and isinstance(item.get("id"), str) and isinstance(item.get("quote"), str)
+            for item in planned)):
+        raise KbError("%s: product.planned_features must be a list of {id, quote} strings or null" % source)
+    decisions = answers.get("decisions")
+    if isinstance(decisions, dict):
+        link = decisions.get("agent_rules_link")
+        if link is not None and not isinstance(link, bool):
+            raise KbError("%s: decisions.agent_rules_link must be true, false or null" % source)
+        accepted = decisions.get("accepted_suggestions")
+        if accepted is not None and not (isinstance(accepted, list) and all(isinstance(v, str) for v in accepted)):
+            raise KbError("%s: decisions.accepted_suggestions must be a list of strings or null" % source)
     return owner, audience, business, product
 
 

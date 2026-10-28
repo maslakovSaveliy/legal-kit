@@ -2,7 +2,7 @@
 id: ru:investicionnoe-konsultirovanie-na-sayte
 title: "Инвестиционное консультирование на сайте и в приложении: инвестиционный советник и индивидуальные инвестиционные рекомендации (39-ФЗ ст. 6.1–6.2)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: medium
 volatility: warm
@@ -10,7 +10,7 @@ obligation: sectoral
 source_kind: law
 subjects: [ul, ip]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["39-ФЗ ст. 2 п. 18", "39-ФЗ ст. 6.1 п. 1–2, 4, 6–7", "39-ФЗ ст. 6.2 п. 1–7", "39-ФЗ ст. 39 п. 1", "39-ФЗ ст. 51 п. 6, 6.1", "397-ФЗ ст. 3 ч. 1, 4", "38-ФЗ ст. 28 ч. 14", "КоАП ст. 14.3 ч. 1"]
 effective_from: mixed
 checked: 2026-10-16

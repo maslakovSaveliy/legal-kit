@@ -62,6 +62,7 @@ EXPECTED_IDS = (
     "captcha.smartcaptcha",
     "ads.own_site_promo", "content.meta_symbols", "content.vpn_mentions",
     "i18n.foreign_language_ui",
+    "bot.telegram", "bot.max", "bot.mini_app", "payments.bot_invoice", "payments.telegram_stars",
 )
 
 # Keyword-based features: weak evidence, the owner must confirm.
@@ -166,6 +167,25 @@ def detect_file(path):
 # entry must be exercised by at least one sample of its kind.
 
 POSITIVE_SAMPLES = [
+    # bots and mini apps (0.2)
+    ("bot.telegram", "manifest", "aiogram==3.13.1\n"),
+    ("bot.telegram", "manifest", '"grammy": "^1.30.0"'),
+    ("bot.telegram", "code", "from aiogram import Bot, Dispatcher"),
+    ("bot.telegram", "code", "import telebot"),
+    ("bot.telegram", "code", "const bot = new Telegraf(process.env.BOT_TOKEN);"),
+    ("bot.telegram", "host", "https://api.telegram.org/bot123:abc/getMe"),
+    ("bot.max", "manifest", '"@maxhub/max-bot-api": "^0.2.0"'),
+    ("bot.max", "code", "from maxapi import Bot, Dispatcher"),
+    ("bot.max", "host", "https://platform-api2.max.ru/me"),
+    ("bot.mini_app", "manifest", '"@telegram-apps/sdk": "^2.0.0"'),
+    ("bot.mini_app", "code", "const tg = window.Telegram.WebApp; tg.ready();"),
+    ("bot.mini_app", "code", "const data = window.WebApp.initData;"),
+    ("bot.mini_app", "host", "https://telegram.org/js/telegram-web-app.js"),
+    ("bot.mini_app", "dom", '<script src="https://telegram.org/js/telegram-web-app.js"></script>'),
+    ("payments.bot_invoice", "code", "await bot.send_invoice(chat_id, title, description, payload, provider_token=TOKEN, currency='RUB', prices=prices)"),
+    ("payments.bot_invoice", "code", "await ctx.api.sendInvoice(chatId, title, description, payload, 'RUB', prices);"),
+    ("payments.telegram_stars", "code", "await message.answer_invoice(title='Pro', description='30 days', payload='pro', currency='XTR', prices=[LabeledPrice(label='Pro', amount=100)])"),
+    ("payments.telegram_stars", "code", "await bot.refund_star_payment(user_id, charge_id)"),
     # forms and accounts
     ("forms.contact", "dom", '<form action="/lead" method="post"><input type="text" name="name"><input type="tel" name="phone"><button>Отправить</button></form>'),
     ("forms.contact", "dom", '<form><textarea name="message"></textarea></form>'),
@@ -462,6 +482,11 @@ POSITIVE_SAMPLES = [
 
 # (signal kind, text, feature ids that must NOT match). Guards precision.
 NEGATIVE_SAMPLES = [
+    ("code", 'const channel = "https://t.me/shop_bot";', {"bot.telegram", "bot.max", "bot.mini_app"}),
+    ("dom", '<script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="shop_bot"></script>', {"bot.mini_app", "bot.telegram"}),
+    ("code", "await sendInvoiceEmail(customer, pdf);", {"payments.bot_invoice"}),
+    ("code", "payment = Payment.create({'amount': {'value': '100.00', 'currency': 'RUB'}})", {"payments.telegram_stars"}),
+    ("code", "const webApp = createWebApp(config);", {"bot.mini_app"}),
     ("code", 'const { register } = useForm(); <input {...register("email")} />', {"forms.registration"}),
     ("code", "import { Inter } from 'next/font/google';", {"foreign.fonts"}),
     ("code", "import '@fontsource/inter';", {"foreign.fonts"}),

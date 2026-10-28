@@ -2,7 +2,7 @@
 id: ru:prekrashchenie-i-unichtozhenie-pdn
 title: "Уточнение, блокирование, прекращение обработки и уничтожение ПДн (включая удаление аккаунта)"
 category: concept
-updated: 2026-09-29
+updated: 2026-10-23
 verified: 2026-09-29
 legal_confidence: high
 volatility: warm
@@ -10,7 +10,7 @@ obligation: general
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["152-ФЗ ст. 20 ч. 3", "152-ФЗ ст. 21 ч. 1–7", "152-ФЗ ст. 9 ч. 2", "152-ФЗ ст. 5 ч. 7", "Приказ РКН от 28.10.2022 № 179"]
 effective_from: mixed
 checked: 2026-09-29

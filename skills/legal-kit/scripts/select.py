@@ -11,7 +11,9 @@ does not fire when a feature of its optional "without" list is found, and fires 
 its optional "products" list when the product kinds are known);
 without those sections they fall back to the requirements' own `templates` and to the ids named
 in documents/*.md, with a warning on stderr. `not_detectable` lists requirements that appear only
-in the map's not_detectable section (owner checklist). Prints JSON.
+in the map's not_detectable section (owner checklist). --planned takes features the owner described
+(plan and feature modes) with reasons "planned:<id>"; they are never read from answers.json.
+"feature_sources" says for every feature whether it was found, planned or both. Prints JSON.
 
 Exit codes: 0 ok, 2 bad input.
 """
@@ -38,6 +40,7 @@ def build_parser():
         description="Select applicable requirements from a jurisdiction pack. Prints JSON.")
     parser.add_argument("--kb", default=_kb.DEFAULT_KB, help="jurisdiction pack directory (default: bundled ru)")
     parser.add_argument("--features", help="comma-separated feature ids found by the scanners")
+    parser.add_argument("--planned", help="comma-separated feature ids the owner described (plan and feature modes)")
     parser.add_argument("--subject", help="owner status: " + "|".join(_kb.SUBJECTS))
     parser.add_argument("--models", help="comma-separated: " + ",".join(_kb.MODELS))
     parser.add_argument("--products", help="comma-separated: " + ",".join(_kb.PRODUCTS))
@@ -104,6 +107,7 @@ def resolve_inputs(args):
 
     return {
         "features": _kb.csv_list(args.features) or [],
+        "planned": list(dict.fromkeys(_kb.csv_list(args.planned) or [])),
         "subject": subject,
         "models": sorted(set(models)),
         "products": sorted(set(products)),
@@ -124,11 +128,12 @@ def candidates(fmap, inputs, warnings):
 
     add(fmap.get("always"), "always")
     features = fmap.get("features") or {}
-    for feature in inputs["features"]:
-        if feature in features:
-            add(features[feature], "feature:" + feature)
-        else:
-            warnings.append("feature %s is not in feature-map.json" % feature)
+    for prefix, key in (("feature:", "features"), ("planned:", "planned")):
+        for feature in inputs.get(key, []):
+            if feature in features:
+                add(features[feature], prefix + feature)
+            else:
+                warnings.append("feature %s is not in feature-map.json" % feature)
     owner_facts = fmap.get("owner_facts") or {}
     for fact in inputs["facts"]:
         add(owner_facts.get(fact), "owner:" + fact)
@@ -171,11 +176,12 @@ def documents_by_ids(kb, applicable_ids):
 def mapped(section, inputs):
     """Names from a map section {name: {features, facts, always, without, products}} that apply, with the reason."""
     present = set(inputs["features"])
+    planned = set(inputs.get("planned", [])) - present
     facts = set(inputs["facts"]) | set(inputs["sectors"]) | {"sector:" + s for s in inputs["sectors"]}
     chosen = []
     for name in sorted(section):
         rule = section[name] if isinstance(section[name], dict) else {}
-        if present & set(rule.get("without") or []):
+        if (present | planned) & set(rule.get("without") or []):
             continue
         if rule.get("products") and inputs["products"] and not set(inputs["products"]) & set(rule["products"]):
             continue
@@ -183,6 +189,7 @@ def mapped(section, inputs):
         if rule.get("always"):
             why.append("always")
         why.extend("feature:" + f for f in rule.get("features") or [] if f in present)
+        why.extend("planned:" + f for f in rule.get("features") or [] if f in planned)
         why.extend("fact:" + f for f in rule.get("facts") or [] if f in facts)
         if why:
             chosen.append((name, why))
@@ -237,8 +244,13 @@ def select(kb, inputs, today):
         if req_id in detectable or requirement is None or filter_reasons(requirement, inputs):
             continue
         not_detectable.append({"id": req_id, "reason": reason})
+    sources = {}
+    for key, label in (("features", "found"), ("planned", "planned")):
+        for feature in inputs.get(key, []):
+            sources.setdefault(feature, set()).add(label)
     return {
         "inputs": dict(inputs, today=today.isoformat()),
+        "feature_sources": {f: sorted(labels) for f, labels in sorted(sources.items())},
         "applicable": applicable,
         "not_applicable": not_applicable,
         "templates": [t["name"] for t in templates],

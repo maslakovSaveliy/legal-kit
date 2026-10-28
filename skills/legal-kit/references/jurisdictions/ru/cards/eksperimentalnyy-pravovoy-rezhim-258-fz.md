@@ -2,7 +2,7 @@
 id: ru:eksperimentalnyy-pravovoy-rezhim-258-fz
 title: "Субъект экспериментального правового режима (258-ФЗ): реестры, информирование, ИИ и страхование по программе"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["258-ФЗ ст. 1 ч. 2", "258-ФЗ ст. 2 ч. 1 пп. 7, 13–14", "258-ФЗ ст. 7 ч. 1", "258-ФЗ ст. 8 ч. 1 п. 4", "258-ФЗ ст. 11 ч. 2", "258-ФЗ ст. 10 ч. 5 пп. 4, 9.1, 12, 13.1, 13.2", "258-ФЗ ст. 14 ч. 1, 3", "258-ФЗ ст. 18.1 ч. 1, 4, 5", "258-ФЗ ст. 19 ч. 2, 3, 5", "243-ФЗ ст. 13 ч. 4", "152-ФЗ ст. 6 ч. 1 п. 9.1"]
 effective_from: mixed
 checked: 2026-10-01

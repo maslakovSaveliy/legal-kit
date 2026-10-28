@@ -2,7 +2,7 @@
 id: ru:sredstva-obhoda-blokirovok
 title: "Средства обхода блокировок (149-ФЗ ст. 15.8)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["149-ФЗ ст. 15.8 ч. 1–15.1, 17", "149-ФЗ ст. 10.2-1 ч. 5.1", "149-ФЗ ст. 15.1 ч. 5 п. 1 подп. «м»", "Приказ РКН от 01.07.2025 № 149", "КоАП ст. 13.52 ч. 1–4", "КоАП ст. 4.5 ч. 1", "КоАП ст. 2.4 (примечание)"]
 effective_from: mixed
 checked: 2026-09-30

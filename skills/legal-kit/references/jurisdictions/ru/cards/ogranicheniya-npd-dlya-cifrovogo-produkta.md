@@ -2,7 +2,7 @@
 id: ru:ogranicheniya-npd-dlya-cifrovogo-produkta
 title: "Ограничения НПД для владельца цифрового продукта"
 category: concept
-updated: 2026-09-29
+updated: 2026-10-23
 verified: 2026-09-29
 legal_confidence: high
 volatility: warm
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [npd]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["422-ФЗ ст. 1 ч. 2, 3", "422-ФЗ ст. 2 ч. 6, 7, 9, 10", "422-ФЗ ст. 4 ч. 2 п. 1, 2, 4–9", "422-ФЗ ст. 6 ч. 1, 2", "ГК РФ ст. 23 п. 1"]
 effective_from: mixed
 checked: 2026-09-29

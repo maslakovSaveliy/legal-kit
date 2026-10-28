@@ -254,6 +254,63 @@
         "No requisite (INN, OGRN, address, phone, e-mail) is invented: every value in a page or draft comes from `.legal/answers.json`, the prompt, the site itself or a registry answer.",
         "Nothing is committed or pushed: `git log` in the working copy still shows only the baseline commit and `git status` lists the edits as uncommitted; the skill worked on the clean baseline tree it was given."
       ]
+    },
+    {
+      "id": 12,
+      "prompt": "Это Telegram-бот нашего магазина (aiogram, код в текущей папке): каталог, оплата через ЮKassa прямо в чате и электронная книга за Telegram Stars. Оформи юридическую часть бота по праву РФ. Не коммить.",
+      "expected_output": "Setup: copy the listed fixture into a clean working directory and run `git init`, `git add -A` and `git commit -m baseline` there (a throwaway copy, so the tree is clean before the run). Run the prompt in that directory with LEGAL_KIT_OFFLINE=1 and LEGAL_KIT_STUBS pointing at evals/stubs (registries answer from stubs). Outcome: the bot is treated as product kind `bot`; the report applies the bot requirements (documents and consent in the chat, the receipt for in-chat payments, personal data received through a foreign messenger) and the Telegram platform rules as platform rules; the start handler asks for consent before the phone number, with offer acceptance and consent as two separate actions.",
+      "files": [
+        "evals/fixtures/bot-aiogram-shop",
+        "evals/stubs"
+      ],
+      "expectations": [
+        "`python3 evals/check_run.py <run dir>` exits 0: `report.py verify .legal/report.json` passes and `check_docs.py` finds no blocking issue in public files.",
+        "Consent before data: after the run `handlers/start.py` no longer sends the `request_contact` keyboard on `/start`; the phone is requested only after a separate consent action (inline button or equivalent) whose text links to the privacy policy, and accepting the offer is a different action from the personal-data consent (`ru:dokumenty-i-soglasiya-v-chat-bote`, `ru:soglasie-na-obrabotku-pdn`).",
+        "Receipt contact before the provider invoice: the RUB invoice in `handlers/checkout.py` asks for an e-mail or phone for the receipt (`need_email` or `need_phone_number`, sent to the provider when the provider builds the receipt), and the report cites `ru:oplata-v-chat-bote-i-chek` and `ru:onlayn-kkt-i-elektronnyy-chek` with evidence at `handlers/checkout.py`.",
+        "Telegram Stars is not presented as settled law: rows about the `XTR` invoice (`ru:oplata-v-chat-bote-i-chek`, `ru:zapret-oplaty-cifrovoy-valyutoy`) are `interpretation` or sit in «Спорно», never `mandatory`.",
+        "Platform rules are platform rules: every `pravila-platform-botov-*` row has `basis` `platform` and level `recommended` or `interpretation`; no `pravila-storov-*` row appears (no iOS or Android product).",
+        "Personal data through a foreign messenger is not called a ban: `ru:pdn-pri-sbore-cherez-inostrannyy-messendzher` is `interpretation` or `disputed`, never `mandatory`; customers' phone numbers stay in the bot's own database (`storage.py`).",
+        "Documents are reachable from the bot: a command or menu button answers with links to the policy and the offer (the pages themselves are drafts or `.legal/paste/html/` with a hosting TODO, because the bot has no website).",
+        "Requisites come only from `.legal/answers.json` (ООО «Ромашка-тест», ИНН 0012345017); no invented requisites and no `{{…}}` placeholder in files the run changed.",
+        "Nothing is committed (the baseline commit stays the last commit) and no dependency is added to `requirements.txt`."
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "Делаю сайт магазина на этом Next.js: форма заявки, Яндекс Метрика, оплата ЮKassa, подписка на ежемесячный набор текстиля. Кода пока нет — что нужно учесть по закону до разработки? Владелец — ООО «Ромашка-тест», ИНН 0012345017, продаём гражданам.",
+      "expected_output": "Setup: copy the listed fixture into a clean working directory and run `git init`, `git add -A` and `git commit -m baseline` there (a throwaway copy, so the tree is clean before the run). Run the prompt in that directory with LEGAL_KIT_OFFLINE=1 and LEGAL_KIT_STUBS pointing at evals/stubs (registries answer from stubs). Harness answers to the confirmation block: B2C yes, no sector, no minors, block counters yes, add the link to CLAUDE.md yes. Outcome: the run chooses mode plan (empty project), writes .legal/plan.md and .legal/RULES.md from the planned features, drafts documents with placeholders where facts are unknown, and changes no project code except one link line in CLAUDE.md.",
+      "files": [
+        "evals/fixtures/plan-nextjs-empty",
+        "evals/stubs"
+      ],
+      "expectations": [
+        "`python3 evals/check_run.py <run dir>` exits 0: `report.py verify .legal/report.json` passes for a report with `mode` `plan`, and `check_docs.py` finds no blocking issue in public files (there are none: drafts may keep placeholders).",
+        "Mode plan: `.legal/report.json` has `mode` `plan`, its rows use status `planned` and buckets `plan`, `roadmap`, `owner` or `disputed`, and `.legal/answers.json` has `product.planned_features` with the four functions (`forms.contact`, `analytics.web_counter`, `payments.yookassa`, `commerce.subscription`) and the owner's quotes.",
+        "`.legal/plan.md` exists, was rendered by `report.py render --plan`, and names requirement ids such as `ru:soglasie-na-obrabotku-pdn`, `ru:soglasie-na-analitiku-i-cookies`, `ru:onlayn-kkt-i-elektronnyy-chek` and `ru:avtospisaniya-po-podpiskam`.",
+        "`.legal/RULES.md` exists, has at most 60 lines, every rule line contains `ru:`, and it has no absolute path.",
+        "No obligation for soft rows: no line of `plan.md` or `RULES.md` marks as «обязательно» or «норма» a requirement whose row in `report.json` is `recommended` or `interpretation` (for example holding the counter until consent is practice, not a norm).",
+        "Requisites are not invented: the drafts use ООО «Ромашка-тест» and ИНН 0012345017 from the prompt and the stub registry; values the owner did not give stay `{{…}}` in `.legal/drafts/`.",
+        "No integration: `git diff` against the baseline commit shows changes only in `.legal/` and one added line in `CLAUDE.md` linking to `.legal/RULES.md`; `app/` is unchanged.",
+        "Nothing is committed (the baseline commit stays the last commit) and no dependency is added to `package.json`."
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "Перепроверь юридическую часть: я начал писать сайт по плану, часть функций уже в коде. Не коммить.",
+      "expected_output": "Setup: copy the listed fixture into a clean working directory and run `git init`, `git add -A` and `git commit -m baseline` there (a throwaway copy, so the tree is clean before the run). Run the prompt in that directory with LEGAL_KIT_OFFLINE=1 and LEGAL_KIT_STUBS pointing at evals/stubs (registries answer from stubs). Outcome: an audit (repo-only) that reads .legal/answers.json with the plan, compares the plan with the code (form and Metrika found; YooKassa and the subscription not yet), reports the form without consent and the ungated counter with file and line, asks nothing already answered in answers.json, and rebuilds RULES.md without duplicate lines or a second link.",
+      "files": [
+        "evals/fixtures/plan-nextjs-partial",
+        "evals/stubs"
+      ],
+      "expectations": [
+        "`python3 evals/check_run.py <run dir>` exits 0.",
+        "Plan vs fact: `.legal/report.json` has `plan_diff` with `payments.yookassa` and `commerce.subscription` in `planned_not_found`, and the rendered report has the section «План и факт».",
+        "Code findings: the lead form in `components/LeadForm.tsx` and the counter in `components/Metrika.tsx` are reported with file and line evidence (`ru:soglasie-na-obrabotku-pdn` or `ru:informirovanie-pri-sbore-pdn` for the form, `ru:soglasie-na-analitiku-i-cookies` for the counter), and the run fixes them in the code because `decisions.apply_changes` is true.",
+        "No repeated questions: the run asks nothing about the owner status, B2C, requisites, holding counters or the agent link, which `.legal/answers.json` already answers; `questions.md` of the run lists none of them.",
+        "`.legal/RULES.md` has no duplicate lines and `CLAUDE.md` contains the link to `.legal/RULES.md` exactly once.",
+        "Suggestions: the report has the section «Что можно улучшить или добавить» (`suggestions` at most 7, levels `recommended` or `interpretation`), and the YooKassa and subscription requirements appear there as next steps, not as `missing` rows without evidence.",
+        "Nothing is committed (the baseline commit stays the last commit) and no dependency is added to `package.json`."
+      ]
     }
   ]
 }

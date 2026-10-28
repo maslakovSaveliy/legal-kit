@@ -2,7 +2,7 @@
 id: ru:sposob-vozvrata-distancionno-kuplennogo-tovara
 title: "Способ возврата дистанционно купленного товара надлежащего качества (КС РФ № 7-П)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: court
 subjects: [ul, ip, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["Постановление КС РФ от 17.02.2026 № 7-П (пп. 3, 4 ст. 26.1 ЗоЗПП)", "ЗоЗПП ст. 26.1 пп. 3, 4", "ГК ст. 497, ст. 458 п. 1–2, ст. 459 п. 1", "ПП РФ от 30.05.2026 № 657, Правила пп. 21, 25–27"]
 effective_from: 2026-02-18
 checked: 2026-10-16

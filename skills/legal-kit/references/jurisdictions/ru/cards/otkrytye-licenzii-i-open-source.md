@@ -2,7 +2,7 @@
 id: ru:otkrytye-licenzii-i-open-source
 title: "Открытые лицензии и open source компоненты (ГК РФ ст. 1286.1)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-15
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ГК РФ ст. 1286.1 пп. 1–5", "ГК РФ ст. 1233 п. 5 абз. 9", "ГК РФ ст. 1237 п. 3", "ГК РФ ст. 1265 п. 1", "ГК РФ ст. 1270 п. 2 подп. 9", "ГК РФ ст. 1300 пп. 1–3", "Пленум ВС РФ от 23.04.2019 № 10 п. 87", "ПП РФ от 10.10.2022 № 1804 пп. 1, 3, 7; Положение пп. 2, 3, 7 «в»–«г», 9; приложение (образец лицензии) пп. 2.3, 3.1", "ПП РФ № 1236, Правила п. 4 подп. «н»"]
 effective_from: mixed
 checked: 2026-10-15

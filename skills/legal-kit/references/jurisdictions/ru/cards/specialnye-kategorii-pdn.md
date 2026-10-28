@@ -2,7 +2,7 @@
 id: ru:specialnye-kategorii-pdn
 title: "Специальные категории ПДн вне медицины: здоровье, убеждения, национальность и иные данные (152-ФЗ ст. 10)"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["152-ФЗ ст. 10 ч. 1, 2 (пп. 1–10), 2.1, 3, 4", "152-ФЗ ст. 6 ч. 2", "152-ФЗ ст. 9 ч. 1, 3, 4, 8", "152-ФЗ ст. 10.1 ч. 1", "ПП РФ от 01.11.2012 № 1119, п. 5, 9–11", "Приказ РКН от 27.10.2022 № 178, п. 2.1", "323-ФЗ ст. 2 ч. 1 п. 1 (опора для толкования)", "200-ФЗ от 07.07.2025 ст. 2 (с 01.03.2027)"]
 effective_from: mixed
 checked: 2026-10-16

@@ -2,7 +2,7 @@
 id: ru:vnutrennie-mery-operatora-pdn
 title: "Внутренние меры оператора ПДн: ответственный, локальные акты, контроль, обучение"
 category: concept
-updated: 2026-09-29
+updated: 2026-10-23
 verified: 2026-09-29
 legal_confidence: high
 volatility: warm
@@ -10,7 +10,7 @@ obligation: general
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["152-ФЗ ст. 18.1 ч. 1 пп. 1, 2, 4, 6", "152-ФЗ ст. 18.1 ч. 4", "152-ФЗ ст. 22.1"]
 effective_from: 2022-09-01
 checked: 2026-09-29

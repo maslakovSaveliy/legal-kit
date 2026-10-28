@@ -2,7 +2,7 @@
 id: ru:markirovannye-tovary-pri-distancionnoy-prodazhe
 title: "Маркированные товары при дистанционной продаже: вывод из оборота и передача сведений в ГИС мониторинга"
 category: concept
-updated: 2026-10-16
+updated: 2026-10-23
 verified: 2026-10-16
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["381-ФЗ ст. 5 ч. 1 пп. 3.1, 3.2", "381-ФЗ ст. 8 ч. 9, 10", "381-ФЗ ст. 16 ч. 4", "381-ФЗ ст. 20.1 ч. 5, 16", "Распоряжение Правительства РФ от 28.04.2018 № 792-р", "ПП РФ от 05.07.2019 № 860 п. 2, 55.1, 81, 81.1", "ПП РФ от 15.12.2020 № 2099 п. 2, 100, 101", "КоАП ст. 15.12 ч. 2, 4", "КоАП ст. 15.12.1, 15.12.2", "381-ФЗ ст. 20.1 ч. 1.1 (ред. 331-ФЗ, с 01.03.2027)"]
 effective_from: mixed
 checked: 2026-10-16

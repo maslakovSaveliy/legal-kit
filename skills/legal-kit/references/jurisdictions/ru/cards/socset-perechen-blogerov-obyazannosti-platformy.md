@@ -2,7 +2,7 @@
 id: ru:socset-perechen-blogerov-obyazannosti-platformy
 title: "Социальная сеть и перечень блогеров РКН: отметка «А+», сведения о создателе страницы, ограничение страниц (149-ФЗ ст. 10.6 ч. 1 пп. 12–14; ПП № 1963)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: medium
 volatility: hot
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["149-ФЗ ст. 10.6 ч. 1 пп. 12–14", "149-ФЗ ст. 10.6 ч. 1.1–1.3, 9.1", "ПП РФ от 28.12.2024 № 1963", "Приказ РКН от 10.12.2024 № 238 пп. 4, 5, 9, 12", "303-ФЗ ст. 5"]
 effective_from: mixed
 checked: 2026-10-01

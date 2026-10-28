@@ -2,7 +2,7 @@
 id: ru:zapret-reklamy-sredstv-obhoda-blokirovok
 title: "Запрет рекламы средств обхода блокировок (VPN и др.) (38-ФЗ ст. 5 ч. 10.8; КоАП ст. 14.3 ч. 18)"
 category: concept
-updated: 2026-09-30
+updated: 2026-10-23
 verified: 2026-09-30
 legal_confidence: high
 volatility: hot
@@ -10,7 +10,7 @@ obligation: general
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["38-ФЗ ст. 5 ч. 10.8", "38-ФЗ ст. 38 ч. 6, 7", "КоАП ст. 14.3 ч. 18", "149-ФЗ ст. 15.8 ч. 1–2"]
 effective_from: 2025-09-01
 checked: 2026-09-30

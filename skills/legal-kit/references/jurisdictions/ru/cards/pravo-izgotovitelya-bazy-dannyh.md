@@ -2,7 +2,7 @@
 id: ru:pravo-izgotovitelya-bazy-dannyh
 title: "Право изготовителя базы данных: защита своей базы и использование чужих (ГК РФ ст. 1333–1335.1)"
 category: concept
-updated: 2026-10-01
+updated: 2026-10-23
 verified: 2026-10-01
 legal_confidence: high
 volatility: cold
@@ -10,7 +10,7 @@ obligation: conditional
 source_kind: law
 subjects: [ul, ip, npd, foreign]
 models: [b2b, b2c]
-products: [site, webapp, ios, android]
+products: [site, webapp, ios, android, bot]
 acts: ["ГК РФ ст. 1333 пп. 1–2", "ГК РФ ст. 1334 пп. 1–3", "ГК РФ ст. 1335 пп. 1–2", "ГК РФ ст. 1335.1 пп. 1–4", "ГК РФ ст. 1260 п. 2", "ГК РФ ст. 1240 п. 1", "ГК РФ ст. 1303 п. 1", "ГК РФ ст. 1304 п. 1 подп. 4, п. 2", "ГК РФ ст. 1336 п. 1", "Пленум ВС РФ от 23.04.2019 № 10 п. 115", "243-ФЗ ст. 10 ч. 2"]
 effective_from: mixed
 checked: 2026-10-01
