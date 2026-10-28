@@ -66,10 +66,10 @@ Every item names its requirement id, its level and its basis (norm, practice, in
 
 ## RULES.md
 
-`rules.py --select .legal/evidence/select.json --stacks <stack ids> --lang <lang> --today <date> > .legal/RULES.md`.
+`rules.py --select .legal/evidence/select.json --report .legal/report.json --stacks <stack ids> --lang <lang> --today <date> > .legal/RULES.md` (after `report.py verify` exits 0).
 
 - It picks the rules of `references/rules/` ([the library](../rules/README.md)) whose requirements are applicable and whose features were found or planned, at most 60 lines.
-- A line: `- <rule> — <requirement ids>, <label>; как: legal-kit references/stacks/<stack>.md`. The label is never stronger than the requirements allow.
+- A line: `- <rule> — <requirement ids>, <label>; как: legal-kit references/stacks/<stack>.md`. The label is never stronger than the requirements allow, nor than the level the run gave the row in `report.json`: a requirement the run rated `interpretation` (for example consent under a contract basis) is never «норма».
 - No absolute paths: the file can be committed and works for colleagues.
 - Two header lines say that the file is generated and point to `plan.md` and the report.
 - The output is deterministic; a rerun with the same inputs gives the same bytes, so `state.json` can compare its sha256.

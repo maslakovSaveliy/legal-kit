@@ -275,3 +275,30 @@ def test_rules_bad_select_exits_2(tmp_path):
     result = subprocess.run([sys.executable, str(SCRIPTS / "rules.py"), "--select", str(bad), "--kb", str(FIX_KB),
                              "--rules", str(FIX_RULES)], capture_output=True, text=True)
     assert result.returncode == 2
+
+
+def test_rules_label_follows_the_report_row_level(tmp_path):
+    # eval 13: the run rated the consent row interpretation (contract basis); RULES.md must not say «норма»
+    report = tmp_path / "report.json"
+    report.write_text(json.dumps({"rows": [
+        {"req": "ru:t-always", "level": "interpretation", "basis": "interpretation"},
+        {"req": "ru:t-analytics", "level": "conditional", "basis": "norm"}]}), encoding="utf-8")
+    data = select_out(["ru:t-always", "ru:t-analytics"], features=["analytics.web_counter"])
+    out = run_rules(tmp_path, data, "--report", report).stdout
+    line = [l for l in rule_lines(out) if "Политика опубликована" in l][0]
+    assert "трактовка" in line and ", норма" not in line
+
+
+def test_rules_report_row_with_practice_basis_gives_practice(tmp_path):
+    report = tmp_path / "report.json"
+    report.write_text(json.dumps({"rows": [
+        {"req": "ru:t-always", "level": "recommended", "basis": "practice"}]}), encoding="utf-8")
+    line = [l for l in rule_lines(run_rules(tmp_path, select_out(["ru:t-always"]), "--report", report).stdout)
+            if "Политика опубликована" in l][0]
+    assert "практика" in line
+
+
+def test_rules_bad_report_exits_2(tmp_path):
+    report = tmp_path / "report.json"
+    report.write_text("{}", encoding="utf-8")
+    assert run_rules(tmp_path, select_out(["ru:t-always"]), "--report", report).returncode == 2

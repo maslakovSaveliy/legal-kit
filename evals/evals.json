@@ -308,7 +308,7 @@
         "Code findings: the lead form in `components/LeadForm.tsx` and the counter in `components/Metrika.tsx` are reported with file and line evidence (`ru:soglasie-na-obrabotku-pdn` or `ru:informirovanie-pri-sbore-pdn` for the form, `ru:soglasie-na-analitiku-i-cookies` for the counter), and the run fixes them in the code because `decisions.apply_changes` is true.",
         "No repeated questions: the run asks nothing about the owner status, B2C, requisites, holding counters or the agent link, which `.legal/answers.json` already answers; `questions.md` of the run lists none of them.",
         "`.legal/RULES.md` has no duplicate lines and `CLAUDE.md` contains the link to `.legal/RULES.md` exactly once.",
-        "Suggestions: the report ends with «Что можно улучшить или добавить» (`suggestions` at most 7, levels `recommended` or `interpretation`), and the YooKassa and subscription requirements appear there as next steps, not as `missing` rows without evidence.",
+        "Suggestions: the report has the section «Что можно улучшить или добавить» (`suggestions` at most 7, levels `recommended` or `interpretation`), and the YooKassa and subscription requirements appear there as next steps, not as `missing` rows without evidence.",
         "Nothing is committed (the baseline commit stays the last commit) and no dependency is added to `package.json`."
       ]
     }

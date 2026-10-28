@@ -5,7 +5,8 @@ Reads the select.py output (--select), the rules library (references/rules/*.md)
 records of the pack. A rule is printed when at least one of its requirements is applicable, it is marked
 `always` or one of its features was found or planned, and its products (if any) meet the product kinds.
 The label of a rule is never stronger than its requirements allow: "norm" only when the rule's basis is
-norm and every applicable requirement of the rule is a law or bylaw with legal_confidence above low.
+norm and every applicable requirement of the rule is a law or bylaw with legal_confidence above low; with
+--report, a requirement whose row the run rated `recommended` or `interpretation` lowers the label to that row.
 The output is deterministic (sorted, dated only by --today), so a rerun can compare it by sha256, and
 it carries no absolute paths. Prints Markdown.
 
@@ -47,6 +48,7 @@ def build_parser():
     parser = argparse.ArgumentParser(prog="rules.py", description="Render .legal/RULES.md from the rules library.")
     parser.add_argument("--select", required=True, help="select.py output (.legal/evidence/select.json)")
     parser.add_argument("--kb", default=_kb.DEFAULT_KB, help="jurisdiction pack directory (default: bundled ru)")
+    parser.add_argument("--report", help=".legal/report.json: the run's row levels lower the labels")
     parser.add_argument("--rules", default=DEFAULT_RULES, help="rules directory (default: references/rules)")
     parser.add_argument("--stacks", help="comma-separated stack ids of the project (the 'how' link)")
     parser.add_argument("--lang", choices=sorted(TEXT), default="ru")
@@ -75,14 +77,36 @@ def requirement_label(record):
     return "interpretation"
 
 
-def effective_label(rule, requirements, applicable):
-    """The rule's basis, lowered to the weakest label its applicable requirements allow."""
-    labels = [rule["basis"]] + [requirement_label(requirements[r]) for r in rule["reqs"]
-                                if r in applicable and r in requirements]
+def row_label(row):
+    """Label of a report row: norm only for an obligation level resting on a norm."""
+    if row.get("level") in ("mandatory", "conditional") and row.get("basis") == "norm":
+        return "norm"
+    return row.get("basis") if row.get("basis") in ("platform", "practice") else "interpretation"
+
+
+def effective_label(rule, requirements, applicable, rows=None):
+    """The rule's basis, lowered to the weakest label its applicable requirements (and the run's rows) allow."""
+    rows = rows or {}
+    labels = [rule["basis"]]
+    for req in rule["reqs"]:
+        if req in applicable and req in requirements:
+            labels.append(requirement_label(requirements[req]))
+            labels.extend(rows.get(req, []))
     return max(labels, key=ORDER.index)
 
 
-def pick(rules, select_out, requirements):
+def report_rows(path):
+    data = _kb.load_json(path)
+    if not isinstance(data, dict) or not isinstance(data.get("rows"), list):
+        raise _kb.KbError("%s: not a report.json (no rows list)" % path)
+    rows = {}
+    for row in data["rows"]:
+        if isinstance(row, dict) and isinstance(row.get("req"), str):
+            rows.setdefault(row["req"], []).append(row_label(row))
+    return rows
+
+
+def pick(rules, select_out, requirements, rows=None):
     inputs = select_out.get("inputs") or {}
     applicable = {i.get("id") for i in select_out.get("applicable") or [] if isinstance(i, dict)}
     features = set(inputs.get("features") or []) | set(inputs.get("planned") or [])
@@ -95,7 +119,7 @@ def pick(rules, select_out, requirements):
             continue
         if rule["products"] and not set(rule["products"]) & products:
             continue
-        picked.append(dict(rule, label=effective_label(rule, requirements, applicable),
+        picked.append(dict(rule, label=effective_label(rule, requirements, applicable, rows),
                            applicable=[r for r in rule["reqs"] if r in applicable]))
     return sorted(picked, key=lambda r: (ORDER.index(r["label"]), r["id"]))
 
@@ -127,13 +151,14 @@ def main(argv=None):
             raise _kb.KbError("%s: not a select.py output (no applicable list)" % args.select)
         requirements = _kb.load_requirements(args.kb)
         rules = _kb.load_rules(args.rules)
+        rows = report_rows(args.report) if args.report else None
         today = _kb.today_arg(args.today).isoformat()
         if args.max_lines < 5:
             raise _kb.KbError("--max-lines must be at least 5")
     except _kb.KbError as exc:
         return _kb.fail(str(exc))
     stacks = _kb.csv_list(args.stacks) or []
-    sys.stdout.write(render(pick(rules, data, requirements), args.lang, stacks, args.version or skill_version(),
+    sys.stdout.write(render(pick(rules, data, requirements, rows), args.lang, stacks, args.version or skill_version(),
                             today, args.max_lines))
     return 0
 
