@@ -2548,5 +2548,116 @@
       "*"
     ],
     "notes": "Weak evidence: locale lists, a non-Russian default language, hreflang alternates or a language switcher. Whether a Russian version exists and is complete is checked in the interface and confirmed with the owner. i18n libraries are not listed because they also serve Russian-only products."
+  },
+  {
+    "id": "bot.telegram",
+    "title_ru": "Бот в Telegram",
+    "title_en": "Telegram bot",
+    "deps": [
+      "aiogram",
+      "python-telegram-bot",
+      "pyTelegramBotAPI",
+      "telegraf",
+      "grammy",
+      "node-telegram-bot-api"
+    ],
+    "code": [
+      "\\bapi\\.telegram\\.org/bot",
+      "\\bfrom\\s+aiogram(?:\\.[\\w.]+)?\\s+import\\b",
+      "\\bfrom\\s+telegram\\.ext\\s+import\\b",
+      "^\\s*import\\s+telebot\\b",
+      "\\bnew\\s+(?:Telegraf|TelegramBot)\\s*\\(",
+      "\\bfrom\\s+['\"]grammy['\"]"
+    ],
+    "hosts": [
+      "api.telegram.org"
+    ],
+    "dom": [],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Confirmed: aiogram, python-telegram-bot (telegram.ext), pyTelegramBotAPI (import telebot), telegraf, grammy, node-telegram-bot-api; Bot API host api.telegram.org (core.telegram.org/bots/api). A t.me link alone is chat.messenger_links, not a bot."
+  },
+  {
+    "id": "bot.max",
+    "title_ru": "Бот в MAX",
+    "title_en": "MAX bot",
+    "deps": [
+      "@maxhub/max-bot-api",
+      "maxapi"
+    ],
+    "code": [
+      "\\bplatform-api2?\\.max\\.ru\\b",
+      "\\bfrom\\s+maxapi(?:\\.[\\w.]+)?\\s+import\\b",
+      "['\"]@maxhub/max-bot-api['\"]",
+      "^\\s*import\\s+max_client\\b"
+    ],
+    "hosts": [
+      "platform-api.max.ru",
+      "platform-api2.max.ru"
+    ],
+    "dom": [],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Confirmed: @maxhub/max-bot-api (official TypeScript client), maxapi (unofficial Python client reviewed by MAX), max_client (generated Python client); API host platform-api2.max.ru, earlier platform-api.max.ru (dev.max.ru/docs-api)."
+  },
+  {
+    "id": "bot.mini_app",
+    "title_ru": "Мини-приложение в мессенджере (Telegram Mini App, MAX)",
+    "title_en": "Mini app inside a messenger (Telegram Mini App, MAX)",
+    "deps": [
+      "@twa-dev/sdk",
+      "@telegram-apps/sdk",
+      "@telegram-apps/sdk-react"
+    ],
+    "code": [
+      "\\bwindow\\.Telegram\\.WebApp\\b",
+      "\\bTelegram\\.WebApp\\.(?:initData|initDataUnsafe|ready|expand|MainButton)\\b",
+      "\\bwindow\\.WebApp\\.(?:initData|initDataUnsafe|ready)\\b"
+    ],
+    "hosts": [
+      "telegram.org/js/telegram-web-app.js"
+    ],
+    "dom": [
+      "(?i)<script\\b[^>]{0,400}telegram-web-app\\.js"
+    ],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Confirmed: telegram-web-app.js and window.Telegram.WebApp (core.telegram.org/bots/webapps), @twa-dev/sdk, @telegram-apps/sdk; MAX Bridge exposes window.WebApp.initData (dev.max.ru). telegram-widget.js is the login widget (auth.telegram), not a mini app."
+  },
+  {
+    "id": "payments.bot_invoice",
+    "title_ru": "Оплата счётом в чате бота (провайдер платежей)",
+    "title_en": "In-chat invoice payments in a bot (payment provider)",
+    "deps": [],
+    "code": [
+      "\\b(?:send_invoice|sendInvoice|answer_invoice|replyWithInvoice|create_invoice_link|createInvoiceLink)\\s*\\(",
+      "\\bprovider_token\\b",
+      "\\b(?:pre_checkout_query|answer_pre_checkout_query|answerPreCheckoutQuery)\\b"
+    ],
+    "hosts": [],
+    "dom": [],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Confirmed: sendInvoice / createInvoiceLink with provider_token and pre_checkout_query (core.telegram.org/bots/payments). The same calls with currency XTR are Telegram Stars (payments.telegram_stars)."
+  },
+  {
+    "id": "payments.telegram_stars",
+    "title_ru": "Оплата в Telegram Stars",
+    "title_en": "Telegram Stars payments",
+    "deps": [],
+    "code": [
+      "\\bcurrency\\s*[=:]\\s*['\"]XTR['\"]",
+      "\\b(?:refund_star_payment|refundStarPayment|get_star_transactions|getStarTransactions)\\b"
+    ],
+    "hosts": [],
+    "dom": [],
+    "stacks": [
+      "*"
+    ],
+    "notes": "Confirmed: currency XTR and refundStarPayment (core.telegram.org/bots/payments-stars). Platform rule: digital goods in bots are sold only for Stars."
   }
 ]

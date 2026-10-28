@@ -445,6 +445,10 @@ def npm_dependencies(text):
     return names
 
 
+BOT_NPM = ("telegraf", "grammy", "node-telegram-bot-api", "@maxhub/max-bot-api")
+BOT_PY = re.compile(r"(?im)^\s*(?:aiogram|python-telegram-bot|pytelegrambotapi|maxapi)\b")
+
+
 def detect_stacks(rels, npm, py_text, pubspec, composer):
     """-> (stacks, frameworks). `stacks` are ids of references/stacks/<id>.md; `frameworks` is finer detail."""
     stacks, frameworks = set(), set()
@@ -494,6 +498,8 @@ def detect_stacks(rels, npm, py_text, pubspec, composer):
     elif "composer.json" in base_names or exts.count(".php") > 3:
         stacks.add("generic-web")
         frameworks.add("laravel" if ("laravel/framework" in composer or "artisan" in base_names) else "php")
+    if any(name in npm for name in BOT_NPM) or re.search(BOT_PY, py_text):
+        stacks.add("bot")
     # a lone handler such as send.php next to plain pages is still a static site
     if ({".html", ".htm"} & set(exts)) and not stacks:
         stacks.add("static-html")

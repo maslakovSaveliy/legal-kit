@@ -2286,3 +2286,19 @@ def test_products_include_bot():
 
 def test_report_has_direction_o():
     assert load("report").DIRECTIONS["O"] == ("Боты и мини-приложения в мессенджерах", "Bots and mini apps in messengers")
+
+
+def test_detect_stacks_adds_bot_for_aiogram():
+    stacks, _ = load("scan_repo").detect_stacks(["bot.py", "requirements.txt"], {}, "aiogram==3.13.1\n", "", "")
+    assert {"python", "bot"} <= set(stacks)
+
+
+def test_detect_stacks_adds_bot_for_grammy_and_max():
+    scan = load("scan_repo")
+    assert "bot" in scan.detect_stacks(["src/bot.ts", "package.json"], {"grammy": "^1"}, "", "", "")[0]
+    assert "bot" in scan.detect_stacks(["src/bot.ts", "package.json"], {"@maxhub/max-bot-api": "^0.2"}, "", "", "")[0]
+
+
+def test_detect_stacks_no_bot_for_plain_site():
+    stacks, _ = load("scan_repo").detect_stacks(["app/page.tsx", "package.json"], {"next": "15"}, "", "", "")
+    assert "bot" not in stacks

@@ -468,6 +468,15 @@ GOLDENS = {
         templates=({"oferta-uslugi-i-podpiska", "soglasie-na-rasprostranenie-pdn"},
                    {"publichnaya-oferta-tovary", "usloviya-vozvrata-i-obmena"}),
         documents=({"image-consent", "cross-border-notification"}, set())),
+    "bot-shop": dict(
+        inputs=dict(features=("bot.telegram", "payments.bot_invoice", "payments.telegram_stars"),
+                    subject="ul", models=("b2c",), products=("bot",)),
+        include=rid("dokumenty-i-soglasiya-v-chat-bote", "oplata-v-chat-bote-i-chek",
+                    "pdn-pri-sbore-cherez-inostrannyy-messendzher", "onlayn-kkt-i-elektronnyy-chek",
+                    "zapret-oplaty-cifrovoy-valyutoy", "pravila-platform-botov-oplata", "soglasie-na-obrabotku-pdn"),
+        exclude=rid("pravila-storov-oplata-i-podpiski", "soglasie-na-analitiku-i-cookies"),
+        templates=({"soglasie-na-obrabotku-pdn", "politika-obrabotki-pdn"}, {"cookie-banner-i-uvedomlenie"}),
+        documents=({"kkt-checklist"}, set())),
 }
 
 
@@ -482,8 +491,13 @@ def test_golden_requirements(name):
     assert not extra, "%s: must exclude %s" % (name, extra)
     if not golden["inputs"].get("sectors"):
         assert not applicable & ids_of(obligation="sectoral"), name
+    platform = set(feature_map()["platform_rules"])
+    store_rules = {i for i in platform if i.startswith("ru:pravila-storov-")}
+    bot_rules = platform - store_rules
     if not set(golden["inputs"]["products"]) & {"ios", "android"}:
-        assert not applicable & set(feature_map()["platform_rules"]), name
+        assert not applicable & store_rules, name
+    if "bot" not in golden["inputs"]["products"]:
+        assert not applicable & bot_rules, name
 
 
 @pytest.mark.parametrize("name", sorted(GOLDENS))
