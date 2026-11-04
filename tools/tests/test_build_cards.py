@@ -16,7 +16,7 @@ TOOLS = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(TOOLS))
 
 import build_knowledge  # noqa: E402
-from kb import emit_cards  # noqa: E402
+from kb import archive, emit_cards  # noqa: E402
 from kb.dates import norm_dates  # noqa: E402
 from kb.legacy import load_build_refs  # noqa: E402
 from kb.links import LinkCtx, raw_url_map, unlink  # noqa: E402
@@ -221,20 +221,63 @@ def test_dumps_is_compact_and_utf8():
     assert line == '{"id":"ru:x","title":"Заголовок","norm_dates":[{"norm":"a","from":null}]}'
 
 
-def test_write_requirements_sorted_one_object_per_line(tmp_path):
-    records = [{"id": "ru:b", "x": 1}, {"id": "ru:a", "x": 2}]
-    path = emit_cards.write_requirements(records, tmp_path)
-    assert path == tmp_path / "requirements.jsonl"
-    lines = path.read_text(encoding="utf-8").splitlines()
+def test_write_requirements_shards_by_dir(tmp_path):
+    records = [{"id": "ru:b", "dir": "A"}, {"id": "ru:c", "dir": "B"}, {"id": "ru:a", "dir": "A"}]
+    (tmp_path / "requirements.jsonl").write_text("old\n", encoding="utf-8")
+    (tmp_path / "requirements").mkdir()
+    (tmp_path / "requirements" / "Z.jsonl").write_text("stale\n", encoding="utf-8")
+    paths = emit_cards.write_requirements(records, tmp_path)
+    assert paths == [tmp_path / "requirements" / "A.jsonl", tmp_path / "requirements" / "B.jsonl"]
+    assert sorted(p.name for p in (tmp_path / "requirements").iterdir()) == ["A.jsonl", "B.jsonl"]
+    assert not (tmp_path / "requirements.jsonl").exists()
+    lines = paths[0].read_text(encoding="utf-8").splitlines()
     assert [json.loads(l)["id"] for l in lines] == ["ru:a", "ru:b"]
-    assert path.read_text(encoding="utf-8").endswith("\n")
+    assert paths[1].read_text(encoding="utf-8").endswith("\n")
 
 
-def test_write_card_drops_sections_and_keys(tmp_path):
+@pytest.mark.parametrize("bad", ["", "AB", "a", "1", None])
+def test_write_requirements_rejects_bad_dir(tmp_path, bad):
+    with pytest.raises(ValueError):
+        emit_cards.write_requirements([{"id": "ru:a", "dir": bad}], tmp_path)
+
+
+def test_pack_is_deterministic():
+    files = {"cards/b.md": "Б\n".encode(), "cards/a.md": b"A\n"}
+    first = archive.pack(files)
+    assert first == archive.pack(dict(reversed(list(files.items()))))
+    assert first[:2] == b"\x1f\x8b" and first[4:8] == b"\x00\x00\x00\x00"  # gzip, mtime 0
+
+
+def test_pack_members_roundtrip(tmp_path):
+    files = {"cards/b.md": "Б\n".encode(), "cards/a.md": b"A\n"}
+    path = tmp_path / "cards.tar.gz"
+    path.write_bytes(archive.pack(files))
+    assert archive.members(path) == files
+    assert list(archive.members(path)) == ["cards/a.md", "cards/b.md"]
+
+
+def test_write_if_changed_keeps_file_with_same_members(tmp_path):
+    import gzip, io, tarfile
+    files = {"cards/a.md": b"A\n"}
+    buf = io.BytesIO()
+    with tarfile.open(fileobj=buf, mode="w") as tar:
+        info = tarfile.TarInfo("cards/a.md")
+        info.size = 2
+        tar.addfile(info, io.BytesIO(b"A\n"))
+    other = gzip.compress(buf.getvalue(), compresslevel=1)
+    path = tmp_path / "cards.tar.gz"
+    path.write_bytes(other)
+    assert archive.write_if_changed(path, files) is False
+    assert path.read_bytes() == other
+    assert archive.write_if_changed(path, {"cards/a.md": b"B\n"}) is True
+    assert archive.members(path) == {"cards/a.md": b"B\n"}
+    fresh = tmp_path / "new.tar.gz"
+    assert archive.write_if_changed(fresh, files) is True and fresh.read_bytes() == archive.pack(files)
+
+
+def test_render_card_drops_sections_and_keys():
     card = fixture_card()
-    path = emit_cards.write_card(card, fixture_ctx(), tmp_path)
-    assert path == tmp_path / "cards" / "demo-consent.md"
-    text = path.read_text(encoding="utf-8")
+    text = emit_cards.render_card(card, fixture_ctx())
     front, body = text[4:].split("\n---\n", 1)
     keys = [line.split(":", 1)[0] for line in front.splitlines() if re.match(r"^[a-z_]+:", line)]
     assert keys[0] == "id" and front.splitlines()[0] == "id: ru:demo-consent"
@@ -255,13 +298,13 @@ def test_write_card_drops_sections_and_keys(tmp_path):
         assert leak not in text, leak
 
 
-def test_write_card_rewords_frontmatter_and_body(tmp_path):
+def test_render_card_rewords_frontmatter_and_body():
     card = fixture_card()
     card.fm_raw["summary"] = (
         'summary: "Единственное место wiki (P27); см. [[demo-policy|политику]] ([Политика](demo-policy.md))."'
     )
     card.sections["Исключения"] = "Нет (discovery P11). См. хаб G: в пути P16 не искали."
-    text = emit_cards.write_card(card, fixture_ctx(), tmp_path).read_text(encoding="utf-8")
+    text = emit_cards.render_card(card, fixture_ctx())
     assert 'summary: "Единственное место базы; см. [политику](demo-policy.md)."' in text
     assert "Нет (предварительный поиск). См. направление G: в базе не искали." in text
     for marker in ("wiki", "P27", "P11", "P16", "discovery", "хаб"):
@@ -361,10 +404,13 @@ def test_build_pack_and_check_roundtrip(tmp_path):
     assert meta["requirements"] == 2 and meta["cards"] == 2 and meta["templates"] == 1
     assert meta["base_date"] == "2026-04-10"
     assert meta["source_sha256"] == build_knowledge.source_digest(TOPIC, REFS)
-    assert (out / "requirements.jsonl").is_file() and (out / "BASE.md").is_file()
+    assert sorted(p.name for p in (out / "requirements").iterdir()) == ["A.jsonl", "B.jsonl"]
+    assert not (out / "requirements.jsonl").exists() and (out / "BASE.md").is_file()
     assert f"- Source content sha256: {meta['source_sha256']}" in (out / "BASE.md").read_text(encoding="utf-8")
-    assert sorted(p.name for p in (out / "cards").iterdir()) == ["demo-consent.md", "demo-policy.md"]
-    assert emit_cards.is_generated_card(out / "cards" / "demo-policy.md")
+    assert not (out / "cards").exists()
+    cards = archive.members(out / "cards.tar.gz")
+    assert list(cards) == ["cards/demo-consent.md", "cards/demo-policy.md"]
+    assert cards["cards/demo-policy.md"].decode("utf-8").startswith(emit_cards.GENERATED_CARD_MARK)
     assert build_knowledge.check_pack(TOPIC, out, REFS) == []
 
     # Hand-written siblings (templates, elements, ...) are not generator output and are ignored.
@@ -372,18 +418,25 @@ def test_build_pack_and_check_roundtrip(tmp_path):
     (out / "templates").mkdir()
     assert build_knowledge.check_pack(TOPIC, out, REFS) == []
 
+    (out / "cards").mkdir()
     (out / "cards" / "notes.md").write_text("hand-written", encoding="utf-8")
     assert build_knowledge.check_pack(TOPIC, out, REFS) == []
 
-    original = (out / "cards" / "demo-policy.md").read_text(encoding="utf-8")
-    (out / "cards" / "demo-policy.md").write_text(original + "extra\n", encoding="utf-8")
-    (out / "cards" / "gone.md").write_text("---\nid: ru:gone\n---\n", encoding="utf-8")
+    # The archive is compared by its members, not by its bytes.
+    edited = dict(cards)
+    edited["cards/demo-policy.md"] += b"extra\n"
+    edited["cards/gone.md"] = b"---\nid: ru:gone\n---\n"
+    (out / "cards.tar.gz").write_bytes(archive.pack(edited))
+    (out / "cards" / "old.md").write_text(cards["cards/demo-consent.md"].decode("utf-8"), encoding="utf-8")
+    (out / "requirements.jsonl").write_text("{}\n", encoding="utf-8")
     diffs = build_knowledge.check_pack(TOPIC, out, REFS)
-    assert diffs == ["differs: cards/demo-policy.md", "unexpected: cards/gone.md"]
+    assert diffs == ["differs: cards.tar.gz!cards/demo-policy.md", "unexpected: cards.tar.gz!cards/gone.md",
+                     "unexpected: cards/old.md", "unexpected: requirements.jsonl"]
 
-    # Rebuilding repairs generated files, removes stale generated cards and keeps hand-written ones.
+    # Rebuilding repairs the archive, removes generated loose cards and the old index, keeps hand-written ones.
     build_knowledge.build_pack(TOPIC, out, REFS)
-    assert not (out / "cards" / "gone.md").exists()
+    assert archive.members(out / "cards.tar.gz") == cards
+    assert not (out / "cards" / "old.md").exists() and not (out / "requirements.jsonl").exists()
     assert (out / "cards" / "notes.md").read_text(encoding="utf-8") == "hand-written"
     assert (out / "JURISDICTION.md").read_text(encoding="utf-8") == "manual"
     assert build_knowledge.check_pack(TOPIC, out, REFS) == []
@@ -394,7 +447,7 @@ def test_cli_check_exit_codes(tmp_path):
     args = ["--wiki", str(TOPIC), "--build-refs", str(REFS), "--out", str(out)]
     assert build_knowledge.main(args) == 0
     assert build_knowledge.main(args + ["--check"]) == 0
-    (out / "requirements.jsonl").write_text("[]\n", encoding="utf-8")
+    (out / "requirements" / "A.jsonl").write_text("[]\n", encoding="utf-8")
     assert build_knowledge.main(args + ["--check"]) == 1
     missing = ["--wiki", str(tmp_path / "missing"), "--build-refs", str(REFS), "--out", str(out)]
     assert build_knowledge.main(missing) == 2
@@ -424,8 +477,14 @@ def pack(tmp_path_factory):
     out = tmp_path_factory.mktemp("pack") / "ru"
     code = build_knowledge.main(["--wiki", WIKI, "--build-refs", BUILD_REFS, "--out", str(out)])
     assert code == 0
-    lines = (out / "requirements.jsonl").read_text(encoding="utf-8").splitlines()
+    lines = [line for shard in sorted((out / "requirements").glob("*.jsonl"))
+             for line in shard.read_text(encoding="utf-8").splitlines()]
     return out, lines, [json.loads(line) for line in lines]
+
+
+def written_cards(out):
+    """{member: text} of the cards archive of a built pack."""
+    return {name: data.decode("utf-8") for name, data in archive.members(out / "cards.tar.gz").items()}
 
 
 @pytest.fixture(scope="module")
@@ -438,17 +497,19 @@ def source_cards():
 def test_227_requirements_and_cards(pack):
     out, _, records = pack
     assert len(records) == 227
-    assert [r["id"] for r in records] == sorted(r["id"] for r in records)
     assert len({r["id"] for r in records}) == 227
-    cards = sorted(p.name for p in (out / "cards").iterdir())
+    for shard in sorted((out / "requirements").glob("*.jsonl")):
+        ids = [json.loads(line)["id"] for line in shard.read_text(encoding="utf-8").splitlines()]
+        assert ids == sorted(ids) and {json.loads(line)["dir"] for line in shard.read_text(encoding="utf-8").splitlines()} == {shard.stem}
+    cards = list(written_cards(out))
     assert len(cards) == 227
-    assert cards == sorted(f"{r['id'][3:]}.md" for r in records)
+    assert cards == sorted(f"cards/{r['id'][3:]}.md" for r in records)
     assert all(r["card"] == f"cards/{r['id'][3:]}.md" for r in records)
 
 
 def written_basis(out, record):
     """Legal-basis section of the written card of a record."""
-    _, body = parse_frontmatter((out / record["card"]).read_text(encoding="utf-8"))
+    _, body = parse_frontmatter(written_cards(out)[record["card"]])
     return split_sections(body)[BASIS]
 
 
@@ -605,26 +666,28 @@ PRIVATE_MARKERS = [
 def test_generated_pack_has_no_private_markers(pack):
     out, _, _ = pack
     hits = []
-    for path in sorted(out.rglob("*")):
-        if not path.is_file():
-            continue
-        text = path.read_text(encoding="utf-8")
+    texts = {f"cards.tar.gz!{name}": text for name, text in written_cards(out).items()}
+    texts.update({str(path.relative_to(out)): path.read_text(encoding="utf-8")
+                  for path in sorted(out.rglob("*")) if path.is_file() and path.name != "cards.tar.gz"})
+    for name, text in texts.items():
         for marker in PRIVATE_MARKERS:
             match = re.search(marker, text)
             if match:
                 context = text[max(0, match.start() - 30):match.end() + 30]
-                hits.append(f"{path.relative_to(out)}: {marker!r}: {context!r}")
+                hits.append(f"{name}: {marker!r}: {context!r}")
     assert not hits, "\n".join(hits[:20])
 
 
 @needs_wiki
 def test_card_links_resolve_inside_pack(pack):
     out, _, _ = pack
-    names = {p.name for p in (out / "cards").iterdir()}
+    cards = written_cards(out)
+    names = {name[len("cards/"):] for name in cards}
     templates = {p.stem[len("shablon-"):] for p in (Path(WIKI) / "wiki" / "references").glob("shablon-*.md")}
     broken = []
-    for path in sorted((out / "cards").iterdir()):
-        for target in re.findall(r"\]\(([^)\s]+)\)", path.read_text(encoding="utf-8")):
+    for member, text in cards.items():
+        path = Path(member)
+        for target in re.findall(r"\]\(([^)\s]+)\)", text):
             if target.startswith(("http://", "https://")):
                 continue
             target = target.split("#", 1)[0]

@@ -9,7 +9,7 @@ the record fields (obligation, source_kind, subjects, models). It is a starting 
 for a human: the curated feature-map.json is written by hand, so the script refuses to
 overwrite it. With --build-refs the short triggers are read from the source base's table
 module (only at build time; nothing from it is copied); otherwise the "trigger" field of
-requirements.jsonl is used. Output is deterministic. Exit code 2: bad input. Stdlib only.
+the requirement records is used. Output is deterministic. Exit code 2: bad input. Stdlib only.
 """
 
 from __future__ import annotations
@@ -117,13 +117,17 @@ class SeedError(Exception):
 
 
 def load_requirements(kb: Path) -> list:
-    path = kb / "requirements.jsonl"
-    if not path.is_file():
-        raise SeedError(f"requirements.jsonl not found in {kb}")
-    try:
-        return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
-    except json.JSONDecodeError as error:
-        raise SeedError(f"{path}: {error}") from error
+    """Records of requirements/*.jsonl (or the single requirements.jsonl of an older pack), sorted by id."""
+    paths = sorted((kb / "requirements").glob("*.jsonl")) or [kb / "requirements.jsonl"]
+    if not paths[0].is_file():
+        raise SeedError(f"requirements/*.jsonl not found in {kb}")
+    records = []
+    for path in paths:
+        try:
+            records += [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+        except json.JSONDecodeError as error:
+            raise SeedError(f"{path}: {error}") from error
+    return sorted(records, key=lambda r: r["id"])
 
 
 def load_catalog(path: Path) -> set:
@@ -222,7 +226,7 @@ def seed(records: list, catalog: set, triggers: dict) -> dict:
 def build_parser():
     parser = argparse.ArgumentParser(description="Seed a draft feature map (never the curated one).")
     parser.add_argument("--out", required=True, help="draft output path ('-' for stdout)")
-    parser.add_argument("--kb", default=str(DEFAULT_KB), help="jurisdiction pack with requirements.jsonl")
+    parser.add_argument("--kb", default=str(DEFAULT_KB), help="jurisdiction pack with requirements/*.jsonl")
     parser.add_argument("--catalog", default=str(DEFAULT_CATALOG), help="features/catalog.json")
     parser.add_argument("--build-refs", help="the source base's build_refs.py: take the short triggers from it")
     return parser

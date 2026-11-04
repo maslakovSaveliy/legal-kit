@@ -62,7 +62,7 @@ One row per requirement id, with one exception: a separate `disputed` row about 
 | `element` | `"<template>:<id>"` when the row rests on a template element of the same requirement (its `requirements` list holds `req`), else `null` |
 | `basis` | `norm`, `practice`, `interpretation`, `inference`, `platform` |
 
-The report describes the state after this run: a requirement the run fixed is `present`, with the new lines as evidence and bucket `done`; its title says the skill added it. Set `effective_from` to the date `norm_dates` give for the norm the row cites whenever the record has one; `null` is for records without a date.
+The report describes the state after this run: a requirement the run fixed is `present`, with the new lines as evidence and bucket `done`; its title says the skill added it. Set `effective_from` to the date `norm_dates` give for the norm the row cites whenever the record has one. When the cited norm has no date in `norm_dates` (a court ruling or a position cited without one), take the record's `effective_from` if it is a single date; never borrow the date of another norm of the record. `null` is for records without a date.
 
 ### Evidence
 
@@ -141,17 +141,17 @@ A report with `mode: "plan"` describes a product that is not built yet ([plan.md
 ```sh
 python3 <skill>/scripts/report.py verify .legal/report.json --kb <skill>/references/jurisdictions/ru \
   --sources .legal/sources.json --answers .legal/answers.json --today <YYYY-MM-DD> \
-  [--select .legal/evidence/select.json]
+  --select .legal/evidence/select.json
 ```
 
-`--select` (mode `plan`) checks that each `{"select": …}` evidence is a reason `select.py` gave for the row's requirement and that `{"owner": …}` rows were selected through a planned feature.
+`--select` checks that every id of `applicable` in the `select.py` output has a row (`uncovered_req`: a requirement that turns out not to apply gets an `n_a` row with the reason) and, in mode `plan`, that each `{"select": …}` evidence is a reason `select.py` gave for the row's requirement and that `{"owner": …}` rows were selected through a planned feature.
 
 `--answers` is optional for the script but always passed here: it switches on the sector gate ([Sectors](applicability.md#sectors)). The command prints a JSON list of issues and exits 1 while the list is not empty. Fix each issue in the report and run it again until it exits 0. Exit 2 means bad input (an unreadable or missing file, broken JSON, `rows` not a list): fix the file itself, for example create `.legal/sources.json` as `[]`, never by removing findings.
 
 | Rule | Fix |
 |---|---|
 | `missing_field`, `bad_enum`, `bad_type` | complete the row or top-level key with the allowed values and types |
-| `unknown_req`, `unknown_element` | use an id that exists in `requirements.jsonl` or `elements.json`; a topic outside the base gets `req` `null` |
+| `unknown_req`, `unknown_element` | use an id that exists in `requirements/*.jsonl` or `elements.json`; a topic outside the base gets `req` `null` |
 | `element_req_mismatch` | name an element of this requirement, or set `element` to `null` |
 | `mandatory_unsupported`, `conditional_unsupported` | the row does not earn an obligation level: lower it to `interpretation` or `recommended`, never bend the basis or source to keep it |
 | `level_basis_mismatch` | interpretation, practice, inference and market rows carry only `recommended` or `interpretation` |
@@ -161,6 +161,7 @@ python3 <skill>/scripts/report.py verify .legal/report.json --kb <skill>/referen
 | `missing_evidence` | add the file and line or the URL; without evidence the status is `not_visible` |
 | `future_not_roadmap` | move the row to `roadmap`, or set `effective_from` to the in-force date it relies on |
 | `effective_from_unknown` | use one of the requirement's own dates |
+| `uncovered_req` | add the row of that applicable requirement; `n_a` with the reason when it does not apply |
 | `planned_outside_plan` | status `planned` or bucket `plan` in a report whose mode is not `plan`: use the audit statuses |
 | `planned_evidence` | give the `planned` row `{owner}` or `{select}` evidence that matches `select.json` |
 | `suggestion_level` | suggestions: at most 7, level `recommended` or `interpretation` only |
@@ -192,10 +193,18 @@ Short, in the user's language:
 
 - Verify by hand:
   - every row has the fields above with allowed values, and the top-level keys are all present;
-  - each `req` exists (`grep -F '"id":"<id>"' <skill>/references/jurisdictions/ru/requirements.jsonl`) and each `element` exists in `<skill>/references/jurisdictions/ru/elements.json` with `req` in its `requirements`;
+  - each `req` exists (`grep -rhF '"id":"<id>"' <skill>/references/jurisdictions/ru/requirements/`) and each `element` exists in `<skill>/references/jurisdictions/ru/elements.json` with `req` in its `requirements`;
   - every `mandatory` or `conditional` row meets all conditions of [Level and basis](#level-and-basis);
   - a `mandatory` or `conditional` row (status other than `n_a`) of a requirement with `obligation` `sectoral` has a group in `business.sectors` whose `sectoral` entry in `feature-map.json` lists its id;
+  - every id of `applicable` in `.legal/evidence/select.json` is the `req` of a row (an `n_a` row with the reason when it does not apply);
   - rows of `present`, `missing`, `partial` have evidence;
   - `official_runtime` and `platform` rows have URLs, and `official_runtime` URLs and `official` sources are on the allowlist ([research-rules.md](research-rules.md#official-sources));
   - each `effective_from` is one of the requirement's dates, no row outside `roadmap` has a future date, and no row with a `null` date belongs to a requirement with a future date unless it is in `roadmap`.
-- Render by hand into `.legal/report-YYYY-MM-DD.md` with the same sections: title with the product name; product, mode, date; «База требований: <date from BASE.md>»; summary by direction; «Сделано», «Сделать вам», «Спорно», «Дорожная карта» as tables (requirement, status, level, norm, confidence, source, evidence; the roadmap adds the date); «Реестры»; «Запрос документов»; «Что не проверялось»; «Не юридическая консультация.»
+- Render by hand into `.legal/report-YYYY-MM-DD.md` with the same sections: title with the product name; product, mode, date; «База требований: <date from BASE.md>»; summary by direction; «Сделано», «Сделать вам», «Спорно», «Дорожная карта» as tables, one line per row, grouped by direction (`### <letter> <name>` from the requirement's `dir`):
+
+  ```
+  | Требование | Статус | Уровень | Норма | Уверенность | Источник | Доказательства |
+  |---|---|---|---|---|---|---|
+  ```
+
+  English reports use Requirement, Status, Level, Norm, Confidence, Source, Evidence; «Дорожная карта» adds «С даты» (From); «Реестры»; «Запрос документов»; «Что не проверялось»; «Не юридическая консультация.»

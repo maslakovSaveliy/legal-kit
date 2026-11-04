@@ -43,9 +43,9 @@ WORKFLOW_FILES = (
 MAX_SKILL_BODY_LINES = 500
 TOC_MIN_LINES = 100
 TOC_MARKER_RE = re.compile(r"^(?:#{1,6}\s+)?(?:contents|table of contents|оглавление|содержание)\b", re.I)
-# Generated requirement cards are read one at a time and carry no TOC by design of the
-# knowledge generator; their links are still checked.
-TOC_EXCLUDED_DIRS = ("cards",)
+# Directories whose reference files need no TOC (the generated cards, which have none, now live in
+# cards.tar.gz and are not files here).
+TOC_EXCLUDED_DIRS = ()
 
 LINK_RE = re.compile(r"(?<!!)\[[^\]\n]*\]\(([^)\s]+)\)")
 BACKTICK_RE = re.compile(r"`([^`\n]+)`")

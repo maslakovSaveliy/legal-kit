@@ -39,7 +39,7 @@ No other flag is needed when the answers are passed. `--subject`, `--models`, `-
 | `not_detectable` | requirements no scanner or answer can establish, with what to ask the owner; they go to the report's `owner_checklist` ([report.md](report.md#reportjson)) |
 | `warnings` | features or sectors missing from the map, unknown ids, a map without trigger sections |
 
-Read `warnings`: a feature the map does not know brings no requirement; check it by hand against `requirements.jsonl` and, if a topic has no norm in the base, take it to research ([research-rules.md](research-rules.md)). Templates and documents are still candidates: documents.md confirms each one against its own trigger.
+Read `warnings`: a feature the map does not know brings no requirement; check it by hand against `requirements/*.jsonl` and, if a topic has no norm in the base, take it to research ([research-rules.md](research-rules.md)). Templates and documents are still candidates: documents.md confirms each one against its own trigger.
 
 ## The feature map
 
@@ -75,7 +75,7 @@ Both are reported as platform rules: `source` `base`, `basis` `platform`, `level
 
 ## Assess each requirement
 
-For each applicable id read its record in `requirements.jsonl` (one line, `"id":"ru:<slug>"`):
+For each applicable id read its record in `requirements/<letter>.jsonl` (one line, `"id":"ru:<slug>"`; `grep -rhF` over the folder finds it):
 
 - `trigger`, `summary`, `obligation`, `subjects`, `models`, `products`: does it really apply to this product; a feature can trigger a requirement whose condition the evidence does not meet.
 - `tech[]`: what to look for in the product. Each item has `kind` `norm`, `practice`, `interpretation`, `inference` or `platform`; the kind of the item a row rests on becomes the row's `basis`.
@@ -83,7 +83,7 @@ For each applicable id read its record in `requirements.jsonl` (one line, `"id":
 - `norm_dates`, `effective_from`, `official_urls`, `source_kind`, `legal_confidence`: the row's norm, dates, sources and the ceiling of its level ([report.md](report.md#level-and-basis)).
 - `templates`: the documents that implement it.
 
-Open `cards/<slug>.md` only when the record is not enough: an ambiguous trigger, a disputed point, the exact periods or wording a document needs.
+The record does not list every disputed point. Before you set the statuses, read the section «Пробелы и спорные места» of the card of every applicable requirement except those you mark `n_a`, in one call: `python3 <skill>/scripts/kb.py card ru:<a> ru:<b> … --section "Пробелы и спорные места"` (each card follows a line `==> ru:<slug> <==`). A detected feature the section names as disputed (a foreign chat widget for data localization, say) gets a `disputed` row of that requirement ([report.md](report.md#evidence)). Open the whole card when the record and that section are not enough: an ambiguous trigger, the exact periods or wording a document needs. Cards are packed in `cards.tar.gz`: `kb.py card ru:<slug>` prints one (`--section <title>` one section, `kb.py search <words>` finds a text across cards, `kb.py extract --to <dir>` writes them all as files to read).
 
 Then set the status:
 
@@ -104,6 +104,7 @@ Report `n_a` rows for requirements the user asked about or would expect (an offe
 - `effective_from` of a row is always one of the requirement's own dates (`norm_dates[].from` or `effective_from`); `report.py verify` rejects any other date.
 - A record whose `effective_from` is a single date after the run date: one row, bucket `roadmap`, with that date.
 - A record whose `effective_from` is `mixed` and whose `norm_dates` include both passed and later dates: its row covers what is in force, with `effective_from` set to the latest passed date; the later part gets its own row with `req` `null`, the id and the date in the title, level `recommended` or `interpretation`, bucket `roadmap`, `effective_from` the future date. A requirement id is never used in two rows, except a separate `disputed` row about a detected feature next to a norm-based row ([report.md](report.md#evidence)).
+- The row's date is the date of the norm it cites. When that norm has no date in `norm_dates` (a court ruling or a position cited without one), use the record's `effective_from` if it is a single date; never the latest date of another norm of the record.
 - A row whose `effective_from` is `null` inherits the requirement's latest date in `report.py verify`; set `effective_from` on every row of a requirement that has a future date, and on any row whose cited norm has a date in `norm_dates` ([report.md](report.md#rows)).
 
 ## One package
@@ -117,7 +118,24 @@ Do what `select.py` does by hand, with the files under `<skill>/references/juris
 
 1. Owner facts from `answers.json`: `subject:<owner.status>`; `b2c` if `audience.b2c` is true; `minors` if `audience.minors` is `14-18` or `under-14`; `revenue_over_20m` if true; `domain_ru` if a host in `product.urls` ends in `.ru`, `.рф` (`.xn--p1ai`) or `.su`.
 2. Collect candidate ids from `feature-map.json`: `always`, plus `features[<id>]` for each confirmed feature, plus `owner_facts[<fact>]` for each fact, plus `sectoral[<group>].requirements` for each group in `business.sectors`.
-3. For each id find its line: `grep -F '"id":"ru:<slug>"' <skill>/references/jurisdictions/ru/requirements.jsonl`. Drop it when the owner status is not in `subjects`, or neither model in `models`, or no product kind in `products` (an empty list means no restriction), or its `obligation` is `sectoral` and no confirmed group lists it.
+3. For each id find its line: `grep -rhF '"id":"ru:<slug>"' <skill>/references/jurisdictions/ru/requirements/`. A card, when needed: `cd <skill>/references/jurisdictions/ru && tar -xzOf cards.tar.gz cards/<slug>.md`; read its section «Пробелы и спорные места» for every id you do not mark `n_a`, as [Assess each requirement](#assess-each-requirement) says. Drop it when the owner status is not in `subjects`, or neither model in `models`, or no product kind in `products` (an empty list means no restriction), or its `obligation` is `sectoral` and no confirmed group lists it.
 4. `future_from`: the latest date among `norm_dates[].from` and `effective_from`, if it is after the run date.
 5. Templates and documents: a name in the map's `templates` or `documents` section applies when it has `always`, or one of its `features` was found, or one of its `facts` (owner facts and confirmed groups) holds.
 6. `not_detectable`: entries of the map's `not_detectable` whose id is not already a candidate and fits the owner, model and product filters.
+7. Write `.legal/evidence/select.json` in the shape `select.py` prints, so a rerun and the checks read the same file:
+
+```json
+{
+  "inputs": {"features": ["forms.contact"], "planned": [], "subject": "ul", "models": ["b2c"], "products": ["site"],
+             "sectors": [], "facts": ["b2c", "subject:ul"], "today": "YYYY-MM-DD"},
+  "applicable": [{"id": "ru:<slug>", "why": ["always", "feature:<id>", "planned:<id>", "owner:<fact>", "sector:<group>"],
+                  "future_from": null, "note": null}],
+  "not_applicable": [{"id": "ru:<slug>", "reason": "…"}],
+  "templates": ["<template>"], "template_reasons": {"<template>": ["always"]},
+  "documents": [{"name": "<doc>", "path": "documents/<doc>.md", "why": ["always"], "requirements": ["ru:<slug>"]}],
+  "not_detectable": [{"id": "ru:<slug>", "reason": "…"}],
+  "warnings": []
+}
+```
+
+   `why` holds only the reasons that apply; `not_applicable` lists the candidates dropped in step 3 with the filter that dropped them.

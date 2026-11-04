@@ -4,9 +4,11 @@ Self-contained on purpose: the repo root is located from this file, so the test
 runs from any working directory. Stdlib only.
 """
 
+import io
 import json
 import os
 import re
+import tarfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -90,9 +92,17 @@ def load_json(path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def iter_repo_text_files():
-    for dirpath, dirnames, filenames in os.walk(ROOT):
-        rel_dir = Path(dirpath).relative_to(ROOT).as_posix()
+def iter_archive_texts(path, rel):
+    """Members of a .tar.gz as ("<rel>!<member>", text): the leak scan reads inside the cards archive."""
+    with tarfile.open(path, "r:gz") as archive:
+        for member in archive.getmembers():
+            if member.isfile():
+                yield f"{rel}!{member.name}", archive.extractfile(member).read().decode("utf-8", "replace")
+
+
+def iter_repo_text_files(root=ROOT):
+    for dirpath, dirnames, filenames in os.walk(root):
+        rel_dir = Path(dirpath).relative_to(root).as_posix()
         dirnames[:] = [
             d
             for d in dirnames
@@ -103,7 +113,10 @@ def iter_repo_text_files():
             if filename in EXCLUDED_FILE_NAMES:
                 continue
             path = Path(dirpath) / filename
-            rel = path.relative_to(ROOT).as_posix()
+            rel = path.relative_to(root).as_posix()
+            if filename.endswith(".tar.gz"):
+                yield from iter_archive_texts(path, rel)
+                continue
             raw = path.read_bytes()
             if b"\x00" in raw:
                 continue
@@ -182,3 +195,51 @@ def test_no_private_patterns():
             if pattern in text:
                 hits.append(f"{rel}: {pattern!r}")
     assert not hits, "private patterns found:\n" + "\n".join(hits)
+
+
+def test_no_private_patterns_in_archives(tmp_path):
+    buf = io.BytesIO()
+    with tarfile.open(fileobj=buf, mode="w:gz") as archive:
+        data = ("see " + "/Us" + "ers/someone/notes").encode("utf-8")
+        info = tarfile.TarInfo("cards/x.md")
+        info.size = len(data)
+        archive.addfile(info, io.BytesIO(data))
+    (tmp_path / "cards.tar.gz").write_bytes(buf.getvalue())
+    found = dict(iter_repo_text_files(tmp_path))
+    assert "/Us" + "ers/" in found["cards.tar.gz!cards/x.md"]
+
+
+# skills.sh builds a text snapshot of the skill folder and gives up when any of its limits is passed
+# (measured 2026-11-04: about 200 files, about 512 KiB per file, 5-6 MB in all; binaries are left out).
+# The budget keeps a margin below each limit.
+SNAPSHOT_MAX_FILES = 150
+SNAPSHOT_MAX_FILE_BYTES = 400_000
+SNAPSHOT_MAX_TOTAL_BYTES = 4_000_000
+ALLOWED_BINARIES = {"references/jurisdictions/ru/cards.tar.gz"}
+
+
+def skill_files():
+    """(rel, bytes) of the files of the skill folder, as an install copies them."""
+    for dirpath, dirnames, filenames in os.walk(SKILL_DIR):
+        dirnames[:] = [d for d in dirnames if d not in EXCLUDED_DIR_NAMES]
+        for filename in filenames:
+            if filename in EXCLUDED_FILE_NAMES or filename == ".DS_Store":
+                continue
+            path = Path(dirpath) / filename
+            yield path.relative_to(SKILL_DIR).as_posix(), path.read_bytes()
+
+
+def is_binary(rel, raw):
+    return rel.endswith(".gz") or b"\x00" in raw
+
+
+def test_skill_has_no_binaries_but_cards_archive():
+    assert {rel for rel, raw in skill_files() if is_binary(rel, raw)} == ALLOWED_BINARIES
+
+
+def test_skill_fits_skills_sh_snapshot():
+    sizes = {rel: len(raw) for rel, raw in skill_files() if not is_binary(rel, raw)}
+    big = {rel: size for rel, size in sizes.items() if size > SNAPSHOT_MAX_FILE_BYTES}
+    assert len(sizes) <= SNAPSHOT_MAX_FILES, f"{len(sizes)} text files in the skill folder"
+    assert not big, f"text files over {SNAPSHOT_MAX_FILE_BYTES} bytes: {big}"
+    assert sum(sizes.values()) <= SNAPSHOT_MAX_TOTAL_BYTES, f"{sum(sizes.values())} bytes of text"

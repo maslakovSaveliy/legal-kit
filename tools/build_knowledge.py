@@ -17,21 +17,24 @@ import argparse
 import hashlib
 import re
 import sys
+import tarfile
 import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from kb import GENERATOR_VERSION  # noqa: E402
+from kb import GENERATOR_VERSION, archive  # noqa: E402
 from kb.emit_cards import (  # noqa: E402
-    brief, dir_letter, is_generated_card, load_templates, write_base, write_card, write_requirements,
+    CARDS_ARCHIVE, REQUIREMENTS_DIR, brief, dir_letter, is_generated_card, load_templates, render_card, write_base,
+    write_requirements,
 )
 from kb.legacy import load_build_refs  # noqa: E402
 from kb.links import LinkCtx, raw_url_map  # noqa: E402
 from kb.parse import header_bytes, load_card  # noqa: E402
 from kb.templates import TemplateError, build_templates, generated_paths as template_paths  # noqa: E402
 
-GENERATED_FILES = ("requirements.jsonl", "BASE.md")
+GENERATED_FILES = ("BASE.md",)
+LEGACY_INDEX = "requirements.jsonl"
 TABLE_NAME = "build_refs.py"
 DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
 
@@ -76,7 +79,7 @@ def load_cards(topic: Path) -> list:
 
 
 def build_pack(topic, out, build_refs) -> dict:
-    """Write requirements.jsonl, cards/*.md and BASE.md into ``out`` and return the build facts."""
+    """Write requirements/*.jsonl, cards.tar.gz and BASE.md into ``out`` and return the build facts."""
     topic, out = Path(topic), Path(out)
     cards = load_cards(topic)
     try:
@@ -114,13 +117,16 @@ def build_pack(topic, out, build_refs) -> dict:
         brief(card, refs.TRIGGER[card.slug], letters[card.slug], templates_by_card, ctx) for card in cards
     ]
     write_requirements(records, out)
-    cards_dir = out / "cards"
-    cards_dir.mkdir(parents=True, exist_ok=True)
-    for stale in cards_dir.glob("*.md"):
-        if stale.stem not in slugs and is_generated_card(stale):
-            stale.unlink()
-    for card in cards:
-        write_card(card, ctx, out)
+    archive.write_if_changed(
+        out / CARDS_ARCHIVE, {f"cards/{card.slug}.md": render_card(card, ctx).encode("utf-8") for card in cards}
+    )
+    loose = out / "cards"  # cards of older packs were files; generated ones go, hand-written ones stay
+    if loose.is_dir():
+        for stale in loose.glob("*.md"):
+            if is_generated_card(stale):
+                stale.unlink()
+        if not any(loose.iterdir()):
+            loose.rmdir()
     try:  # templates/, elements.json, placeholders.json, forbidden-clauses.json (kb/templates.py)
         build_templates(topic, out, ctx)
     except TemplateError as error:
@@ -138,11 +144,23 @@ def build_pack(topic, out, build_refs) -> dict:
     return meta
 
 
-def _generated_paths(root: Path) -> set:
-    paths = {name for name in GENERATED_FILES if (root / name).is_file()}
+def _generated_entries(root: Path) -> dict:
+    """``{rel: bytes}`` of everything the generator writes under ``root``; the members of the cards
+    archive appear as ``cards.tar.gz!cards/<slug>.md``, leftovers of older packs (requirements.jsonl,
+    generated loose cards) under their own paths."""
+    paths = {name for name in GENERATED_FILES + (LEGACY_INDEX,) if (root / name).is_file()}
+    if (root / REQUIREMENTS_DIR).is_dir():
+        paths |= {f"{REQUIREMENTS_DIR}/{p.name}" for p in (root / REQUIREMENTS_DIR).glob("*.jsonl")}
     if (root / "cards").is_dir():
         paths |= {f"cards/{p.name}" for p in (root / "cards").glob("*.md") if is_generated_card(p)}
-    return paths | template_paths(root)
+    entries = {rel: (root / rel).read_bytes() for rel in paths | template_paths(root)}
+    if (root / CARDS_ARCHIVE).is_file():
+        try:
+            members = archive.members(root / CARDS_ARCHIVE)
+        except (OSError, EOFError, tarfile.TarError) as error:
+            raise BuildError(f"cannot read {root / CARDS_ARCHIVE}: {error}") from error
+        entries.update({f"{CARDS_ARCHIVE}!{name}": data for name, data in members.items()})
+    return entries
 
 
 def check_pack(topic, out, build_refs) -> list:
@@ -151,14 +169,14 @@ def check_pack(topic, out, build_refs) -> list:
     with tempfile.TemporaryDirectory() as tmp:
         fresh_root = Path(tmp) / "ru"
         build_pack(topic, fresh_root, build_refs)
-        fresh, existing = _generated_paths(fresh_root), _generated_paths(out)
+        fresh, existing = _generated_entries(fresh_root), _generated_entries(out)
         differences = []
-        for rel in sorted(fresh | existing):
+        for rel in sorted(set(fresh) | set(existing)):
             if rel not in existing:
                 differences.append(f"missing: {rel}")
             elif rel not in fresh:
                 differences.append(f"unexpected: {rel}")
-            elif (fresh_root / rel).read_bytes() != (out / rel).read_bytes():
+            elif fresh[rel] != existing[rel]:
                 differences.append(f"differs: {rel}")
         return differences
 

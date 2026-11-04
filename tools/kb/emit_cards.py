@@ -19,6 +19,8 @@ DROPPED_SECTIONS = {"See Also", "Sources"}
 DROPPED_FRONTMATTER = {"sources", "created", "aliases", "tags", "confidence"}
 # Every generated card starts with these two lines; hand-written files next to them do not.
 GENERATED_CARD_MARK = "---\nid: ru:"
+REQUIREMENTS_DIR = "requirements"
+CARDS_ARCHIVE = "cards.tar.gz"
 
 # Hosts that mirror official texts; a card may list them, but they are not official sources.
 NON_OFFICIAL_HOSTS = {
@@ -163,7 +165,7 @@ def load_templates(topic):
 
 
 def is_generated_card(path) -> bool:
-    """True when the file was written by ``write_card``."""
+    """True when the file is a generated card (``render_card`` output) left as a loose file by an older pack."""
     with open(path, encoding="utf-8", errors="replace") as handle:
         return handle.read(len(GENERATED_CARD_MARK)) == GENERATED_CARD_MARK
 
@@ -173,16 +175,33 @@ def _write_text(path: Path, text: str) -> None:
     path.write_bytes(text.encode("utf-8"))
 
 
-def write_requirements(records: list, out) -> Path:
-    """Write ``requirements.jsonl`` into the pack directory, sorted by id."""
-    path = Path(out) / "requirements.jsonl"
-    lines = [dumps(record) for record in sorted(records, key=lambda r: r["id"])]
-    _write_text(path, "\n".join(lines) + "\n")
-    return path
+def write_requirements(records: list, out) -> list:
+    """Write ``requirements/<dir>.jsonl`` (one file per direction letter, records sorted by id) and drop
+    the single ``requirements.jsonl`` of older packs and shards of directions that are gone."""
+    shards = {}
+    for record in records:
+        letter = record.get("dir")
+        if not (isinstance(letter, str) and len(letter) == 1 and "A" <= letter <= "Z"):
+            raise ValueError(f"{record.get('id')}: dir must be one letter A-Z, got {letter!r}")
+        shards.setdefault(letter, []).append(record)
+    folder = Path(out) / REQUIREMENTS_DIR
+    paths = []
+    for letter in sorted(shards):
+        path = folder / f"{letter}.jsonl"
+        lines = [dumps(record) for record in sorted(shards[letter], key=lambda r: r["id"])]
+        _write_text(path, "\n".join(lines) + "\n")
+        paths.append(path)
+    for stale in sorted(folder.glob("*.jsonl")):
+        if stale not in paths:
+            stale.unlink()
+    legacy = Path(out) / "requirements.jsonl"
+    if legacy.is_file():
+        legacy.unlink()
+    return paths
 
 
-def write_card(card: Card, ctx: LinkCtx, out) -> Path:
-    """Write ``cards/<slug>.md``: kept frontmatter plus the body without See Also and Sources.
+def render_card(card: Card, ctx: LinkCtx) -> str:
+    """Text of ``cards/<slug>.md``: kept frontmatter plus the body without See Also and Sources.
 
     Links and process markers are rewritten in the frontmatter values and in the body alike.
     """
@@ -198,9 +217,7 @@ def write_card(card: Card, ctx: LinkCtx, out) -> Path:
         if title in DROPPED_SECTIONS:
             continue
         parts += [f"## {title}", "", clean(content), ""]
-    path = Path(out) / "cards" / f"{card.slug}.md"
-    _write_text(path, "\n".join(parts).rstrip("\n") + "\n")
-    return path
+    return "\n".join(parts).rstrip("\n") + "\n"
 
 
 def write_base(meta: dict, out) -> Path:

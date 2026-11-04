@@ -27,7 +27,9 @@ class LinkCtx:
     """What the sanitizer needs to know about the pack it writes into.
 
     ``card_href`` and ``template_href`` give the link target of a card or template slug,
-    relative to the file that contains the link.
+    relative to the file that contains the link. A ``card_href`` that returns ``None`` means the
+    cards are not files next to the text (they are packed in cards.tar.gz): a card is then named
+    by its id instead of linked.
     """
 
     card_slugs: set
@@ -38,7 +40,7 @@ class LinkCtx:
     _known_hrefs: set = field(default_factory=set, init=False, repr=False)
 
     def __post_init__(self):
-        self._known_hrefs = {self.card_href(s) for s in self.card_slugs} | {
+        self._known_hrefs = {self.card_href(s) for s in self.card_slugs} - {None} | {
             self.template_href(s) for s in self.template_slugs
         }
 
@@ -103,7 +105,8 @@ def _link_to(slug: str, text: str, ctx: LinkCtx) -> str:
     """
     text = text or slug
     if slug in ctx.card_slugs:
-        return f"[{text}]({ctx.card_href(slug)})"
+        href = ctx.card_href(slug)
+        return f"{text} (`ru:{slug}`)" if href is None else f"[{text}]({href})"
     template = _template_name(slug, ctx)
     if template:
         return f"[{text}]({ctx.template_href(template)})"

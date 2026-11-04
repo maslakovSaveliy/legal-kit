@@ -41,7 +41,7 @@ CATALOG = FIX / "catalog.json"
 REAL_CATALOG = ROOT / "skills" / "legal-kit" / "references" / "features" / "catalog.json"
 ANSWERS = FIX / "docs" / "answers.json"
 TODAY = "2026-10-18"
-SCRIPT_NAMES = ["_kb", "scan_repo", "scan_url", "select", "registry", "check_docs", "report", "rules"]
+SCRIPT_NAMES = ["_kb", "scan_repo", "scan_url", "select", "registry", "check_docs", "report", "rules", "kb"]
 
 # Checksum vectors computed with the INN/OGRN algorithms; fictitious numbers
 # (region code 00 does not exist).
@@ -2450,6 +2450,25 @@ def test_verify_planned_select_evidence_matches_select_json(tmp_path, capsys):
     assert "planned_evidence" in issue_rules(issues)
     good = plan_report(plan_row(), plan_row(req="ru:t-always", evidence=[{"select": "always"}]))
     assert verify(tmp_path, good, capsys, "--select", select_json) == (0, [])
+
+
+def test_verify_select_needs_a_row_for_every_applicable_id(tmp_path, capsys):
+    select_json = tmp_path / "select.json"
+    select_json.write_text(json.dumps({"applicable": [
+        {"id": good_row()["req"], "why": ["always"]}, {"id": "ru:t-bylaw", "why": ["always"]}]}), encoding="utf-8")
+    code, issues = verify(tmp_path, make_report(good_row()), capsys, "--select", select_json)
+    assert code == 1
+    assert [(i["rule"], i["req"]) for i in issues] == [("uncovered_req", "ru:t-bylaw")]
+    covered = make_report(good_row(), good_row(req="ru:t-bylaw", element=None, level="conditional",
+                                               status="missing", bucket="owner"))
+    assert verify(tmp_path, covered, capsys, "--select", select_json) == (0, [])
+
+
+def test_verify_select_with_a_non_string_req_reports_bad_type(tmp_path, capsys):
+    select_json = tmp_path / "select.json"
+    select_json.write_text(json.dumps({"applicable": [{"id": good_row()["req"], "why": ["always"]}]}), encoding="utf-8")
+    code, issues = verify(tmp_path, make_report(good_row(), good_row(req=["ru:t-bylaw"])), capsys, "--select", select_json)
+    assert code == 1 and "bad_type" in issue_rules(issues) and "uncovered_req" not in issue_rules(issues)
 
 
 def test_verify_owner_evidence_is_not_accepted_for_present_rows(tmp_path, capsys):

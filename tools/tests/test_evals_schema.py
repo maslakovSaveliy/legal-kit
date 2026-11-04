@@ -52,10 +52,12 @@ def load_json(path):
 
 def load_requirements():
     out = {}
-    for line in (KB / "requirements.jsonl").read_text(encoding="utf-8").splitlines():
-        if line.strip():
-            record = json.loads(line)
-            out[record["id"]] = record
+    paths = sorted((KB / "requirements").glob("*.jsonl")) or [KB / "requirements.jsonl"]
+    for path in paths:
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                record = json.loads(line)
+                out[record["id"]] = record
     return out
 
 
@@ -1140,3 +1142,19 @@ def test_check_run_passes_on_the_golden_report(golden):
     result = subprocess.run([sys.executable, str(CHECK_RUN), str(golden), "--today", GOLDEN_TODAY],
                             capture_output=True, text=True)
     assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_check_run_passes_select_json_to_verify_when_it_exists(tmp_path):
+    scripts = make_scripts(tmp_path)
+    run = make_run(tmp_path, drafts=False)
+    (run / ".legal" / "evidence").mkdir()
+    (run / ".legal" / "evidence" / "select.json").write_text('{"applicable": []}', encoding="utf-8")
+    assert run_check(run, scripts=scripts).returncode == 0
+    verify_args = json.loads((tmp_path / "verify-argv.json").read_text())
+    assert verify_args[verify_args.index("--select") + 1].endswith(".legal/evidence/select.json")
+
+
+def test_check_run_leaves_select_out_without_select_json(tmp_path):
+    scripts = make_scripts(tmp_path)
+    assert run_check(make_run(tmp_path, drafts=False), scripts=scripts).returncode == 0
+    assert "--select" not in json.loads((tmp_path / "verify-argv.json").read_text())

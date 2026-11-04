@@ -15,13 +15,15 @@ verify prints a JSON list of issues ({row, req, rule, message}; sources.json pro
 "source" instead of "row", top-level problems have "row": null and a "key") and exits 1 when it is not
 empty. Rules: missing_field, bad_enum, bad_type, unknown_req, unknown_element, element_req_mismatch,
 mandatory_unsupported, conditional_unsupported, level_basis_mismatch, platform_level, source_required,
-source_not_allowlisted, missing_evidence, future_not_roadmap, effective_from_unknown, sectoral_unconfirmed.
+source_not_allowlisted, missing_evidence, future_not_roadmap, effective_from_unknown, sectoral_unconfirmed,
+uncovered_req.
 With --answers (.legal/answers.json) a mandatory or conditional row of a sectoral requirement (status not n_a)
 needs a sector group in business.sectors whose feature-map.json entry lists that requirement; without the flag
-the rule is off.
+the rule is off. With --select (.legal/evidence/select.json) every applicable id needs a row (uncovered_req)
+and the {"select": …} evidence of planned rows must be one of select.py's reasons (planned_evidence).
 render prints Markdown (sections by bucket, rows grouped by requirement direction).
 
-Reads the jurisdiction pack (requirements.jsonl, elements.json, BASE.md). Exit codes: 0 ok, 1 verify
+Reads the jurisdiction pack (requirements/*.jsonl, elements.json, BASE.md). Exit codes: 0 ok, 1 verify
 found issues, 2 bad input.
 """
 
@@ -370,6 +372,13 @@ def cmd_verify(args):
             continue
         issues.extend(verify_row(index, row, requirements, elements, today, sectoral_ids,
                                  mode=report.get("mode"), select_why=select_why))
+    if select_why is not None:
+        covered = {row["req"] for row in report["rows"] if isinstance(row, dict) and isinstance(row.get("req"), str)}
+        for req_id in select_why:
+            if req_id not in covered:
+                issues.append({"row": None, "req": req_id, "rule": "uncovered_req",
+                               "message": "select.json lists %s as applicable but no row covers it "
+                                          "(give it a row, n_a with the reason if it does not apply)" % req_id})
     if args.sources:
         issues.extend(verify_sources(args.sources))
     _kb.emit(issues)
@@ -683,7 +692,8 @@ def build_parser():
     verify.add_argument("--sources", help=".legal/sources.json")
     verify.add_argument("--answers", help=".legal/answers.json: turns on the check that sector requirements "
                                           "rest on a sector the owner confirmed")
-    verify.add_argument("--select", help=".legal/evidence/select.json: checks the reasons cited by planned rows")
+    verify.add_argument("--select", help=".legal/evidence/select.json: every applicable id needs a row; "
+                                         "the reasons cited by planned rows must be select.py's")
     verify.add_argument("--today", help="YYYY-MM-DD (default: today)")
     verify.set_defaults(run=cmd_verify)
     render_parser = sub.add_parser("render", help="render a report as Markdown")

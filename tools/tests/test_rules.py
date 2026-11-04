@@ -51,7 +51,7 @@ def rules():
 
 
 def requirements():
-    return {json.loads(line)["id"]: json.loads(line) for line in (KB_DIR / "requirements.jsonl").open(encoding="utf-8")}
+    return load_kb().load_requirements(str(KB_DIR))
 
 
 def catalog_ids():
