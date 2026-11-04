@@ -16,8 +16,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # 3.9 is the floor the skill's scripts promise (system python on macOS); 3.13 is current.
-        python: ["3.9", "3.13"]
+        # 3.9 is the floor the skill's scripts promise (older macOS system python); 3.13 and 3.14 are current
+        # (3.14 changed html.parser internals that scan_url.py subclasses).
+        python: ["3.9", "3.13", "3.14"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

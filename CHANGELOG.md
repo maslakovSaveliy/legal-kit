@@ -28,7 +28,7 @@ Light package for skills.sh, workflow fixes from the evals.
 
 ### Tooling
 
-- GitHub Actions: tests (with the leak check), script `--help` and the golden `check_run` on Python 3.9 and 3.13 for every push to main and every PR.
+- GitHub Actions: tests (with the leak check), script `--help` and the golden `check_run` on Python 3.9, 3.13 and 3.14 for every push to main and every PR.
 - The runner is pinned to `ubuntu-24.04`: `ubuntu-latest` (26.04) has no Python 3.9 for `setup-python`.
 - Tests run on Python 3.9: explicit ids for the registry failure cases; the stdlib-list check skips below 3.10.
 
