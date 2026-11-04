@@ -23,7 +23,19 @@ def test_passage_kept_only_when_confirmed_is_left_out_of_the_public_page():
     rule = section(read("documents.md"), "Drafts and public pages") if "\n## Drafts and public pages\n" in read(
         "documents.md") else read("documents.md")
     assert "«Заполняйте, только если" in rule and "«оставляйте, только если" in rule
+    assert "«Заполняйте только после" in rule and "«… только если это сделано»" in rule  # cookie notice wording
     assert "`{{РЕГИОН_РАЗМЕЩЕНИЯ_БД}}`" in rule and "left out of the public page" in rule
+    assert "a heading left without text goes too" in rule
+
+
+def test_every_fill_only_if_note_of_the_templates_is_named_by_the_rule():
+    import re
+    templates = SKILL / "references" / "jurisdictions" / "ru" / "templates"
+    notes = set()
+    for path in templates.glob("*/text.md"):
+        notes |= {m.group(1) for m in re.finditer(r"\[(Заполняйте,? только [а-яё]+|[Оо]ставляйте, только если)", path.read_text(encoding="utf-8"))}
+    rule = read("documents.md")
+    assert notes and all(("«" + n[0].upper() + n[1:]) in rule or ("«" + n) in rule for n in notes), notes
 
 
 def test_row_date_falls_back_to_the_record_date_when_the_cited_norm_has_none():

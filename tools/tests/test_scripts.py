@@ -2464,6 +2464,13 @@ def test_verify_select_needs_a_row_for_every_applicable_id(tmp_path, capsys):
     assert verify(tmp_path, covered, capsys, "--select", select_json) == (0, [])
 
 
+def test_verify_select_with_a_non_string_req_reports_bad_type(tmp_path, capsys):
+    select_json = tmp_path / "select.json"
+    select_json.write_text(json.dumps({"applicable": [{"id": good_row()["req"], "why": ["always"]}]}), encoding="utf-8")
+    code, issues = verify(tmp_path, make_report(good_row(), good_row(req=["ru:t-bylaw"])), capsys, "--select", select_json)
+    assert code == 1 and "bad_type" in issue_rules(issues) and "uncovered_req" not in issue_rules(issues)
+
+
 def test_verify_owner_evidence_is_not_accepted_for_present_rows(tmp_path, capsys):
     code, issues = verify(tmp_path, plan_report(good_row(evidence=[{"owner": "форма"}])), capsys)
     assert "missing_evidence" in issue_rules(issues)

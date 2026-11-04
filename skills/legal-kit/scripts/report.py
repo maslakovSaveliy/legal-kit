@@ -373,7 +373,7 @@ def cmd_verify(args):
         issues.extend(verify_row(index, row, requirements, elements, today, sectoral_ids,
                                  mode=report.get("mode"), select_why=select_why))
     if select_why is not None:
-        covered = {row.get("req") for row in report["rows"] if isinstance(row, dict)}
+        covered = {row["req"] for row in report["rows"] if isinstance(row, dict) and isinstance(row.get("req"), str)}
         for req_id in select_why:
             if req_id not in covered:
                 issues.append({"row": None, "req": req_id, "rule": "uncovered_req",

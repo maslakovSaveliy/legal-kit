@@ -64,7 +64,7 @@ Template defaults are not placeholders to ask about: the edition date is the run
 - Mode `plan` drafts the documents before any code exists: drafts only, no public page ([plan.md](plan.md#plan-mode)).
 - `.legal/drafts/<doc>.md` are documents for the owner. They may keep placeholders only the owner can fill: signature, signing date, internal numbers, unknown facts and requisites. `check_docs.py` reports them with `"blocking": false`.
 - A public page is any text the product shows its users: a legal page, the footer or owner block, banner and checkbox texts, catalog entries, a Documents screen, and the paste artifacts in `.legal/paste/`. It carries no `{{…}}` except the requisites listed in `owner.withheld`, which stay visible and go to «Сделать вам».
-- A passage the template keeps only once a fact is confirmed (a bracketed note «Заполняйте, только если …» or «оставляйте, только если …», such as the storage region `{{РЕГИОН_РАЗМЕЩЕНИЯ_БД}}` in section 5 of the policy) is left out of the public page while that fact is unknown: the page is published without the passage, the draft keeps it with its placeholder, and «Сделать вам» names the fact and the passage to add on the next run. A placeholder outside such a passage still holds the page back.
+- A passage the template keeps only once a fact is confirmed (a bracketed note «Заполняйте, только если …», «Заполняйте только после …», «оставляйте, только если …» or «… только если это сделано», such as the storage region `{{РЕГИОН_РАЗМЕЩЕНИЯ_БД}}` in section 5 of the policy and in the cookie notice) is left out of the public page while that fact is unknown: the page is published without the passage, a heading left without text goes too, the draft keeps the passage with its placeholder, and «Сделать вам» names the fact and the passage to add on the next run. A placeholder outside such a passage still holds the page back.
 - A draft with any other unresolved requisite or document fact is not integrated: no page is created from it and an existing page is not rewritten with it. The draft stays in `.legal/drafts/`, and «Сделать вам» names the missing values and the page that waits for them; the next run integrates it once `answers.json` has them.
 - Runtime values are not unknowns: a message, confirmation or consent text that reaches the product (an e-mail template, a confirmation screen) uses the project's own interpolation with the real field names, so no `{{ИМЯ}}` of the pack is left; a template engine's own `{{ order.number }}` with a Latin identifier is that interpolation, not a placeholder.
 - Wording that hides an unknown value (an underscore blank, «уточняется», a likely value) is no fix: it is the same unresolved placeholder in other words.
@@ -115,7 +115,7 @@ Drafts come first, before any option; every public file gets its own `--public` 
 | `mismatch` | always | the text differs from `answers.json`: use the confirmed value |
 | `forbidden_clause` | severity `violation` | remove or rewrite it; severity `risk` is reported without blocking and goes to «Спорно» ([Existing legal pages](#existing-legal-pages)) |
 
-Repeat until it exits 0. The pages built from the drafts carry the same text.
+Repeat until it exits 0. The pages built from the drafts carry the same text, without the passages left out under [Drafts and public pages](#drafts-and-public-pages).
 
 ## Without python3
 
