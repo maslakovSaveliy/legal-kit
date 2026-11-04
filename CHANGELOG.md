@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-11-04
+
+Light package for skills.sh, workflow fixes from the evals.
+
+### Scripts
+
+- `scan_url.py` no longer fails to parse a page on Python 3.14 (its parser reused the name `_pending` that `html.parser` now keeps for its own buffer; found on a live Tilda site, whose home page lost its forms).
+
 ### Workflow
 
 - Every assessed requirement gets the section «Пробелы и спорные места» of its card read before its status is set (`kb.py card` takes several ids); a detected feature the section calls disputed gets a `disputed` row.
@@ -20,7 +28,7 @@
 
 ### Tooling
 
-- GitHub Actions: tests (with the leak check), script `--help` and the golden `check_run` on Python 3.9 and 3.13 for every push to main and every PR.
+- GitHub Actions: tests (with the leak check), script `--help` and the golden `check_run` on Python 3.9, 3.13 and 3.14 for every push to main and every PR.
 - The runner is pinned to `ubuntu-24.04`: `ubuntu-latest` (26.04) has no Python 3.9 for `setup-python`.
 - Tests run on Python 3.9: explicit ids for the registry failure cases; the stdlib-list check skips below 3.10.
 
