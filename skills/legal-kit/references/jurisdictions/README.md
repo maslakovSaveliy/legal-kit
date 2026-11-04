@@ -29,8 +29,8 @@ Every pack provides these paths, relative to `jurisdictions/<cc>/`. Generated fi
 |---|---|---|
 | `JURISDICTION.md` | hand-written | Pack descriptor: code, id prefix, languages, scope, file list, pack-specific rules. |
 | `BASE.md` | generated | What the knowledge snapshot covers, its date and how to read the cards. |
-| `requirements.jsonl` | generated | One short record per requirement (id, applicability, norms with dates, official URLs, technical signals, what cannot be checked from code). |
-| `cards/` | generated | Full requirement cards `cards/<slug>.md`, read only when a requirement is edited or disputed. |
+| `requirements/` | generated | One short record per requirement (id, applicability, norms with dates, official URLs, technical signals, what cannot be checked from code), in `requirements/<letter>.jsonl` by direction; no file over 400 KB. |
+| `cards.tar.gz` | generated | Full requirement cards as members `cards/<slug>.md` of one archive (the skill folder stays within the limits of text snapshots); read one with `scripts/kb.py card ru:<slug>` or `tar -xzOf cards.tar.gz cards/<slug>.md`, only when a requirement is edited or disputed. |
 | `templates/` | generated | Document templates `templates/<t>/text.md` (text) and `templates/<t>/meta.md` (forks, placeholders, sources). |
 | `elements.json` | generated | Required elements of every template, with status and method. |
 | `placeholders.json` | generated | Placeholders used by templates, with hints. |

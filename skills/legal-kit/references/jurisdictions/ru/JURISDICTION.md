@@ -54,8 +54,8 @@ Each requirement record carries the owner statuses it applies to (`ul`, `ip`, `n
 |---|---|---|---|
 | `JURISDICTION.md` | hand-written | this pack | This descriptor. |
 | `BASE.md` | generated | knowledge generator | Snapshot date and coverage. |
-| `requirements.jsonl` | generated | knowledge generator | One record per requirement, id `ru:<slug>`. |
-| `cards/` | generated | knowledge generator | `cards/<slug>.md`, full text with official URLs. |
+| `requirements/` | generated | knowledge generator | `requirements/<letter>.jsonl`, one record per requirement, id `ru:<slug>`, one file per direction A–O. |
+| `cards.tar.gz` | generated | knowledge generator | Archive of `cards/<slug>.md`, full text with official URLs; read with `scripts/kb.py card ru:<slug>` or `tar -xzOf`. |
 | `templates/` | generated | template generator | `templates/<t>/text.md` and `templates/<t>/meta.md`. |
 | `elements.json` | generated | template generator | Template elements with status and method. |
 | `placeholders.json` | generated | template generator | Placeholder hints. |

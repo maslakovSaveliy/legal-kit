@@ -237,3 +237,20 @@ def test_every_requirement_has_its_card_in_the_archive():
     requirements, cards = _kb.load_requirements(REAL_KB), _kb.load_cards(REAL_KB)
     assert sorted(requirements) == sorted(cards)
     assert all(record["card"] == "cards/%s.md" % key[3:] for key, record in requirements.items())
+
+
+def test_card_links_resolve_inside_archive():
+    import re
+    cards = _kb.load_cards(REAL_KB)
+    names = {key[3:] + ".md" for key in cards}
+    templates = {p.name for p in (REAL_KB / "templates").iterdir() if p.is_dir()}
+    broken = []
+    for key, text in cards.items():
+        for target in re.findall(r"\]\(([^)\s]+)\)", text):
+            target = target.split("#", 1)[0]
+            if target.startswith(("http://", "https://")) or not target:
+                continue
+            template = re.fullmatch(r"\.\./templates/([a-z0-9-]+)/text\.md", target)
+            if not (target in names or (template and template.group(1) in templates)):
+                broken.append("%s: %s" % (key, target))
+    assert not broken, "\n".join(broken[:20])
