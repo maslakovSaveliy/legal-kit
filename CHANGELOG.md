@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-11-04
+
+Light package for skills.sh, workflow fixes from the evals.
+
 ### Workflow
 
 - Every assessed requirement gets the section «Пробелы и спорные места» of its card read before its status is set (`kb.py card` takes several ids); a detected feature the section calls disputed gets a `disputed` row.
