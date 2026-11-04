@@ -94,23 +94,27 @@ def skill_text():
 
 def test_foreign_owner_skips_russian_registries_by_identifier():
     rule = section(read("recon-prod.md"), "Public registries")
-    assert "`foreign`" in rule and "`egrul`" in rule and "`npd`" in rule
-    assert "registration number" in rule and "by name" in rule
+    assert "`egrul`, `npd` and `cbr` never run, with or without an INN" in rule
+    assert "never for a `foreign` owner" in rule and "by name" in rule and "`owner.reg_number`" in rule
+    assert "«ЕГРЮЛ не проверялся: иностранная компания»" in rule
 
 
 def test_foreign_owner_identifiers_replace_inn_and_ogrn_in_drafts():
     rule = subsection(read("documents.md"), "Placeholders")
     assert "`foreign`" in rule and "`{{СТРАНА_РЕГИСТРАЦИИ}}`" in rule and "`{{РЕГИСТРАЦИОННЫЙ_НОМЕР}}`" in rule
-    assert "`owner.ogrn`" in rule and "`owner.country`" in rule
+    assert "«страна регистрации {{СТРАНА_РЕГИСТРАЦИИ}}, регистрационный номер {{РЕГИСТРАЦИОННЫЙ_НОМЕР}}»" in rule
+    assert "`owner.reg_number`" in rule and "`owner.country`" in rule and "«по ЕГРЮЛ» is dropped" in rule
+    assert "a bare `{{ОГРН_ИЛИ_ОГРНИП}}`" in rule and "`РЕГИСТРАЦИОННЫЙ_НОМЕР` in `owner.withheld`" in rule
     schema = (SKILL / "references" / "jurisdictions" / "ru" / "owner-questions.md").read_text(encoding="utf-8")
-    ogrn = next(line for line in schema.splitlines() if line.strip().startswith('"ogrn"'))
-    assert "иностранной компании" in ogrn
+    assert any(line.strip().startswith('"reg_number"') for line in schema.splitlines())
 
 
 def test_unknown_requisite_is_not_withheld():
     assert "is not withholding" in skill_text()
     rule = subsection(read("documents.md"), "Drafts and public pages")
     assert "«не знаю»" in rule and "unavailable" in rule and "never adds" in rule
+    assert "points to the policy page the site already has" in rule
+    assert "nothing goes into `owner.withheld`" in read("intake.md")
 
 
 def test_long_disputed_sections_go_to_an_evidence_file_and_are_all_read():

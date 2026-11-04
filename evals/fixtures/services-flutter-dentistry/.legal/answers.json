@@ -20,6 +20,7 @@
     "name": "ООО \"Улыбка-тест\"",
     "inn": "0012345049",
     "ogrn": "1220000000043",
+    "reg_number": null,
     "country": "RU",
     "address": "644000, г. Омск, ул. Тестовая, д. 7",
     "email": "clinic@ulybka.test",

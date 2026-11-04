@@ -50,7 +50,7 @@
 
 1. Статус владельца: «По {{реестр}} владелец — {{статус}} {{наименование}}. Верно?» (`owner.status`; влияет на `ru:operator-pdn-po-statusu-vladelca`, `ru:onlayn-kkt-i-elektronnyy-chek`, `ru:cheki-samozanyatogo-npd`)
 2. B2C: «Покупатели — граждане, которые покупают для личных нужд. Верно?» (`audience.b2c`; `ru:nedopustimye-usloviya-oferty`, `ru:zozpp-i-samozanyatye`)
-3. Реквизиты: «В документы подставлю: {{наименование}}, ИНН {{ИНН}}, ОГРН {{ОГРН}}, адрес {{адрес}}, e-mail {{email}}, телефон {{телефон}}; ответственный за организацию обработки ПДн — {{ФИО или должность, контакт}}. Верно?» (`owner.name`, `owner.inn`, `owner.ogrn`, `owner.address`, `owner.email`, `owner.phone`, `owner.pd_officer`; `ru:svedeniya-o-vladelce-sayta`, `ru:svedeniya-o-prodavce-pri-distancionnoy-prodazhe`, `ru:vnutrennie-mery-operatora-pdn`)
+3. Реквизиты: «В документы подставлю: {{наименование}}, ИНН {{ИНН}}, ОГРН {{ОГРН}}, адрес {{адрес}}, e-mail {{email}}, телефон {{телефон}}; ответственный за организацию обработки ПДн — {{ФИО или должность, контакт}}. Верно?» Для иностранной компании вместо ИНН и ОГРН — страна и регистрационный номер. (`owner.name`, `owner.inn`, `owner.ogrn`, `owner.reg_number`, `owner.country`, `owner.address`, `owner.email`, `owner.phone`, `owner.pd_officer`; `ru:svedeniya-o-vladelce-sayta`, `ru:svedeniya-o-prodavce-pri-distancionnoy-prodazhe`, `ru:vnutrennie-mery-operatora-pdn`)
 4. Отрасль: «Признаков регулируемой отрасли {{не нашёл | нашёл: …}}. Верно?» (`business.sectors`; отраслевые требования применяются только при отраслевом признаке)
 5. Дети: «Продуктом пользуются лица младше 18 лет: {{нет | есть от 14 до 18 лет | есть младше 14 лет}}. Верно?» (`audience.minors` = `none`, `14-18` или `under-14`; `ru:nesovershennoletnie-polzovateli`, `ru:klassifikaciya-informacionnoy-produkcii-436-fz`)
 6. Выручка: «Выручка за прошлый календарный год больше 20 млн руб.?» (`business.revenue_over_20m` — только для порога `ru:prinyatie-nacionalnyh-platezhnyh-instrumentov`. Для поэтапных порогов `ru:oplata-cifrovymi-rublyami` (более 120 млн руб. с 01.09.2026, более 30 млн руб. с 01.09.2027) этого флага недостаточно: точную выручку спрашивает вопрос по этому требованию.)
@@ -85,7 +85,8 @@
     "status": "ul | ip | npd | foreign | null",
     "name": "string | null: наименование юрлица или ФИО",
     "inn": "string | null: ИНН (у ИП и самозанятого — 12 цифр)",
-    "ogrn": "string | null: ОГРН или ОГРНИП; у иностранной компании — регистрационный номер в стране регистрации",
+    "ogrn": "string | null: ОГРН или ОГРНИП; у иностранной компании null",
+    "reg_number": "string | null: регистрационный номер иностранной компании в стране регистрации; null для ul, ip, npd",
     "country": "string: страна регистрации, ISO 3166-1 alpha-2; RU по умолчанию",
     "address": "string | null: адрес по ЕГРЮЛ или ЕГРИП",
     "email": "string | null: e-mail для обращений",

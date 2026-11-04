@@ -22,6 +22,7 @@
     "name": "ООО \"Ромашка-тест\"",
     "inn": "0012345017",
     "ogrn": "1220000000010",
+    "reg_number": null,
     "country": "RU",
     "address": "119000, г. Москва, ул. Тестовая, д. 1",
     "email": "info@romashka.test",

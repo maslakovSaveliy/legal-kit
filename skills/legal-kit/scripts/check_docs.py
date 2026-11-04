@@ -70,6 +70,8 @@ RUNTIME_PLACEHOLDERS = frozenset((
 _NUMBER = r"(\d(?:[\d \u00a0\u202f-]*\d)?)"
 INN_RE = re.compile(r"(?<!\w)ИНН(?!\w)(?:\s*/\s*КПП)?[\s:№#.,\u00a0-]*" + _NUMBER + r"(?:\s*/\s*\d+)?", re.I)
 OGRN_RE = re.compile(r"(?<!\w)ОГРН(?:ИП)?(?!\w)[\s:№#.,\u00a0-]*" + _NUMBER, re.I)
+# the label a foreign company's drafts print instead of INN and OGRN (documents.md, Placeholders)
+REG_NUMBER_RE = re.compile(r"(?<!\w)регистрационный номер(?!\w)", re.I)
 GROUPING = re.compile(r"[ \u00a0\u202f-]")
 LEGAL_FORM_RE = re.compile(
     r"^(?:общество с ограниченной ответственностью|индивидуальный предприниматель|публичное акционерное общество|"
@@ -134,6 +136,7 @@ def check_numbers(path, text, starts, owner):
     """INN/OGRN checksum and mismatch issues as (line, column, issue)."""
     found = []
     inns, ogrns = [], []
+    foreign = owner is not None and owner.get("status") == "foreign"
     for match in INN_RE.finditer(text):
         value, line = GROUPING.sub("", match.group(1)), line_of(starts, match.start())
         inns.append((line, match.start(), value))
@@ -142,7 +145,11 @@ def check_numbers(path, text, starts, owner):
     for match in OGRN_RE.finditer(text):
         value, line = GROUPING.sub("", match.group(1)), line_of(starts, match.start())
         ogrns.append((line, match.start(), value))
-        if not _kb.ogrn_valid(value):
+        if foreign:
+            found.append((line, match.start(), {
+                "file": path, "line": line, "kind": "mismatch", "field": "ogrn", "value": value, "blocking": True,
+                "message": "a foreign company has no OGRN/OGRNIP: print the country and registration number"}))
+        elif not _kb.ogrn_valid(value):
             found.append((line, match.start(),
                           digits_issue(path, line, "ogrn_checksum", value, "OGRN/OGRNIP", "13 or 15 digits")))
     if owner is None:
@@ -162,7 +169,7 @@ def check_numbers(path, text, starts, owner):
             mismatch(line, column, "inn", value, "INN %s differs from the owner INN in answers.json" % value)
     expected_ogrn = owner.get("ogrn")
     for line, column, value in ogrns:
-        if not _kb.ogrn_valid(value):
+        if foreign or not _kb.ogrn_valid(value):
             continue
         if owner.get("status") == "npd":
             mismatch(line, column, "ogrn", value, "a self-employed owner (npd) has no OGRN/OGRNIP")
@@ -170,11 +177,19 @@ def check_numbers(path, text, starts, owner):
             mismatch(line, column, "ogrn", value, "the document has an OGRN but answers.json does not (not confirmed)")
         elif value != expected_ogrn:
             mismatch(line, column, "ogrn", value, "OGRN %s differs from the owner OGRN in answers.json" % value)
+    regs = []
+    if foreign:
+        regs = [(line_of(starts, m.start()), m.start(), "") for m in REG_NUMBER_RE.finditer(text)]
+        expected_reg = GROUPING.sub("", owner.get("reg_number") or "")
+        if regs and expected_reg and expected_reg not in GROUPING.sub("", text):
+            line, column, _ = regs[0]
+            mismatch(line, column, "reg_number", owner.get("reg_number"),
+                     "the registration number from answers.json is not in the document")
     name = owner.get("name")
-    if name and (inns or ogrns):
+    if name and (inns or ogrns or regs):
         core = LEGAL_FORM_RE.sub("", fold_plain(name))
         if core and core not in fold(text)[0]:
-            line, column, _ = min(inns + ogrns)
+            line, column, _ = min(inns + ogrns + regs)
             mismatch(line, column, "name", name, "the owner name from answers.json is not in the document")
     return found, inns, ogrns
 

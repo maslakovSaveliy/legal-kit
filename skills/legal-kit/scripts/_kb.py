@@ -294,7 +294,8 @@ def answers_sections(answers, source="answers.json"):
             raise KbError("%s: %r must be an object" % (source, name))
         sections.append(value)
     owner, audience, business, product = sections
-    for section, key in ((owner, "status"), (audience, "minors"), (owner, "name"), (owner, "inn"), (owner, "ogrn")):
+    for section, key in ((owner, "status"), (audience, "minors"), (owner, "name"), (owner, "inn"), (owner, "ogrn"),
+                         (owner, "reg_number")):
         if section.get(key) is not None and not isinstance(section[key], str):
             raise KbError("%s: %s must be a string or null" % (source, key))
     for section, key in ((product, "urls"), (product, "kinds"), (business, "sectors"), (owner, "withheld")):
