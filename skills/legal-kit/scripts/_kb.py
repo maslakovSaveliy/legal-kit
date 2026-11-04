@@ -134,10 +134,14 @@ def load_requirements(kb):
 
     The shard directory wins: a requirements.jsonl left next to it by an older install is ignored."""
     shards = os.path.join(str(kb), REQUIREMENTS_DIR)
+    paths = []
     if os.path.isdir(shards):
         paths = [os.path.join(shards, name) for name in sorted(os.listdir(shards)) if name.endswith(".jsonl")]
-    else:
-        paths = [os.path.join(str(kb), "requirements.jsonl")]
+    if not paths:  # no shards (or an empty folder of a partial copy): the single file of an older pack
+        legacy = os.path.join(str(kb), "requirements.jsonl")
+        if not os.path.isfile(legacy):
+            raise KbError("no requirement records: neither %s/*.jsonl nor %s" % (shards, legacy))
+        paths = [legacy]
     requirements, origin = {}, {}
     for path in paths:
         for number, line in enumerate(read_text(path).splitlines(), 1):

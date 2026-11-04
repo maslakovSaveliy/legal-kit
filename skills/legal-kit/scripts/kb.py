@@ -7,7 +7,7 @@
   kb.py extract --to <dir>                   write <dir>/cards/<slug>.md for every card
 
 A link `<slug>.md` inside a card names the card ru:<slug>. Without python3 the same card is printed by
-`tar -xzOf <kb>/cards.tar.gz cards/<slug>.md`. Exit codes: 0 ok, 2 bad input.
+`tar -xzOf cards.tar.gz cards/<slug>.md` run in the pack folder. Exit codes: 0 ok, 2 bad input.
 """
 
 import os

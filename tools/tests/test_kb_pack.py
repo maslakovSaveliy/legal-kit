@@ -254,3 +254,32 @@ def test_card_links_resolve_inside_archive():
             if not (target in names or (template and template.group(1) in templates)):
                 broken.append("%s: %s" % (key, target))
     assert not broken, "\n".join(broken[:20])
+
+
+def test_requirements_empty_shard_dir_falls_back_to_legacy_file(tmp_path):
+    (tmp_path / "requirements").mkdir()
+    write_jsonl(tmp_path / "requirements.jsonl", [{"id": "ru:old"}])
+    assert list(_kb.load_requirements(tmp_path)) == ["ru:old"]
+
+
+def test_requirements_empty_shard_dir_without_legacy_fails(tmp_path):
+    (tmp_path / "requirements").mkdir()
+    with pytest.raises(_kb.KbError, match="requirements"):
+        _kb.load_requirements(tmp_path)
+
+
+def test_docs_tar_fallback_runs_from_the_pack_folder():
+    """GNU tar of Git for Windows reads `C:/…/cards.tar.gz` as host:path; the docs name the archive relatively."""
+    import re
+    skill = ROOT / "skills" / "legal-kit"
+    docs = [skill / "SKILL.md", *sorted((skill / "references" / "workflow").glob("*.md"))]
+    commands = [(p.name, m) for p in docs for m in re.findall(r"`[^`]*tar -xzOf[^`]*`", p.read_text(encoding="utf-8"))]
+    assert commands
+    bad = [(name, cmd) for name, cmd in commands if "cd <skill>/references/jurisdictions/ru" not in cmd
+           or "tar -xzOf cards.tar.gz cards/" not in cmd]
+    assert not bad, bad
+
+
+def test_skill_md_explains_template_links_inside_cards():
+    text = (ROOT / "skills" / "legal-kit" / "SKILL.md").read_text(encoding="utf-8")
+    assert "`../templates/<t>/text.md`" in text and "references/jurisdictions/ru/templates/<t>/text.md" in text

@@ -47,7 +47,7 @@ Pack files used at run time (all under `references/jurisdictions/ru/`):
 | [owner-questions.md](references/jurisdictions/ru/owner-questions.md) | start questions, the confirmation block, the only `answers.json` schema, per-requirement questions, the document request |
 | [registries.md](references/jurisdictions/ru/registries.md) | public registries: keys, limits, what to hand to the user |
 | `requirements/<letter>.jsonl` | one record per requirement, a file per direction A–O: applicability, norms with dates, official URLs, `tech`, `cannot_check`, `templates` |
-| `cards.tar.gz` | the full cards; read one only when a record is ambiguous or disputed: `python3 <skill>/scripts/kb.py card ru:<slug>` (`--section <title>`; `search <words>`), without python3 `tar -xzOf <skill>/references/jurisdictions/ru/cards.tar.gz cards/<slug>.md`; a link `<x>.md` inside a card is the card `ru:<x>` |
+| `cards.tar.gz` | the full cards; read one only when a record is ambiguous or disputed: `python3 <skill>/scripts/kb.py card ru:<slug>` (`--section <title>`; `search <words>`), without python3 `cd <skill>/references/jurisdictions/ru && tar -xzOf cards.tar.gz cards/<slug>.md` (a relative archive path also suits the GNU tar of Git for Windows); inside a card a link `<x>.md` is the card `ru:<x>` and `../templates/<t>/text.md` is `references/jurisdictions/ru/templates/<t>/text.md` |
 | `feature-map.json` | features, owner facts and sectors to requirement ids; triggers of templates and documents |
 | `templates/<t>/meta.md`, `templates/<t>/text.md` | nine document templates: when needed, forks, placeholders, text |
 | `elements.json`, `placeholders.json`, `forbidden-clauses.json` | template elements with status and method, placeholder hints, forbidden clauses |
