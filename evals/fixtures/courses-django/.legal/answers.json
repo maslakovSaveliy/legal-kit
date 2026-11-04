@@ -20,6 +20,7 @@
     "name": "ООО \"Школа-тест\"",
     "inn": "0012345031",
     "ogrn": "1220000000032",
+    "reg_number": null,
     "country": "RU",
     "address": "620000, г. Екатеринбург, ул. Тестовая, д. 5",
     "email": "info@shkola.test",
