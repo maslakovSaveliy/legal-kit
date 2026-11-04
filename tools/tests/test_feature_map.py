@@ -20,7 +20,6 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 RU_DIR = ROOT / "skills" / "legal-kit" / "references" / "jurisdictions" / "ru"
 MAP_PATH = RU_DIR / "feature-map.json"
-REQUIREMENTS_PATH = RU_DIR / "requirements.jsonl"
 OWNER_QUESTIONS_PATH = RU_DIR / "owner-questions.md"
 CATALOG_PATH = ROOT / "skills" / "legal-kit" / "references" / "features" / "catalog.json"
 SEED_SCRIPT = ROOT / "tools" / "seed_feature_map.py"
@@ -54,7 +53,8 @@ def feature_map():
 
 @lru_cache(maxsize=None)
 def requirements():
-    records = [json.loads(line) for line in REQUIREMENTS_PATH.read_text(encoding="utf-8").splitlines() if line]
+    paths = sorted((RU_DIR / "requirements").glob("*.jsonl")) or [RU_DIR / "requirements.jsonl"]
+    records = [json.loads(line) for path in paths for line in path.read_text(encoding="utf-8").splitlines() if line]
     return {r["id"]: r for r in records}
 
 
@@ -650,3 +650,15 @@ def test_seed_takes_short_triggers_from_the_build_refs_module(tmp_path):
 def test_seed_bad_input_exits_2(tmp_path, missing):
     result = run_seed(missing, tmp_path / "nope", "--out", tmp_path / "x.json")
     assert result.returncode == 2
+
+
+def test_seed_reads_requirement_shards(tmp_path):
+    kb = tmp_path / "kb"
+    (kb / "requirements").mkdir(parents=True)
+    for letter, slug in (("B", "demo-b"), ("A", "demo-a")):
+        record = {"id": f"ru:{slug}", "dir": letter, "title": "Demo", "summary": "Demo", "trigger": "",
+                  "obligation": "general", "source_kind": "law", "subjects": [], "models": []}
+        (kb / "requirements" / f"{letter}.jsonl").write_text(json.dumps(record) + "\n", encoding="utf-8")
+    out = tmp_path / "draft.json"
+    assert run_seed("--kb", kb, "--out", out).returncode == 0
+    assert "ru:demo-a" in out.read_text(encoding="utf-8") and "ru:demo-b" in out.read_text(encoding="utf-8")

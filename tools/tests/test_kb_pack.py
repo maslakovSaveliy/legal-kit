@@ -213,3 +213,27 @@ def test_kb_missing_archive_exit_2(tmp_path):
 def test_kb_help():
     result = run_kb("--help")
     assert result.returncode == 0 and "card" in result.stdout and "extract" in result.stdout
+
+
+# ---------------------------------------------------------------- the bundled pack
+
+REAL_KB = ROOT / "skills" / "legal-kit" / "references" / "jurisdictions" / "ru"
+
+
+def test_tar_fallback_matches_kb_card():
+    import shutil
+    import subprocess
+    if not shutil.which("tar"):
+        pytest.skip("no tar on PATH")
+    cards = _kb.load_cards(REAL_KB)
+    first = next(iter(cards))
+    member = "cards/%s.md" % first[3:]
+    result = subprocess.run(["tar", "-xzOf", str(REAL_KB / "cards.tar.gz"), member], capture_output=True, timeout=60)
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.decode("utf-8") == cards[first]
+
+
+def test_every_requirement_has_its_card_in_the_archive():
+    requirements, cards = _kb.load_requirements(REAL_KB), _kb.load_cards(REAL_KB)
+    assert sorted(requirements) == sorted(cards)
+    assert all(record["card"] == "cards/%s.md" % key[3:] for key, record in requirements.items())

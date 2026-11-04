@@ -52,10 +52,12 @@ def load_json(path):
 
 def load_requirements():
     out = {}
-    for line in (KB / "requirements.jsonl").read_text(encoding="utf-8").splitlines():
-        if line.strip():
-            record = json.loads(line)
-            out[record["id"]] = record
+    paths = sorted((KB / "requirements").glob("*.jsonl")) or [KB / "requirements.jsonl"]
+    for path in paths:
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                record = json.loads(line)
+                out[record["id"]] = record
     return out
 
 
