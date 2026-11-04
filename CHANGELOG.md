@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Workflow
+
+- Every assessed requirement gets the section «Пробелы и спорные места» of its card read before its status is set (`kb.py card` takes several ids); a detected feature the section calls disputed gets a `disputed` row.
+- `report.py verify --select` requires a row for every applicable requirement (`uncovered_req`); the workflow passes `--select` in every mode and `evals/check_run.py` passes it when `.legal/evidence/select.json` exists.
+- A row whose cited norm has no date in `norm_dates` takes the record's `effective_from`, not the date of another norm.
+- A passage the template keeps only once a fact is confirmed (the storage region in the policy) is left out of the public page while the fact is unknown; the page is published and «Сделать вам» names the fact.
+- Without python3: the shape of a hand-made `select.json`, the INN and OGRN check digits and the row table of the report are spelled out.
+
 ### Packaging
 
 - The skill folder fits the text snapshot of skills.sh, which shows nothing for a skill that passes any of its limits (measured: about 200 files, about 512 KiB per file, 5–6 MB of text): 122 text files, 2.6 MB, none over 230 KB.

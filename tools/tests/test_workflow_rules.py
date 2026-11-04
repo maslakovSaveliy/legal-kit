@@ -1,0 +1,68 @@
+"""Rules of the workflow files that the evals showed missing or unclear (iteration 4).
+
+Each test pins one sentence-level rule; the wording may change, the pinned terms may not.
+"""
+
+from pathlib import Path
+
+SKILL = Path(__file__).resolve().parents[2] / "skills" / "legal-kit"
+WORKFLOW = SKILL / "references" / "workflow"
+
+
+def read(name):
+    return (WORKFLOW / name).read_text(encoding="utf-8")
+
+
+def section(text, heading):
+    start = text.index("\n## " + heading + "\n")
+    end = text.find("\n## ", start + 1)
+    return text[start:end if end != -1 else None]
+
+
+def test_passage_kept_only_when_confirmed_is_left_out_of_the_public_page():
+    rule = section(read("documents.md"), "Drafts and public pages") if "\n## Drafts and public pages\n" in read(
+        "documents.md") else read("documents.md")
+    assert "«Заполняйте, только если" in rule and "«оставляйте, только если" in rule
+    assert "`{{РЕГИОН_РАЗМЕЩЕНИЯ_БД}}`" in rule and "left out of the public page" in rule
+
+
+def test_row_date_falls_back_to_the_record_date_when_the_cited_norm_has_none():
+    for name in ("report.md", "applicability.md"):
+        text = read(name)
+        assert "no date in `norm_dates`" in text and "the record's `effective_from`" in text, name
+
+
+def test_manual_verify_checks_that_every_applicable_id_has_a_row():
+    manual = section(read("report.md"), "Without python3")
+    assert "every id of `applicable`" in manual and "uncovered_req" in read("report.md")
+
+
+def test_manual_select_json_has_a_shape():
+    manual = section(read("applicability.md"), "Without python3")
+    for key in ('"applicable"', '"why"', '"not_applicable"', '"templates"', '"documents"', '"not_detectable"'):
+        assert key in manual, key
+
+
+def test_manual_inn_and_ogrn_check_digits_are_spelled_out():
+    manual = section(read("documents.md"), "Without python3")
+    assert "_kb.py" not in manual
+    for weights in ("2, 4, 10, 3, 5, 9, 4, 6, 8", "7, 2, 4, 10, 3, 5, 9, 4, 6, 8", "3, 7, 2, 4, 10, 3, 5, 9, 4, 6, 8"):
+        assert weights in manual, weights
+    assert "mod 11 mod 10" in manual and "mod 13 mod 10" in manual
+
+
+def test_manual_render_gives_the_row_table():
+    manual = section(read("report.md"), "Without python3")
+    assert "| Требование | Статус | Уровень | Норма | Уверенность | Источник | Доказательства |" in manual
+
+
+def test_cards_disputed_section_is_read_for_every_assessed_requirement():
+    text = read("applicability.md")
+    assert '--section "Пробелы и спорные места"' in text and "except those you mark `n_a`" in text
+    assert "kb.py card ru:<a> ru:<b>" in text
+
+
+def test_verify_is_run_with_select_in_every_mode():
+    assert "[--select" not in read("report.md") and "--select .legal/evidence/select.json" in read("report.md")
+    skill = (SKILL / "SKILL.md").read_text(encoding="utf-8")
+    assert "with `--answers .legal/answers.json` and `--select .legal/evidence/select.json`" in skill

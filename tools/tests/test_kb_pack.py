@@ -160,6 +160,26 @@ def test_kb_card_section(pack):
     assert result.stdout == "## Что проверить\n\nСогласие на обработку.\n\n"
 
 
+def test_kb_card_several_refs_print_each_under_a_header(pack):
+    result = run_kb("card", "ru:a", "b", "--kb", pack)
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == "==> ru:a <==\n" + CARD_A + "\n==> ru:b <==\n" + CARD_B
+
+
+def test_kb_card_several_refs_with_section(tmp_path):
+    kb = tmp_path / "kb"
+    make_archive(kb / "cards.tar.gz", {"cards/a.md": CARD_A, "cards/c.md": CARD_A.replace("ru:a", "ru:c")})
+    result = run_kb("card", "ru:a", "ru:c", "--section", "Что проверить", "--kb", kb)
+    assert result.returncode == 0, result.stderr
+    part = "## Что проверить\n\nСогласие на обработку.\n\n"
+    assert result.stdout == "==> ru:a <==\n" + part + "\n==> ru:c <==\n" + part
+
+
+def test_kb_card_several_refs_one_unknown_fails(pack):
+    result = run_kb("card", "ru:a", "ru:nope", "--kb", pack)
+    assert result.returncode == 2 and "ru:nope" in json.loads(result.stdout)["error"]
+
+
 def test_kb_card_unknown_section_lists_sections(pack):
     result = run_kb("card", "ru:a", "--section", "Нет такой", "--kb", pack)
     assert result.returncode == 2

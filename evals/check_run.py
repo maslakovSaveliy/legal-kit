@@ -179,6 +179,9 @@ def check_verify(args, report, sources, answers):
         cmd += ["--sources", sources]
     if answers.is_file():
         cmd += ["--answers", answers]
+    select = report.parent / "evidence" / "select.json"
+    if select.is_file():
+        cmd += ["--select", select]
     if args.today:
         cmd += ["--today", args.today]
     result = run_script(args.scripts_dir / "report.py", cmd, args)

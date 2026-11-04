@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Read the requirement cards of the pack from cards.tar.gz. Python 3.9+, standard library only.
 
-  kb.py card <ru:slug> [--section <title>]   print a card (or one of its "## " sections) as Markdown
+  kb.py card <ru:slug>... [--section <title>]  print cards (or one "## " section of each) as Markdown;
+                                               with several ids each one follows a line "==> ru:<slug> <=="
   kb.py search <text> [--max N]              JSON list of {id, line, text}: case-insensitive substring
   kb.py list                                 JSON list of {id, card}
   kb.py extract --to <dir>                   write <dir>/cards/<slug>.md for every card
@@ -25,8 +26,8 @@ import argparse  # noqa: E402
 def build_parser():
     parser = argparse.ArgumentParser(prog="kb.py", description="Read requirement cards from the pack's cards.tar.gz.")
     sub = parser.add_subparsers(dest="command", required=True)
-    card = sub.add_parser("card", help="print one card as Markdown")
-    card.add_argument("ref", help="ru:<slug>, <slug> or cards/<slug>.md")
+    card = sub.add_parser("card", help="print cards as Markdown")
+    card.add_argument("ref", nargs="+", help="ru:<slug>, <slug> or cards/<slug>.md; several ids print in turn")
     card.add_argument("--section", help='print only the "## <title>" section')
     search = sub.add_parser("search", help="find a text in all cards (JSON)")
     search.add_argument("text")
@@ -90,8 +91,14 @@ def main(argv=None):
     try:
         cards = _kb.load_cards(args.kb)
         if args.command == "card":
-            text = card_text(cards, args.ref)
-            sys.stdout.write(section(text, args.section) if args.section else text)
+            parts = []
+            for ref in args.ref:
+                text = card_text(cards, ref)
+                parts.append((_kb.card_ref(ref), section(text, args.section) if args.section else text))
+            if len(parts) == 1:
+                sys.stdout.write(parts[0][1])
+            else:
+                sys.stdout.write("\n".join("==> %s <==\n%s" % part for part in parts))
             return 0
         if args.command == "search":
             if args.max < 1:
