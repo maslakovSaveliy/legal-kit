@@ -127,3 +127,89 @@ def test_card_ref_forms(ref):
 def test_card_ref_rejects_garbage(ref):
     with pytest.raises(_kb.KbError):
         _kb.card_ref(ref)
+
+
+# ---------------------------------------------------------------- scripts/kb.py
+
+KB_PY = SCRIPTS / "kb.py"
+
+
+def run_kb(*args, cwd=None):
+    import subprocess
+    return subprocess.run([sys.executable, str(KB_PY), *map(str, args)], capture_output=True, text=True,
+                          encoding="utf-8", timeout=60, cwd=cwd)
+
+
+@pytest.fixture
+def pack(tmp_path):
+    kb = tmp_path / "kb"
+    make_archive(kb / "cards.tar.gz", {"cards/a.md": CARD_A, "cards/b.md": CARD_B})
+    return kb
+
+
+def test_kb_card_prints_text(pack):
+    for ref in ("ru:a", "a", "cards/a.md"):
+        result = run_kb("card", ref, "--kb", pack)
+        assert result.returncode == 0, result.stderr
+        assert result.stdout == CARD_A
+
+
+def test_kb_card_section(pack):
+    result = run_kb("card", "ru:a", "--section", "Что проверить", "--kb", pack)
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == "## Что проверить\n\nСогласие на обработку.\n\n"
+
+
+def test_kb_card_unknown_section_lists_sections(pack):
+    result = run_kb("card", "ru:a", "--section", "Нет такой", "--kb", pack)
+    assert result.returncode == 2
+    error = json.loads(result.stdout)["error"]
+    assert "Что проверить" in error and "Источники" in error
+
+
+def test_kb_card_unknown_id_exit_2(pack):
+    result = run_kb("card", "ru:nope", "--kb", pack)
+    assert result.returncode == 2
+    assert json.loads(result.stdout) == {"error": "no card ru:nope; try: kb.py search <words>"}
+    assert "Traceback" not in result.stderr
+
+
+def test_kb_search_case_insensitive_and_max(pack):
+    result = run_kb("search", "ОФЕРТ", "--kb", pack)
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout) == [{"id": "ru:b", "line": 7, "text": "Текст про оферту."}]
+    limited = json.loads(run_kb("search", "карточка", "--max", "1", "--kb", pack).stdout)
+    assert [hit["id"] for hit in limited] == ["ru:a"]
+
+
+def test_kb_list(pack):
+    result = run_kb("list", "--kb", pack)
+    assert json.loads(result.stdout) == [{"id": "ru:a", "card": "cards/a.md"}, {"id": "ru:b", "card": "cards/b.md"}]
+
+
+def test_kb_extract_writes_card_files(pack, tmp_path):
+    out = tmp_path / "out"
+    result = run_kb("extract", "--to", out, "--kb", pack)
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout) == {"extracted": 2, "dir": str(out)}
+    assert (out / "cards" / "a.md").read_text(encoding="utf-8") == CARD_A
+    assert sorted(p.name for p in (out / "cards").iterdir()) == ["a.md", "b.md"]
+
+
+def test_kb_extract_writes_only_card_files(tmp_path):
+    kb = tmp_path / "kb"
+    make_archive(kb / "cards.tar.gz", {"cards/a.md": CARD_A, "../evil.md": "x"})
+    out = tmp_path / "out"
+    result = run_kb("extract", "--to", out, "--kb", kb)
+    assert result.returncode == 2
+    assert not (tmp_path / "evil.md").exists() and not out.exists()
+
+
+def test_kb_missing_archive_exit_2(tmp_path):
+    result = run_kb("list", "--kb", tmp_path)
+    assert result.returncode == 2 and "cards.tar.gz" in json.loads(result.stdout)["error"]
+
+
+def test_kb_help():
+    result = run_kb("--help")
+    assert result.returncode == 0 and "card" in result.stdout and "extract" in result.stdout
