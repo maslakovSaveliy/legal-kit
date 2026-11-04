@@ -85,7 +85,7 @@
     "status": "ul | ip | npd | foreign | null",
     "name": "string | null: наименование юрлица или ФИО",
     "inn": "string | null: ИНН (у ИП и самозанятого — 12 цифр)",
-    "ogrn": "string | null: ОГРН или ОГРНИП",
+    "ogrn": "string | null: ОГРН или ОГРНИП; у иностранной компании — регистрационный номер в стране регистрации",
     "country": "string: страна регистрации, ISO 3166-1 alpha-2; RU по умолчанию",
     "address": "string | null: адрес по ЕГРЮЛ или ЕГРИП",
     "email": "string | null: e-mail для обращений",

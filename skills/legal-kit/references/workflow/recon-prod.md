@@ -71,6 +71,8 @@ Registries confirm the owner's identity and status and give sector evidence. The
 
 Without an INN no INN-keyed lookup runs; the INN is asked in the confirmation block, never guessed from a name. Lookups never wait for the user: they run with what is known and the run goes on.
 
+A foreign owner (`owner.status` `foreign`) has no OGRN and has an INN only if the owner gives one. Then `egrul` and `npd` do not run, and that is no error and no registry entry. The owner's identity comes from the footer, the owner's replies and the company registry of its country, which the skill does not query: the country goes to `owner.country`, the registration number to `owner.ogrn` ([documents.md](documents.md#placeholders)), and both are confirmation items. Without an INN the RKN registry of personal-data operators is searched by name in a browser, or handed to the user as `manual` with the company name as the key.
+
 ### Commands
 
 ```sh

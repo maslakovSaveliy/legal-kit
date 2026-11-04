@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Workflow
+
+- A foreign owner: `egrul` and `npd` do not run without an INN, the RKN operators registry is searched by name or handed to the user; drafts of the policy, consent, cookie and offer templates print the country and registration number instead of INN and OGRN; `owner.ogrn` holds the foreign registration number.
+- `owner.withheld` holds only what the owner refused to give: an owner who does not know a requisite or is unavailable is not withholding it, and texts that need no unknown value are still published, linking only to pages that exist.
+- The disputed sections of many cards may be written to `.legal/evidence/disputed-sections.md` and read card by card; every section is still read.
+- The «Предложения скилла» row is written only when a proposal reached a public page, in SKILL.md as in report.md.
+- The no-repo step points to the no-code guide; the guide notes that `data-tilda-cookie-type` on counters does not show they wait for consent.
+
 ## [0.2.1] - 2026-11-04
 
 Light package for skills.sh, workflow fixes from the evals.
