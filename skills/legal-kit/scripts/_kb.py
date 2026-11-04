@@ -1,6 +1,6 @@
 """Shared helpers for the legal-kit scripts. Python 3.9+, standard library only.
 
-Reads a jurisdiction pack (requirements.jsonl, elements.json, forbidden-clauses.json,
+Reads a jurisdiction pack (requirements/*.jsonl, cards.tar.gz, elements.json, forbidden-clauses.json,
 feature-map.json, BASE.md) and `.legal/answers.json`; holds the source allowlists and
 the INN/OGRN checksum rules. Every script imports this module first: it also makes
 sure the stdlib `select` module wins over the sibling select.py.
@@ -10,6 +10,7 @@ import json
 import os
 import re
 import sys
+import tarfile
 from datetime import date, datetime, timezone
 from urllib.parse import urlsplit
 
@@ -48,6 +49,10 @@ DEFAULT_KB = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir,
                           "jurisdictions", "ru")
 DEFAULT_CATALOG = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "references", "features",
                                "catalog.json")
+
+REQUIREMENTS_DIR = "requirements"
+CARDS_ARCHIVE = "cards.tar.gz"
+CARD_MEMBER_RE = re.compile(r"^cards/([a-z0-9-]+)\.md$")
 
 _DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
@@ -125,20 +130,60 @@ def load_json(path):
 
 
 def load_requirements(kb):
-    """requirements.jsonl -> {id: record}, in file order."""
-    path = os.path.join(str(kb), "requirements.jsonl")
-    requirements = {}
-    for number, line in enumerate(read_text(path).splitlines(), 1):
-        if not line.strip():
-            continue
-        try:
-            record = json.loads(line)
-        except ValueError as exc:
-            raise KbError("%s line %d is not valid JSON: %s" % (path, number, exc))
-        if not isinstance(record, dict) or not record.get("id"):
-            raise KbError("%s line %d has no id" % (path, number))
-        requirements[record["id"]] = record
-    return requirements
+    """requirements/*.jsonl (or the single requirements.jsonl of an older pack) -> {id: record}, sorted by id.
+
+    The shard directory wins: a requirements.jsonl left next to it by an older install is ignored."""
+    shards = os.path.join(str(kb), REQUIREMENTS_DIR)
+    if os.path.isdir(shards):
+        paths = [os.path.join(shards, name) for name in sorted(os.listdir(shards)) if name.endswith(".jsonl")]
+    else:
+        paths = [os.path.join(str(kb), "requirements.jsonl")]
+    requirements, origin = {}, {}
+    for path in paths:
+        for number, line in enumerate(read_text(path).splitlines(), 1):
+            if not line.strip():
+                continue
+            try:
+                record = json.loads(line)
+            except ValueError as exc:
+                raise KbError("%s line %d is not valid JSON: %s" % (path, number, exc))
+            if not isinstance(record, dict) or not record.get("id"):
+                raise KbError("%s line %d has no id" % (path, number))
+            if record["id"] in origin:
+                raise KbError("%s is in both %s and %s" % (record["id"], origin[record["id"]], path))
+            origin[record["id"]] = path
+            requirements[record["id"]] = record
+    return {key: requirements[key] for key in sorted(requirements)}
+
+
+def card_ref(ref):
+    """'ru:<slug>', '<slug>', '<slug>.md' or 'cards/<slug>.md' -> 'ru:<slug>'."""
+    text = str(ref or "").strip()
+    slug = text[3:] if text.startswith("ru:") else text
+    if slug.startswith("cards/"):
+        slug = slug[len("cards/"):]
+    if slug.endswith(".md"):
+        slug = slug[:-3]
+    if not CARD_MEMBER_RE.match("cards/%s.md" % slug):
+        raise KbError("not a card reference: %r (expected ru:<slug>)" % (ref,))
+    return "ru:" + slug
+
+
+def load_cards(kb):
+    """cards.tar.gz -> {'ru:<slug>': text}, sorted by id. Members are read in memory, never extracted;
+    a member that is not a plain file named cards/<slug>.md raises KbError."""
+    path = os.path.join(str(kb), CARDS_ARCHIVE)
+    cards = {}
+    try:
+        with tarfile.open(path, "r:gz") as archive:
+            for member in archive.getmembers():
+                match = CARD_MEMBER_RE.match(member.name)
+                if not match or not member.isfile():
+                    raise KbError("%s: unexpected member %r" % (path, member.name))
+                cards["ru:" + match.group(1)] = archive.extractfile(member).read().decode("utf-8", "replace")
+    except (OSError, EOFError, tarfile.TarError) as exc:
+        raise KbError("cannot read %s: %s" % (path, exc))
+    return {key: cards[key] for key in sorted(cards)}
 
 
 def load_elements(kb):
