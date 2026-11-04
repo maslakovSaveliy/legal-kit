@@ -6,6 +6,10 @@
 
 Light package for skills.sh, workflow fixes from the evals.
 
+### Scripts
+
+- `scan_url.py` no longer fails to parse a page on Python 3.14 (its parser reused the name `_pending` that `html.parser` now keeps for its own buffer; found on a live Tilda site, whose home page lost its forms).
+
 ### Workflow
 
 - Every assessed requirement gets the section «Пробелы и спорные места» of its card read before its status is set (`kb.py card` takes several ids); a detected feature the section calls disputed gets a `disputed` row.

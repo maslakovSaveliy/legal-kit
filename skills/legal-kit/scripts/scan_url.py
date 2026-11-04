@@ -155,7 +155,7 @@ class PageParser(HTMLParser):
         self.forms = []
         self._form = None
         self._label_stack = []   # {for, text, boxes}
-        self._pending = None     # checkbox collecting trailing label text
+        self._pending_box = None     # checkbox collecting trailing label text
         self.assets = {"script": set(), "iframe": set(), "img": set(), "link": set()}
         self.inline_scripts = []
         self._script = None
@@ -230,8 +230,8 @@ class PageParser(HTMLParser):
             self._script.append(data)
         for label in self._label_stack:
             label["text"].append(data)
-        if self._pending is not None and len(self._pending["label"]) < 160:
-            self._pending["label"] = (self._pending["label"] + " " + data.strip()).strip()
+        if self._pending_box is not None and len(self._pending_box["label"]) < 160:
+            self._pending_box["label"] = (self._pending_box["label"] + " " + data.strip()).strip()
 
     # -- forms ----------------------------------------------------------
     def _form_control(self, tag, attrs):
@@ -244,14 +244,14 @@ class PageParser(HTMLParser):
                 label["boxes"].append(box)
             self._form["checkboxes"].append(box)
             if not self._label_stack:  # text of an enclosing <label> is added when the label closes
-                self._pending = box
+                self._pending_box = box
         elif tag == "button" or input_type in SKIPPED_INPUT_TYPES:
             return
         elif name and name not in self._form["fields"]:
             self._form["fields"].append(name)
 
     def _end_pending(self):
-        self._pending = None
+        self._pending_box = None
 
     def _close_form(self):
         form = self._form

@@ -843,6 +843,22 @@ def test_scan_url_forms_with_checkboxes(scanned):
     assert search["method"] == "get" and search["fields"] == ["q"] and search["has_consent_checkbox"] is False
 
 
+def test_scan_url_parser_survives_chunks_cut_inside_a_tag():
+    # html.parser of Python 3.14 buffers short feeds in its own `_pending` list; the page parser must not
+    # reuse that name. A chunk ending inside a tag, then shorter chunks, is what a real crawl feeds.
+    module = load("scan_url")
+    page = ('<form action="/send"><input type="checkbox" name="agree"> Согласен на обработку '
+            'персональных данных <a href="/privacy">политика</a><input name="phone"></form>')
+    cut = page.index('href="/privacy"') + 3
+    parser = module.PageParser("https://example.test/")
+    for part in (page[:cut], page[cut:cut + 4], page[cut + 4:cut + 9], page[cut + 9:]):
+        parser.feed(part)
+    parser.close()
+    assert [link["href"] for link in parser.links] == ["/privacy"]
+    (form,) = parser.forms
+    assert form["fields"] == ["phone"] and form["has_consent_checkbox"] is True
+
+
 def test_scan_url_set_cookie_of_first_response_without_values(scanned):
     _, out, raw = scanned
     cookies = {c["name"]: c for c in out["cookies"]}
