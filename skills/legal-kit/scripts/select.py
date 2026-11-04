@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Select the requirements that apply to a product. Python 3.9+, standard library only.
 
-Reads <kb>/requirements.jsonl, <kb>/feature-map.json, <kb>/documents/*.md and, optionally,
+Reads <kb>/requirements/*.jsonl, <kb>/feature-map.json, <kb>/documents/*.md and, optionally,
 .legal/answers.json (canonical schema in owner-questions.md). The applicable set is
 always + detected features + owner facts + sectors passed explicitly (confirmed), then
 narrowed by the requirement's subjects/models/products. A requirement with obligation

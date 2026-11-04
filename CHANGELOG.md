@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Packaging
+
+- The skill folder fits the text snapshot of skills.sh, which shows nothing for a skill that passes any of its limits (measured: about 200 files, about 512 KiB per file, 5–6 MB of text): 122 text files, 2.6 MB, none over 230 KB.
+- The 227 requirement cards are one archive `references/jurisdictions/ru/cards.tar.gz` (members `cards/<slug>.md`, byte-identical to the former files); `scripts/kb.py` prints a card or one section, searches the cards, lists them and extracts them; without python3, `tar -xzOf cards.tar.gz cards/<slug>.md`.
+- `requirements.jsonl` is split by direction into `requirements/A.jsonl` … `O.jsonl`; the records are unchanged. The scripts read the shards and ignore a `requirements.jsonl` left by an older install.
+- Templates name a card by its id (`ru:<slug>`) instead of linking to a file.
+- The generator writes the archive deterministically and leaves it untouched when its members did not change; `--check` compares members. Tests guard the snapshot budget, allow no other binary in the skill folder and scan the archive for private patterns.
+
 ### Tooling
 
 - GitHub Actions: tests (with the leak check), script `--help` and the golden `check_run` on Python 3.9 and 3.13 for every push to main and every PR.

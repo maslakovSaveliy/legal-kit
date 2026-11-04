@@ -21,7 +21,7 @@ needs a sector group in business.sectors whose feature-map.json entry lists that
 the rule is off.
 render prints Markdown (sections by bucket, rows grouped by requirement direction).
 
-Reads the jurisdiction pack (requirements.jsonl, elements.json, BASE.md). Exit codes: 0 ok, 1 verify
+Reads the jurisdiction pack (requirements/*.jsonl, elements.json, BASE.md). Exit codes: 0 ok, 1 verify
 found issues, 2 bad input.
 """
 

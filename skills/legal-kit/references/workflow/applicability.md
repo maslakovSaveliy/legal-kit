@@ -39,7 +39,7 @@ No other flag is needed when the answers are passed. `--subject`, `--models`, `-
 | `not_detectable` | requirements no scanner or answer can establish, with what to ask the owner; they go to the report's `owner_checklist` ([report.md](report.md#reportjson)) |
 | `warnings` | features or sectors missing from the map, unknown ids, a map without trigger sections |
 
-Read `warnings`: a feature the map does not know brings no requirement; check it by hand against `requirements.jsonl` and, if a topic has no norm in the base, take it to research ([research-rules.md](research-rules.md)). Templates and documents are still candidates: documents.md confirms each one against its own trigger.
+Read `warnings`: a feature the map does not know brings no requirement; check it by hand against `requirements/*.jsonl` and, if a topic has no norm in the base, take it to research ([research-rules.md](research-rules.md)). Templates and documents are still candidates: documents.md confirms each one against its own trigger.
 
 ## The feature map
 
@@ -75,7 +75,7 @@ Both are reported as platform rules: `source` `base`, `basis` `platform`, `level
 
 ## Assess each requirement
 
-For each applicable id read its record in `requirements.jsonl` (one line, `"id":"ru:<slug>"`):
+For each applicable id read its record in `requirements/<letter>.jsonl` (one line, `"id":"ru:<slug>"`; `grep -rhF` over the folder finds it):
 
 - `trigger`, `summary`, `obligation`, `subjects`, `models`, `products`: does it really apply to this product; a feature can trigger a requirement whose condition the evidence does not meet.
 - `tech[]`: what to look for in the product. Each item has `kind` `norm`, `practice`, `interpretation`, `inference` or `platform`; the kind of the item a row rests on becomes the row's `basis`.
@@ -83,7 +83,7 @@ For each applicable id read its record in `requirements.jsonl` (one line, `"id":
 - `norm_dates`, `effective_from`, `official_urls`, `source_kind`, `legal_confidence`: the row's norm, dates, sources and the ceiling of its level ([report.md](report.md#level-and-basis)).
 - `templates`: the documents that implement it.
 
-Open `cards/<slug>.md` only when the record is not enough: an ambiguous trigger, a disputed point, the exact periods or wording a document needs.
+Open the card only when the record is not enough: an ambiguous trigger, a disputed point, the exact periods or wording a document needs. Cards are packed in `cards.tar.gz`: `python3 <skill>/scripts/kb.py card ru:<slug>` prints one (`--section <title>` one section, `kb.py search <words>` finds a text across cards, `kb.py extract --to <dir>` writes them all as files to read).
 
 Then set the status:
 
@@ -117,7 +117,7 @@ Do what `select.py` does by hand, with the files under `<skill>/references/juris
 
 1. Owner facts from `answers.json`: `subject:<owner.status>`; `b2c` if `audience.b2c` is true; `minors` if `audience.minors` is `14-18` or `under-14`; `revenue_over_20m` if true; `domain_ru` if a host in `product.urls` ends in `.ru`, `.рф` (`.xn--p1ai`) or `.su`.
 2. Collect candidate ids from `feature-map.json`: `always`, plus `features[<id>]` for each confirmed feature, plus `owner_facts[<fact>]` for each fact, plus `sectoral[<group>].requirements` for each group in `business.sectors`.
-3. For each id find its line: `grep -F '"id":"ru:<slug>"' <skill>/references/jurisdictions/ru/requirements.jsonl`. Drop it when the owner status is not in `subjects`, or neither model in `models`, or no product kind in `products` (an empty list means no restriction), or its `obligation` is `sectoral` and no confirmed group lists it.
+3. For each id find its line: `grep -rhF '"id":"ru:<slug>"' <skill>/references/jurisdictions/ru/requirements/`. A card, when needed: `tar -xzOf <skill>/references/jurisdictions/ru/cards.tar.gz cards/<slug>.md`. Drop it when the owner status is not in `subjects`, or neither model in `models`, or no product kind in `products` (an empty list means no restriction), or its `obligation` is `sectoral` and no confirmed group lists it.
 4. `future_from`: the latest date among `norm_dates[].from` and `effective_from`, if it is after the run date.
 5. Templates and documents: a name in the map's `templates` or `documents` section applies when it has `always`, or one of its `features` was found, or one of its `facts` (owner facts and confirmed groups) holds.
 6. `not_detectable`: entries of the map's `not_detectable` whose id is not already a candidate and fits the owner, model and product filters.

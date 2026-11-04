@@ -151,7 +151,7 @@ python3 <skill>/scripts/report.py verify .legal/report.json --kb <skill>/referen
 | Rule | Fix |
 |---|---|
 | `missing_field`, `bad_enum`, `bad_type` | complete the row or top-level key with the allowed values and types |
-| `unknown_req`, `unknown_element` | use an id that exists in `requirements.jsonl` or `elements.json`; a topic outside the base gets `req` `null` |
+| `unknown_req`, `unknown_element` | use an id that exists in `requirements/*.jsonl` or `elements.json`; a topic outside the base gets `req` `null` |
 | `element_req_mismatch` | name an element of this requirement, or set `element` to `null` |
 | `mandatory_unsupported`, `conditional_unsupported` | the row does not earn an obligation level: lower it to `interpretation` or `recommended`, never bend the basis or source to keep it |
 | `level_basis_mismatch` | interpretation, practice, inference and market rows carry only `recommended` or `interpretation` |
@@ -192,7 +192,7 @@ Short, in the user's language:
 
 - Verify by hand:
   - every row has the fields above with allowed values, and the top-level keys are all present;
-  - each `req` exists (`grep -F '"id":"<id>"' <skill>/references/jurisdictions/ru/requirements.jsonl`) and each `element` exists in `<skill>/references/jurisdictions/ru/elements.json` with `req` in its `requirements`;
+  - each `req` exists (`grep -rhF '"id":"<id>"' <skill>/references/jurisdictions/ru/requirements/`) and each `element` exists in `<skill>/references/jurisdictions/ru/elements.json` with `req` in its `requirements`;
   - every `mandatory` or `conditional` row meets all conditions of [Level and basis](#level-and-basis);
   - a `mandatory` or `conditional` row (status other than `n_a`) of a requirement with `obligation` `sectoral` has a group in `business.sectors` whose `sectoral` entry in `feature-map.json` lists its id;
   - rows of `present`, `missing`, `partial` have evidence;
