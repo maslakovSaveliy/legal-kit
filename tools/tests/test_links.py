@@ -117,3 +117,11 @@ def test_template_slug_equal_to_card_slug_means_the_card_for_bare_slugs():
     ctx = make_ctx(card_slugs={"soglasie"}, template_slugs={"soglasie"})
     out = sanitize("[[soglasie|карточка]], [c](soglasie.md), [t](../references/shablon-soglasie.md)", ctx)
     assert out == "[карточка](soglasie.md), [c](soglasie.md), [t](../templates/soglasie/text.md)"
+
+
+def test_links_none_href_renders_id():
+    ctx = make_ctx(card_href=lambda slug: None)
+    md = "[[politika|политика]] ([Политика](politika.md)), [Согласие](soglasie.md), [[shablon-forma|шаблон]]"
+    out = sanitize(md, ctx)
+    assert out == "политика (`ru:politika`), Согласие (`ru:soglasie`), [шаблон](../templates/forma/text.md)"
+    assert sanitize(out, ctx) == out

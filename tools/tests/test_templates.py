@@ -35,7 +35,7 @@ def make_ctx(**overrides):
         card_slugs={"demo-consent", "demo-policy"},
         template_slugs={"demo-form", "demo-other"},
         raw_urls={"raw/articles/demo-official.md": RAW_URL},
-        card_href=lambda slug: f"../../cards/{slug}.md",
+        card_href=lambda slug: None,
         template_href=lambda slug: f"../{slug}/text.md",
     )
     params.update(overrides)
@@ -368,7 +368,7 @@ def test_clean_rewrites_links_outside_fences_and_keeps_fences_verbatim():
         "Конец, см. discovery."
     )
     out = tpl.clean(md, make_ctx())
-    assert out.split("\n")[0] == "Смотри [карточку](../../cards/demo-consent.md) и [Политика](../../cards/demo-policy.md)."
+    assert out.split("\n")[0] == "Смотри карточку (`ru:demo-consent`) и Политика (`ru:demo-policy`)."
     assert [text for fenced, text in tpl.segments(out) if fenced] == [text for fenced, text in tpl.segments(md) if fenced]
     assert out.split("\n")[-1] == "Конец, см. предварительный поиск."
 
@@ -383,7 +383,7 @@ def test_render_text_has_sections_three_and_four_only():
     assert tpl.fenced_blocks(out) == tpl.fenced_blocks(t.section_text(3))
     assert "See Also" not in out and "Sources" not in out
     assert "[Согласие]" not in out  # a bare link to a concept file is reduced to its text
-    assert "[Политика](../../cards/demo-policy.md)" in out
+    assert "Политика (`ru:demo-policy`)" in out and "../../cards/" not in out
     assert "[[" not in "\n".join(t for fenced, t in tpl.segments(out) if not fenced)
 
 
@@ -402,7 +402,7 @@ def test_render_meta_has_sections_one_five_six_and_frontmatter():
     ]
     headings = [h for level, h in tpl.outline(out) if level == 2]
     assert headings == ["1. Назначение и когда нужен", "5. Что заполнить и проверить владельцу", "6. Спорные места и варианты"]
-    assert "[Согласие на обработку](../../cards/demo-consent.md)" in out
+    assert "Согласие на обработку (`ru:demo-consent`)" in out
     assert "[Шаблон: рассылка](../demo-other/text.md)" in out
     assert f"[закон]({RAW_URL})" in out
     assert "Хаб" in out and "demo-hub" not in out
@@ -495,7 +495,7 @@ def test_text_files_link_to_other_templates_and_cards_relative_to_their_folder(t
     meta = (out / "templates" / "demo-other" / "meta.md").read_text(encoding="utf-8")
     assert "[Шаблон: демо-форма](../demo-form/text.md)" in meta
     text = (out / "templates" / "demo-form" / "text.md").read_text(encoding="utf-8")
-    assert "(../../cards/demo-policy.md)" in text
+    assert "(`ru:demo-policy`)" in text and "cards/" not in text
 
 
 def test_build_is_deterministic(topic, tmp_path):
@@ -573,7 +573,7 @@ EXPECTED_TEMPLATES = [
 
 @pytest.fixture(scope="module")
 def real(tmp_path_factory):
-    """The pack of the real topic, built by the CLI (cards, requirements.jsonl and the template files)."""
+    """The pack of the real topic, built by the CLI (cards.tar.gz, requirements/*.jsonl and the template files)."""
     import build_knowledge  # imported here: the unit tests above do not need the card generator
 
     topic = Path(WIKI)
@@ -668,7 +668,8 @@ def test_an_element_without_a_norm_is_never_a_norm(real):
 def test_every_requirement_exists_in_requirements_jsonl(real):
     known = {
         json.loads(line)["id"]
-        for line in (real["out"] / "requirements.jsonl").read_text(encoding="utf-8").splitlines()
+        for shard in sorted((real["out"] / "requirements").glob("*.jsonl"))
+        for line in shard.read_text(encoding="utf-8").splitlines()
     }
     used = {r for row in read_json(real, "elements.json") for r in row["requirements"]}
     assert used and used <= known, sorted(used - known)

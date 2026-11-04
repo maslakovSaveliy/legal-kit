@@ -511,8 +511,8 @@ def render_readme(templates: list, elements: list, placeholders: dict) -> str:
         "`method` — на чём держится элемент: `norm`, `practice` (инженерная практика, а также пустая ячейка "
         "«Норма»), `interpretation` (трактовка, позиция органа, не норма), `inference` (вывод), `platform` (правило "
         "магазина или площадки). Как «обязательный» элемент подаётся только при `status` «обязательно», "
-        "`method` `norm` и источнике из базы или с официальным URL. `requirements` — id карточек (`ru:<slug>`, "
-        "файл `../cards/<slug>.md`).",
+        "`method` `norm` и источнике из базы или с официальным URL. `requirements` — id карточек (`ru:<slug>`; "
+        "карточка: `python3 scripts/kb.py card ru:<slug>`).",
         "- `placeholders.json` — плейсхолдеры всех шаблонов: подсказка (что вписать) и шаблоны, где имя встречается.",
         "- `forbidden-clauses.json` — формулировки, которых не должно быть в документе, и что они нарушают; "
         "`severity`: `violation` или `risk` (зона риска, не бесспорное нарушение).",
@@ -561,7 +561,7 @@ def build_templates(topic, out, ctx: LinkCtx) -> dict:
         card_slugs=set(ctx.card_slugs),
         template_slugs={t.slug for t in templates},
         raw_urls=ctx.raw_urls,
-        card_href=lambda slug: f"../../cards/{slug}.md",
+        card_href=lambda slug: None,  # cards live in cards.tar.gz: name them by id
         template_href=lambda slug: f"../{slug}/{TEXT_FILE}",
     )
 
