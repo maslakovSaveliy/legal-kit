@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-11-11
+
+Fixes from a live run on a Tilda site with a foreign owner.
+
 ### Workflow
 
 - A foreign owner: `egrul`, `npd` and `cbr` never run, the RKN operators registry is searched by name or handed to the user; drafts print the country and registration number in place of INN, OGRN and «по ЕГРЮЛ»; new `owner.reg_number` in `answers.json`; `check_docs.py` reports an OGRN label in a foreign owner's document and compares the registration number.
