@@ -62,14 +62,16 @@ Registries confirm the owner's identity and status and give sector evidence. The
 
 | Registry | Run when | Key |
 |---|---|---|
-| ЕГРЮЛ and ЕГРИП (`egrul`) | the owner's INN or OGRN is known | INN, OGRN or OGRNIP |
-| НПД (`npd`) | the owner says self-employed, or a 12-digit INN has no ЕГРИП entry | 12-digit INN and the run date |
+| ЕГРЮЛ and ЕГРИП (`egrul`) | the owner's INN or OGRN is known; never for a `foreign` owner | INN, OGRN or OGRNIP |
+| НПД (`npd`) | the owner says self-employed, or a 12-digit INN has no ЕГРИП entry; never for a `foreign` owner | 12-digit INN and the run date |
 | WHOIS (`whois`) | the product runs on a .ru, .рф or .su domain; never for `localhost` or an IP address | domain |
-| Bank of Russia (`cbr`) | only with a finance sector sign | OGRN |
-| RKN registry of personal-data operators | the product collects personal data and the INN is known | INN |
+| Bank of Russia (`cbr`) | only with a finance sector sign, for an owner with an OGRN | OGRN |
+| RKN registry of personal-data operators | the product collects personal data and the INN is known; a `foreign` owner without an INN is searched by name | INN, or the company name |
 | Roszdravnadzor, Rosobrnadzor, others in registries.md | only with the matching sector sign | as registries.md says |
 
 Without an INN no INN-keyed lookup runs; the INN is asked in the confirmation block, never guessed from a name. Lookups never wait for the user: they run with what is known and the run goes on.
+
+A foreign owner (`owner.status` `foreign`) has no OGRN; it has an INN only if the owner gives one. For it `egrul`, `npd` and `cbr` never run, with or without an INN: that is no error, and `not_checked` says «ЕГРЮЛ не проверялся: иностранная компания». The country goes to `owner.country` and the registration number to `owner.reg_number`, both from the footer or the owner's replies ([documents.md](documents.md#placeholders)); they are confirmation items, and the owner or the user checks them in the company registry of that country, which the skill neither queries nor cites. `registry.py rkn` takes an INN only, so without one search the RKN registry of personal-data operators by the company name in a browser, or write the `rkn-operators` entry by hand as `manual` with the name as the key.
 
 ### Commands
 

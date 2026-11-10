@@ -1541,6 +1541,26 @@ def test_check_docs_npd_owner_has_no_ogrn(tmp_path, capsys):
     assert [i["field"] for i in issues if i["kind"] == "mismatch"] == ["ogrn"]
 
 
+def test_check_docs_foreign_owner_has_no_ogrn_and_its_registration_number_is_compared(tmp_path, capsys):
+    answers = json.loads(ANSWERS.read_text(encoding="utf-8"))
+    answers["owner"].update({"status": "foreign", "name": "Siam Example Co., Ltd.", "inn": None, "ogrn": None,
+                             "reg_number": "0105556000011", "country": "TH"})
+    path = tmp_path / "answers-foreign.json"
+    path.write_text(json.dumps(answers), encoding="utf-8")
+    # an OGRN label is wrong for a foreign company, whether or not the number passes the OGRN check digit
+    for name, number in (("f1.md", "0105556000011"), ("f2.md", "0105556012345")):
+        doc = write(tmp_path, name, f"Оператор — Siam Example Co., Ltd., ОГРН {number}, адрес: Бангкок.\n")
+        _, issues = check(capsys, [doc], answers=path)
+        assert [(i["kind"], i["field"]) for i in issues] == [("mismatch", "ogrn")], issues
+    good = write(tmp_path, "f3.md", "Оператор — Siam Example Co., Ltd., страна регистрации Таиланд, "
+                                    "регистрационный номер 0105556000011, адрес: Бангкок.\n")
+    assert check(capsys, [good], answers=path)[1] == []
+    wrong = write(tmp_path, "f4.md", "Оператор — Other Trading Co., Ltd., страна регистрации Таиланд, "
+                                     "регистрационный номер 0105556099999, адрес: Бангкок.\n")
+    _, issues = check(capsys, [wrong], answers=path)
+    assert sorted(i["field"] for i in issues if i["kind"] == "mismatch") == ["name", "reg_number"]
+
+
 OFFER_BAD = (
     "# Публичная оферта\n\n"
     "5.1. Продавец  вправе\nОТМЕНИТЬ заказ в любое время.\n"

@@ -113,7 +113,7 @@ Never an obligation level: basis `interpretation`, `practice`, `inference` or `p
 
 ### Proposals of the skill
 
-Every document fact the skill proposed (a business default from the confirmation block, [intake.md](intake.md#document-facts)) that reaches a public page is listed in one row, whether the owner accepted it with «да, как ты предложил» or the run went on without an answer: `req` `null`, title «Предложения скилла — подтвердите или измените: <факт> — <значение>; …» with every fact and its value, status `not_visible`, level `recommended`, basis `practice`, source `base`, bucket `owner`, `element` `null`, evidence optional (the files where the values appear). Values the owner gave or recon showed are not in it. On a rerun the row is carried over from the previous report until the owner confirms or changes each value.
+Every document fact the skill proposed (a business default from the confirmation block, [intake.md](intake.md#document-facts)) that reaches a public page is listed in one row, whether the owner accepted it with «да, как ты предложил» or the run went on without an answer: `req` `null`, title «Предложения скилла — подтвердите или измените: <факт> — <значение>; …» with every fact and its value, status `not_visible`, level `recommended`, basis `practice`, source `base`, bucket `owner`, `element` `null`, evidence optional (the files where the values appear). Values the owner gave or recon showed are not in it. On a rerun the row is carried over from the previous report until the owner confirms or changes each value. A proposal that stays in the drafts gets no row: the «Сделать вам» item of that draft lists it with its value for the owner to confirm.
 
 ## Registries, owner_checklist and not_checked
 

@@ -20,6 +20,7 @@
     "name": "ООО \"Тёплый дом-тест\"",
     "inn": null,
     "ogrn": null,
+    "reg_number": null,
     "country": "RU",
     "address": "190000, г. Санкт-Петербург, ул. Тестовая, д. 2",
     "email": "shop@teply-dom.test",

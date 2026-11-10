@@ -54,7 +54,8 @@ Write what the prompt states into `answers.json` before any question, so nothing
 | the production address, store pages | `product.urls`, `product.stores` |
 | "code in the current folder" or a path; "no code" | `product.repo` (`.` or the path; `null` for no code) |
 | owner name, status, INN, OGRN, address, e-mail, phone | `owner.*` (self-employed is `npd`, individual entrepreneur `ip`, company `ul`, foreign company `foreign`) |
-| "I will not give the INN and OGRN yet", "do not invent them" | `owner.withheld`: the placeholder names, for example `["ИНН", "ОГРН_ИЛИ_ОГРНИП"]`; the values stay `null` |
+| "I will not give the INN and OGRN yet" (an explicit refusal) | `owner.withheld`: the placeholder names, for example `["ИНН", "ОГРН_ИЛИ_ОГРНИП"]`; the values stay `null` |
+| "do not invent the requisites", "I don't know them", the owner is unavailable | the values stay `null`; nothing goes into `owner.withheld` |
 | customers are consumers or businesses, minors, countries | `audience.*` |
 | the owner names a regulated sector group as their own ("we are a licensed clinic, apply the medical rules") | `business.sectors`; a product description from which a group only follows is sector evidence for the confirmation block ([applicability.md](applicability.md#sectors)) |
 | retention periods, hosting region, support hours, delivery or return terms | `document_facts` |

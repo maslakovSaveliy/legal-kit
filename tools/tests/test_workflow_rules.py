@@ -78,3 +78,59 @@ def test_verify_is_run_with_select_in_every_mode():
     assert "[--select" not in read("report.md") and "--select .legal/evidence/select.json" in read("report.md")
     skill = (SKILL / "SKILL.md").read_text(encoding="utf-8")
     assert "with `--answers .legal/answers.json` and `--select .legal/evidence/select.json`" in skill
+
+
+# Rules the live run on a Tilda site with a foreign owner showed missing or unclear.
+
+def subsection(text, heading):
+    start = text.index("\n### " + heading + "\n")
+    ends = [i for i in (text.find("\n### ", start + 1), text.find("\n## ", start + 1)) if i != -1]
+    return text[start:min(ends) if ends else None]
+
+
+def skill_text():
+    return (SKILL / "SKILL.md").read_text(encoding="utf-8")
+
+
+def test_foreign_owner_skips_russian_registries_by_identifier():
+    rule = section(read("recon-prod.md"), "Public registries")
+    assert "`egrul`, `npd` and `cbr` never run, with or without an INN" in rule
+    assert "never for a `foreign` owner" in rule and "by name" in rule and "`owner.reg_number`" in rule
+    assert "«ЕГРЮЛ не проверялся: иностранная компания»" in rule
+
+
+def test_foreign_owner_identifiers_replace_inn_and_ogrn_in_drafts():
+    rule = subsection(read("documents.md"), "Placeholders")
+    assert "`foreign`" in rule and "`{{СТРАНА_РЕГИСТРАЦИИ}}`" in rule and "`{{РЕГИСТРАЦИОННЫЙ_НОМЕР}}`" in rule
+    assert "«страна регистрации {{СТРАНА_РЕГИСТРАЦИИ}}, регистрационный номер {{РЕГИСТРАЦИОННЫЙ_НОМЕР}}»" in rule
+    assert "`owner.reg_number`" in rule and "`owner.country`" in rule and "«по ЕГРЮЛ» is dropped" in rule
+    assert "a bare `{{ОГРН_ИЛИ_ОГРНИП}}`" in rule and "`РЕГИСТРАЦИОННЫЙ_НОМЕР` in `owner.withheld`" in rule
+    schema = (SKILL / "references" / "jurisdictions" / "ru" / "owner-questions.md").read_text(encoding="utf-8")
+    assert any(line.strip().startswith('"reg_number"') for line in schema.splitlines())
+
+
+def test_unknown_requisite_is_not_withheld():
+    assert "is not withholding" in skill_text()
+    rule = subsection(read("documents.md"), "Drafts and public pages")
+    assert "«не знаю»" in rule and "unavailable" in rule and "never adds" in rule
+    assert "points to the policy page the site already has" in rule
+    assert "nothing goes into `owner.withheld`" in read("intake.md")
+
+
+def test_long_disputed_sections_go_to_an_evidence_file_and_are_all_read():
+    rule = read("applicability.md")
+    assert "`.legal/evidence/disputed-sections.md`" in rule
+    assert "every section in it is read" in rule
+
+
+def test_suggestions_row_condition_is_the_same_in_skill_and_report():
+    line = next(line for line in skill_text().splitlines() if "«Предложения скилла»" in line)
+    assert "only when" in line and "reached a public page" in line
+    assert "stays in the drafts gets no" in read("report.md")
+
+
+def test_no_repo_step_points_to_the_no_code_guide():
+    line = next(line for line in skill_text().splitlines() if line.startswith("- No repo or a no-code site"))
+    assert "references/stacks/no-code.md" in line
+    guide = (SKILL / "references" / "stacks" / "no-code.md").read_text(encoding="utf-8")
+    assert "`data-tilda-cookie-type`" in guide

@@ -20,6 +20,7 @@
     "name": "ИП Тестов Игорь Петрович",
     "inn": "001234500177",
     "ogrn": "322000000000012",
+    "reg_number": null,
     "country": "RU",
     "address": "350000, г. Краснодар, ул. Тестовая, д. 8",
     "email": "hello@lavkadom.test",

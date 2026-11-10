@@ -20,6 +20,7 @@
     "name": "ООО \"Облако-тест\"",
     "inn": "0012345024",
     "ogrn": "1220000000021",
+    "reg_number": null,
     "country": "RU",
     "address": "630000, г. Новосибирск, ул. Тестовая, д. 3",
     "email": "support@oblako.test",

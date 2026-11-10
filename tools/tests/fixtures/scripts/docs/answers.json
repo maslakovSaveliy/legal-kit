@@ -23,6 +23,7 @@
     "name": "ООО «Тест-Компания»",
     "inn": "0098765437",
     "ogrn": "1020000000008",
+    "reg_number": null,
     "country": "RU",
     "address": null,
     "email": null,
