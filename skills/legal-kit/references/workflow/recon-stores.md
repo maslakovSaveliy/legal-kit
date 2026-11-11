@@ -36,7 +36,7 @@ Each mismatch is a row for the store requirement it concerns (for example `ru:pr
 
 Run the app only when a simulator, an emulator or computer use is available and the prompt allows it ("run the app", "check it in the simulator"). Never stop the run to ask for this.
 
-- Build it the project's way (the stack guide's Verify section), install it in the simulator, launch it with fresh data.
+- Build it with the project's own build command only when its dependencies are already installed and the build fetches nothing, install it in the simulator, launch it with fresh data.
 - Observe the first launch: is there a consent screen, do Accept and Reject look equal, which screens link the documents, does analytics start before a choice (SDK debug logs or the network log, if available).
 - Never sign in with real accounts, never buy, never enter real personal data; use the project's own test accounts only if the user points to them.
 - Never install tools or dependencies to build it; a build that cannot run as the project stands is not attempted.

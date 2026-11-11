@@ -111,6 +111,6 @@ No footer in an app. Link the four documents from `DocumentsScreen`, the sign-up
 - No i18n in the project: keep strings in one constants file; do not add `intl` tooling.
 
 ## Verify and record state
-- `flutter pub get`, `dart format --output=none --set-exit-if-changed lib test`, `flutter analyze`, `flutter test`, `flutter gen-l10n` (when ARB changed).
-- `flutter build apk --debug` or `flutter build ios --no-codesign` are slow; run them only when the user agrees. Search check: no `AppMetrica.activate` or `setAnalyticsCollectionEnabled(true)` outside `ConsentService`.
+- Only when the dependencies are already resolved (`.dart_tool/package_config.json` exists): `dart format --output=none --set-exit-if-changed lib test`, `flutter analyze`, `flutter test`, `flutter gen-l10n` (when ARB changed). Never run `flutter pub get`: after `url_launcher` was added to `pubspec.yaml` the command goes to «Сделать вам» and the checks that need it to `not_checked`.
+- `flutter build apk --debug` and `flutter build ios --no-codesign` are not part of the checks (slow, and they fetch what is missing): «Сборка приложения не запускалась» goes to `not_checked`. Search check: no `AppMetrica.activate` or `setAnalyticsCollectionEnabled(true)` outside `ConsentService`.
 - Record every created or edited file in `.legal/state.json` `managed[]` (`path`, `sha256` of the final content, `kind`: `page` | `checkbox` | `banner` | `footer` | `consent-log`). Do not commit.

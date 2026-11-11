@@ -71,7 +71,7 @@ Find the shared footer (layout, partial, `footer.php`, `app.component.html`). Ad
 - No i18n in the project: keep one language and a constants file; add no library.
 
 ## Verify and record state
-- JS stacks: `npx tsc --noEmit` / `npx vue-tsc --noEmit` / `npx svelte-check` / `npx ng build`, `npm run lint`, `npm run build`, `npm test` (use the lockfile's package manager). Nuxt: `npx nuxi typecheck`.
-- PHP: `php -l <file>`, `php artisan route:list | grep legal`, `php artisan test`, `composer lint` if defined. Others: the project's compile/test command.
+- JS stacks: `npx --no-install tsc --noEmit` / `npx --no-install vue-tsc --noEmit` / `npx --no-install svelte-check` / `npx --no-install ng build`, `npm run lint`, `npm run build`, `npm test` (use the lockfile's package manager; a tool that is not installed is skipped and listed in `not_checked`). Nuxt: `npx --no-install nuxi typecheck`.
+- PHP: `php -l <file>`, `php artisan route:list | grep legal`, `php artisan test` (under the local-database rule of [ui-integration.md](../workflow/ui-integration.md#verify)), `composer lint` if defined. Others: the project's compile/test command.
 - Counter hosts must remain only in the loader; in a browser with empty storage no counter request before Accept.
 - Record every created or edited file in `.legal/state.json` `managed[]` (`path`, `sha256` of the final content, `kind`: `page` | `checkbox` | `banner` | `footer` | `consent-log`). Do not commit.

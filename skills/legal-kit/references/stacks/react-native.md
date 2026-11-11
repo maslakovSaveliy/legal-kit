@@ -91,7 +91,7 @@ Mobile apps have no footer. Link Политика / Оферта / Возвра�
 - No i18n setup: keep strings in one `strings.ts`; do not add a library.
 
 ## Verify and record state
-- `npx tsc --noEmit`, `npm run lint`, `npm test` if present. Expo: `npx expo-doctor`. A native build is slow and may rewrite native folders: run `expo prebuild` or `pod install` only with the user's go-ahead.
+- `npx --no-install tsc --noEmit`, `npm run lint`, `npm test` if present. Expo: `npx --no-install expo-doctor`. Never run `expo prebuild` or `pod install`: they rewrite native folders and install dependencies; when a change needs one, the command goes to «Сделать вам».
 - Sanity-check by search: no `AppMetrica.activate` or `setAnalyticsCollectionEnabled(…, true)` outside `src/analytics/consent.ts`.
 - If a simulator is available, launch fresh (cleared storage) and confirm the banner appears and no analytics call happens before Accept.
 - Record every created or edited file in `.legal/state.json` `managed[]` (`path`, `sha256` of the final content, `kind`: `page` | `checkbox` | `banner` | `footer` | `consent-log`). Do not commit.

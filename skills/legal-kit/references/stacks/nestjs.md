@@ -117,6 +117,6 @@ No footer on an API. If the backend sends emails (`@nestjs-modules/mailer`, `nod
 - RU strings and documents are authoritative. EN versions are translations and carry a `translationNotice` key. No i18n library: keep messages in one constants file.
 
 ## Verify and record state
-- `npm run build` (`nest build`), `npm run lint`, `npx tsc --noEmit -p tsconfig.json`, `npm test`, `npm run test:e2e` if the project has them. Add a unit test next to the new service: unknown version rejected, hash stable, no update/delete method exposed.
-- Start the app locally and `curl -i -X POST localhost:3000/consents -H 'content-type: application/json' -d '{...}'` against a local dev database where the owner has applied the migration (never apply it yourself): expect 204, then a row with UTC time, hash, IP and user agent.
+- `npm run build` (`nest build`), `npm run lint`, `npx --no-install tsc --noEmit -p tsconfig.json`, `npm test`, `npm run test:e2e` if the project has them (`test:e2e` only under the local-database rule of [ui-integration.md](../workflow/ui-integration.md#verify)). Add a unit test next to the new service: unknown version rejected, hash stable, no update/delete method exposed.
+- Only when the configured database host is local: start the app locally and `curl -i -X POST localhost:3000/consents -H 'content-type: application/json' -d '{...}'` against a local dev database where the owner has applied the migration (never apply it yourself): expect 204, then a row with UTC time, hash, IP and user agent.
 - Record every created or edited file in `.legal/state.json` `managed[]` (`path`, `sha256` of the final content, `kind`: `page` | `checkbox` | `banner` | `footer` | `consent-log`). Do not commit.

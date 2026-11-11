@@ -142,3 +142,13 @@ def test_bad_checksum_keeps_the_page_a_draft():
     text = read("documents.md")
     assert "fails its check digit" in text and "stays a draft" in text
     assert "| `inn_checksum`, `ogrn_checksum` | on a public page |" in text
+
+
+def test_project_tests_run_only_against_a_local_database():
+    rule = "tests that need a database run only when its configured host is local"
+    assert rule in read("safety.md") and rule in read("ui-integration.md")
+
+
+def test_cms_placement_is_left_to_the_user():
+    text = read("ui-integration.md")
+    assert "computer use" not in text and "The user places them" in text
