@@ -152,3 +152,10 @@ def test_project_tests_run_only_against_a_local_database():
 def test_cms_placement_is_left_to_the_user():
     text = read("ui-integration.md")
     assert "computer use" not in text and "The user places them" in text
+
+
+def test_owner_country_may_be_unknown_and_recon_signals_reach_the_block():
+    questions = (RU / "owner-questions.md").read_text(encoding="utf-8")
+    intake = read("intake.md")
+    assert '"country": "string | null' in questions
+    assert "found in recon" in intake and "the country is a blocking part of item 3" in intake

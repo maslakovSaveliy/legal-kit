@@ -71,7 +71,7 @@ Write what the prompt states into `answers.json` before any question, so nothing
 ### Jurisdiction
 
 - The `ru` pack applies when the owner is registered in Russia or the product serves users in Russia (`audience.countries` contains `RU`), including a foreign owner serving Russian users.
-- `owner.country` defaults to `RU` only when nothing points to another country. Signals of another country: a foreign legal form (GmbH, Ltd, Inc, LLC), a foreign address or registry number in the footer, a foreign ccTLD, prices only in a foreign currency, the interface only in another language. With such signals, the country is asked (start question 4), never assumed.
+- `owner.country` defaults to `RU` only when nothing points to another country. Signals of another country: a foreign legal form (GmbH, Ltd, Inc, LLC), a foreign address or registry number in the footer, a foreign ccTLD, prices only in a foreign currency, the interface only in another language. With such signals, the country is asked (start question 4), never assumed, and `owner.country` stays `null` until the owner answers. Signals found in recon after the start questions (the footer, the legal pages, WHOIS) go to the confirmation block: the country is a blocking part of item 3, shown with the signal and its source, and until the answer `egrul`, `npd` and `cbr` are not run on a guessed status.
 - If neither the owner nor the users are in Russia and the user needs another country's rules, say that this jurisdiction is not supported yet. Offer the technical inventory from recon (features, hosts, forms, cookies) without legal conclusions, draft no documents and stop.
 
 ### Mode
@@ -121,7 +121,7 @@ Blocking items change what the run applies or writes; the run waits while one is
 - B2C or B2B (item 2);
 - a sector, when sector evidence was found (item 4);
 - minors (item 5);
-- requisites the drafts will use, including the person responsible for personal data (item 3), and an INN or OGRN the registry did not find («ИНН … в ЕГРЮЛ не найден — проверьте»); a requisite the owner declines to give answers the item: its placeholder name goes to `owner.withheld`;
+- requisites the drafts will use, including the person responsible for personal data and, when recon found signs of a foreign owner, the country of registration (item 3), and an INN or OGRN the registry did not find («ИНН … в ЕГРЮЛ не найден — проверьте»); a requisite the owner declines to give answers the item: its placeholder name goes to `owner.withheld`;
 - applying edits (item 9) and, when the tree is not clean, editing over the user's changes;
 - holding counters until consent (item 8), when a counter or SDK was found;
 - document facts (item 10), only while a public page needs a fact marked «?» (nothing in recon shows it and it is not a business choice the skill may propose).
