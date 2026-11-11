@@ -71,7 +71,7 @@ Write what the prompt states into `answers.json` before any question, so nothing
 ### Jurisdiction
 
 - The `ru` pack applies when the owner is registered in Russia or the product serves users in Russia (`audience.countries` contains `RU`), including a foreign owner serving Russian users.
-- `owner.country` defaults to `RU` only when nothing points to another country. Signals of another country: a foreign legal form (GmbH, Ltd, Inc, LLC), a foreign address or registry number in the footer, a foreign ccTLD, prices only in a foreign currency, the interface only in another language. With such signals, the country is asked (start question 4), never assumed.
+- `owner.country` defaults to `RU` only when nothing points to another country. Signals of another country: a foreign legal form (GmbH, Ltd, Inc, LLC), a foreign address or registry number in the footer, a foreign ccTLD, prices only in a foreign currency, the interface only in another language. With such signals, the country is asked (start question 4), never assumed, and `owner.country` stays `null` until the owner answers. Signals found in recon after the start questions (the footer, the legal pages, WHOIS) go to the confirmation block: the country is a blocking part of item 3, shown with the signal and its source, and until the answer `egrul`, `npd` and `cbr` are not run on a guessed status.
 - If neither the owner nor the users are in Russia and the user needs another country's rules, say that this jurisdiction is not supported yet. Offer the technical inventory from recon (features, hosts, forms, cookies) without legal conclusions, draft no documents and stop.
 
 ### Mode
@@ -83,8 +83,9 @@ Write what the prompt states into `answers.json` before any question, so nothing
 | no | yes | `prod-only` |
 
 - Code is available when the working directory or the given path holds the product's source. The live URL is the production address or a URL the prompt gives for the running website (a local one included).
-- Store listings are not a live URL: a mobile repo whose only pages are store listings is `repo-only`; the listings are still inspected ([recon-stores.md](recon-stores.md)).
-- Without code and without a URL there is nothing to inspect: ask start question 2 or 3 — unless the owner describes a product to build, which is mode `plan`.
+- With code, store listings are not a live URL: a mobile repo whose only pages are store listings is `repo-only`; the listings are still inspected ([recon-stores.md](recon-stores.md)).
+- A product with no code and only a store listing, or only a bot link (`t.me/…`, a MAX link), runs as `prod-only`: the listing or the bot's public page is the recon target, and what it cannot show (screens, consent flow, data flows) goes to `not_checked`. Read that one page; do not crawl the platform's site with `scan_url.py`, which is for the product's own origin. A live bot is only read, never messaged ([safety.md](safety.md#the-live-product-and-third-parties)).
+- Without code, a URL, a store listing or a bot link there is nothing to inspect: ask start question 2 or 3 — unless the owner describes a product to build, which is mode `plan`.
 - Mode `plan` (no product yet, or the request says it is a new project) and mode `feature` (one function being added now) are chosen by the words of the request: [plan.md](plan.md#choosing-the-mode). Plan requested over code that already has features: offer the audit in one line.
 
 ### Git tree
@@ -121,7 +122,7 @@ Blocking items change what the run applies or writes; the run waits while one is
 - B2C or B2B (item 2);
 - a sector, when sector evidence was found (item 4);
 - minors (item 5);
-- requisites the drafts will use, including the person responsible for personal data (item 3), and an INN or OGRN the registry did not find («ИНН … в ЕГРЮЛ не найден — проверьте»); a requisite the owner declines to give answers the item: its placeholder name goes to `owner.withheld`;
+- requisites the drafts will use, including the person responsible for personal data and, when recon found signs of a foreign owner, the country of registration (item 3), and an INN or OGRN the registry did not find («ИНН … в ЕГРЮЛ не найден — проверьте»); a requisite the owner declines to give answers the item: its placeholder name goes to `owner.withheld`;
 - applying edits (item 9) and, when the tree is not clean, editing over the user's changes;
 - holding counters until consent (item 8), when a counter or SDK was found;
 - document facts (item 10), only while a public page needs a fact marked «?» (nothing in recon shows it and it is not a business choice the skill may propose).
@@ -183,4 +184,4 @@ Right after the reply (or at once, when the block did not wait), before research
 
 ## Without python3
 
-Nothing in these phases needs Python. Read and write the JSON files with any editor, keep the schema from owner-questions.md, and check the git tree with `git status --porcelain --untracked-files=all`.
+Nothing in these phases needs Python. Read and write the JSON files with any editor, keep the schema from owner-questions.md, and check the git tree with `git status --porcelain --untracked-files=all -- . ':(exclude).legal'`.

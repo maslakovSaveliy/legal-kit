@@ -4,7 +4,7 @@ title_ru: "Новый SDK подключается через существую
 title_en: "A new SDK goes through the existing consent gate"
 reqs: [ru:postavshchiki-analitiki-i-sdk]
 basis: practice
-features: [analytics.mobile_sdk, ads.pixels_foreign, analytics.web_counter, analytics.session_replay, analytics.tag_manager, ads.pixels, ads.pixels_foreign]
+features: [analytics.mobile_sdk, ads.pixels_foreign, analytics.web_counter, analytics.session_replay, analytics.tag_manager, ads.pixels]
 always: false
 products: []
 stacks: [react-native, nextjs]

@@ -7,6 +7,8 @@ from pathlib import Path
 
 SKILL = Path(__file__).resolve().parents[2] / "skills" / "legal-kit"
 WORKFLOW = SKILL / "references" / "workflow"
+SKILL_MD = SKILL / "SKILL.md"
+RU = SKILL / "references" / "jurisdictions" / "ru"
 
 
 def read(name):
@@ -134,3 +136,82 @@ def test_no_repo_step_points_to_the_no_code_guide():
     assert "references/stacks/no-code.md" in line
     guide = (SKILL / "references" / "stacks" / "no-code.md").read_text(encoding="utf-8")
     assert "`data-tilda-cookie-type`" in guide
+
+
+def test_bad_checksum_keeps_the_page_a_draft():
+    text = read("documents.md")
+    assert "fails its check digit" in text and "stays a draft" in text
+    assert "| `inn_checksum`, `ogrn_checksum` | on a public page |" in text
+
+
+def test_project_tests_run_only_against_a_local_database():
+    rule = "tests that need a database run only when its configured host is local"
+    assert rule in read("safety.md") and rule in read("ui-integration.md")
+
+
+def test_cms_placement_is_left_to_the_user():
+    text = read("ui-integration.md")
+    assert "computer use" not in text and "The user places them" in text
+
+
+def test_owner_country_may_be_unknown_and_recon_signals_reach_the_block():
+    questions = (RU / "owner-questions.md").read_text(encoding="utf-8")
+    intake = read("intake.md")
+    assert '"country": "string | null' in questions
+    assert "found in recon" in intake and "the country is a blocking part of item 3" in intake
+
+
+def test_listing_only_app_and_repo_less_bot_run_as_prod_only():
+    intake, safety = read("intake.md"), read("safety.md")
+    mode = intake[intake.index("### Mode"):intake.index("### Git tree")]
+    assert "only a store listing" in mode and "only a bot link" in mode and "`prod-only`" in mode
+    assert "never sends a message to a live bot" in safety
+    assert "never sends a message to a live bot" in (SKILL / "references" / "stacks" / "bot.md").read_text(encoding="utf-8")
+
+
+def test_left_out_passages_do_not_hold_a_page_back():
+    for name in ("ui-integration.md", "documents.md"):
+        assert "passages left out under" in read(name), name
+    assert "a passage left out for an unknown fact does not hold the page" in SKILL_MD.read_text(encoding="utf-8")
+
+
+def test_feature_mode_skips_the_start_gate_and_scans_the_code():
+    feature = section(read("plan.md"), "Feature mode")
+    assert "Mode `feature` skips this gate" in SKILL_MD.read_text(encoding="utf-8")
+    assert "scan_repo.py" in feature and ".legal/evidence/select-rules.json" in feature
+
+
+def test_state_kinds_are_one_list():
+    skill = SKILL_MD.read_text(encoding="utf-8")
+    row = next(line for line in skill.splitlines() if line.startswith("| `state.json` |"))
+    table = read("ui-integration.md")
+    for kind in ("page", "checkbox", "banner", "footer", "consent-log", "rules", "agent-link"):
+        assert "`%s`" % kind in row, kind
+        assert "| `%s` |" % kind in table, kind
+
+
+def test_scripts_table_matches_the_scripts_folder():
+    skill = SKILL_MD.read_text(encoding="utf-8")
+    for script in sorted(p.name for p in (SKILL / "scripts").glob("*.py") if not p.name.startswith("_")):
+        assert "| `scripts/%s" % script in skill, script
+    assert "All print JSON (except `render`)" not in skill  # rules.py and kb.py card print Markdown, kb.py extract writes
+
+
+def test_small_lists_are_current():
+    assert "':(exclude).legal'" in section(read("intake.md"), "Without python3")
+    kinds_line = next(line for line in (RU / "JURISDICTION.md").read_text(encoding="utf-8").splitlines()
+                      if "product kinds" in line)
+    assert "`bot`" in kinds_line
+    assert "registry.py egrul|npd|whois|cbr|rkn" in (RU / "registries.md").read_text(encoding="utf-8")
+
+
+def test_swift_build_runs_only_with_packages_already_fetched():
+    text = (SKILL / "references" / "stacks" / "swift.md").read_text(encoding="utf-8")
+    line = next(line for line in text.splitlines() if "xcodebuild -scheme" in line)
+    assert "already fetched" in line and "not_checked" in line
+
+
+def test_platform_pages_are_read_not_crawled():
+    intake = read("intake.md")
+    mode = intake[intake.index("### Mode"):intake.index("### Git tree")]
+    assert "do not crawl" in mode

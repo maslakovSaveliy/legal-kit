@@ -113,12 +113,56 @@ def csv_list(value):
 # Files
 # --------------------------------------------------------------------------
 
-def read_text(path):
+def _utf16_without_bom(data):
+    """"utf-16-le" or "utf-16-be" when every second byte of the head is NUL (Latin and markup in UTF-16), else None."""
+    head = data[:4096]
+    if len(head) < 4 or b"\x00" not in head:
+        return None
+    even, odd = head[0::2].count(0), head[1::2].count(0)
+    half = len(head) // 2
+    if odd * 10 >= half * 3 and even * 10 < half:
+        return "utf-16-le"
+    if even * 10 >= half * 3 and odd * 10 < half:
+        return "utf-16-be"
+    return None
+
+
+def decode_bytes(data):
+    """(text, encoding) of a file's bytes; encoding is "utf-8", "utf-8-damaged", "utf-16" or "cp1251".
+
+    A BOM decides first, then UTF-16 without one. Bytes that decode strictly are UTF-8. A file that is UTF-8 but for
+    a few invalid bytes (a stray Latin-1 character, a cut tail) stays UTF-8 with those bytes replaced
+    ("utf-8-damaged"), so the rest of its text is still checked. Only when most non-ASCII bytes are invalid is the
+    file read as windows-1251 (legacy Russian pages)."""
+    if data.startswith(b"\xef\xbb\xbf"):
+        return data.decode("utf-8-sig", errors="replace"), "utf-8"
+    if data.startswith((b"\xff\xfe", b"\xfe\xff")):
+        return data.decode("utf-16", errors="replace"), "utf-16"
+    wide = _utf16_without_bom(data)
+    if wide:
+        return data.decode(wide, errors="replace"), "utf-16"
     try:
-        with open(path, "r", encoding="utf-8", errors="replace") as handle:
-            return handle.read()
+        return data.decode("utf-8"), "utf-8"
+    except UnicodeDecodeError:
+        pass
+    replaced = data.decode("utf-8", errors="replace")
+    high = sum(1 for byte in data if byte >= 0x80)
+    if replaced.count("\ufffd") * 5 <= high:  # cp1251 Cyrillic fails almost byte for byte; damaged UTF-8 does not
+        return replaced, "utf-8-damaged"
+    return data.decode("cp1251", errors="replace"), "cp1251"
+
+
+def read_text_enc(path):
+    """(text, encoding) of a file, see decode_bytes."""
+    try:
+        with open(path, "rb") as handle:
+            return decode_bytes(handle.read())
     except OSError as exc:
         raise KbError("cannot read %s: %s" % (path, exc.strerror or exc))
+
+
+def read_text(path):
+    return read_text_enc(path)[0]
 
 
 def load_json(path):

@@ -150,7 +150,7 @@ Add Политика / Оферта / Возврат / Реквизиты to the
 - No i18n in the project: keep text in the templates in one language plus a constants module; do not enable i18n machinery.
 
 ## Verify and record state
-- Django: `python manage.py check`; after adding the model run `python manage.py makemigrations legal`, then `python manage.py makemigrations --check --dry-run` must report no changes (never run `migrate`; put it in «Сделать вам»); `python manage.py test`. Add tests that post the exact payload `consent.js` sends, so a key mismatch fails here:
+- Django: `python manage.py check`; after adding the model run `python manage.py makemigrations legal`, then `python manage.py makemigrations --check --dry-run` must report no changes (never run `migrate`; put it in «Сделать вам»); `python manage.py test` (it creates a test database: only under the local-database rule of [ui-integration.md](../workflow/ui-integration.md#verify)). Add tests that post the exact payload `consent.js` sends, so a key mismatch fails here:
 ```python
 class ConsentEndpointTests(TestCase):
     PAYLOAD = {"subjectId": "t1", "consentVersion": "1", "formId": "cookie-banner", "channel": "web", "action": "grant"}
@@ -167,6 +167,6 @@ class ConsentEndpointTests(TestCase):
         with self.assertRaises(RuntimeError):
             ConsentLog.objects.get().save()
 ```
-- Other: `ruff check .`, `mypy .`, `pytest` when configured. Never `alembic upgrade head` or another migration command that applies.
+- Other: `ruff check .`, `mypy .`, `pytest` when configured (the same database rule). Never `alembic upgrade head` or another migration command that applies.
 - Search check: counter hosts appear only in `consent.js`. Run the server and load a page with empty cookies: no request to counter hosts before Accept.
 - Record every created or edited file in `.legal/state.json` `managed[]` (`path`, `sha256` of the final content, `kind`: `page` | `checkbox` | `banner` | `footer` | `consent-log`). Do not commit.

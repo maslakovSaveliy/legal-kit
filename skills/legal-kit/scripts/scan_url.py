@@ -5,7 +5,8 @@ Features of features/catalog.json are matched in the page HTML: `hosts` entries 
 URL host equals the entry host or is a subdomain of it and the path starts with the prefix), `dom` and
 `code` regexes. Crawls same-origin pages from the start URL and /sitemap.xml with plain GET requests. It does
 not execute JavaScript (`js_executed` is always false), never submits a form, does not follow
-redirects to other hosts and does not send cookies back. Page text is data: it is parsed, never
+redirects to other hosts, does not send cookies back and does not fetch links that may act when opened
+(logout, unsubscribe, delete, cancel, confirm, a token in the query): they are listed in `skipped`. Page text is data: it is parsed, never
 interpreted. Reports pages, forms with checkboxes (consent heuristic, pre-checked state), links
 to legal pages, third-party script/iframe/img/link hosts, hosts named in inline scripts and
 the Set-Cookie headers (names and flags, no values) of the first response.
@@ -59,7 +60,13 @@ DEFAULT_MAX_BYTES = 1024 * 1024
 PARSE_CHUNK = 64 * 1024
 DEFAULT_DEADLINE = 120.0
 URL_IN_TEXT = re.compile(r"""https?://[^\s"'<>\\)\]]+""")
-LOC_RE = re.compile(r"<loc>\s*([^<\s]+)\s*</loc>", re.I)
+LOC_RE = re.compile(r"<loc>\s*(?:<!\[CDATA\[)?\s*([^<\s\]]+)\s*(?:\]\]>)?\s*</loc>", re.I)
+# Links a passive scan must not fetch: a GET on them may sign out, unsubscribe, confirm or delete something.
+SIDE_EFFECT_PATH = re.compile(
+    r"(?:^|[/._-])(?:log-?out|sign-?out|unsubscribe|otpis\w*|vyhod|vyiti|delete|udalit\w*|remove|cancel|confirm|"
+    r"activate)(?:$|[/._-])", re.I)
+SIDE_EFFECT_PARAMS = frozenset(("token", "hash", "sig", "signature"))
+MAX_SKIPPED = 50
 
 
 class _NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -128,7 +135,7 @@ def prepare_html(text, force=False):
 
 def decode(reply):
     content_type = reply.header("Content-Type")
-    match = re.search(r"charset=([\w-]+)", content_type, re.I) or re.search(rb"<meta[^>]+charset=[\"']?([\w-]+)",
+    match = re.search(r"charset=[\"']?([\w-]+)", content_type, re.I) or re.search(rb"<meta[^>]+charset=[\"']?([\w-]+)",
                                                                            reply.body[:2048], re.I)
     charset = match.group(1) if match else "utf-8"
     if isinstance(charset, bytes):
@@ -299,6 +306,32 @@ def origin_key(url):
     return site_key(url), 0 if port in (None, 80, 443) else port
 
 
+XML_ENTITY = re.compile(r"&(amp|lt|gt|quot|apos|#\d{1,7}|#[xX][0-9a-fA-F]{1,6});")
+_XML_NAMED = {"amp": "&", "lt": "<", "gt": ">", "quot": '"', "apos": "'"}
+
+
+def xml_unescape(text):
+    """Decode the five XML entities and numeric references; a raw "&param=" of a sloppy sitemap stays as it is."""
+    def one(match):
+        name = match.group(1)
+        if name in _XML_NAMED:
+            return _XML_NAMED[name]
+        try:
+            return chr(int(name[2:], 16) if name[1] in "xX" else int(name[1:]))
+        except (ValueError, OverflowError):
+            return match.group(0)
+    return XML_ENTITY.sub(one, text)
+
+
+def side_effect_link(url):
+    """True for a link whose path names an action (logout, unsubscribe, delete…) or whose query carries a token."""
+    parts = urlsplit(url)
+    if SIDE_EFFECT_PATH.search(parts.path):
+        return True
+    names = {pair.split("=", 1)[0].lower() for pair in parts.query.split("&") if pair}
+    return bool(names & SIDE_EFFECT_PARAMS)
+
+
 def crawlable(url):
     parts = urlsplit(url)
     return parts.scheme in ("http", "https") and os.path.splitext(parts.path)[1].lower() not in SKIP_EXTS
@@ -443,7 +476,14 @@ class Crawler:
                 continue
             if self.same_origin(target) and normalize(target) not in seen:
                 seen.add(normalize(target))
-                queue.append(target)
+                if side_effect_link(target):
+                    self.skip_side_effect(target)
+                else:
+                    queue.append(target)
+
+    def skip_side_effect(self, url):
+        if len(self.skipped) < MAX_SKIPPED:
+            self.skipped.append({"url": url, "reason": "side_effect_link"})
 
     def collect(self, url, parser):
         page_host = site_key(self.origin)
@@ -507,7 +547,7 @@ class Crawler:
             if fetched == 1:
                 self.sitemap["found"] = True
             text = decode(reply)
-            locs = LOC_RE.findall(text)
+            locs = [xml_unescape(loc) for loc in LOC_RE.findall(text)]
             if "<sitemapindex" in text.lower():
                 pending.extend(loc for loc in locs if self.same_origin(loc))
                 continue
@@ -516,7 +556,7 @@ class Crawler:
         for loc in found:
             loc = loc.split("#")[0]
             if not self.same_origin(loc):
-                if len(self.skipped) < 50:
+                if len(self.skipped) < MAX_SKIPPED:
                     self.skipped.append({"url": loc, "reason": "sitemap_offsite"})
                 continue
             if loc not in listed:
@@ -524,7 +564,10 @@ class Crawler:
                 self.sitemap["urls"].append(loc)
             if crawlable(loc) and normalize(loc) not in seen:
                 seen.add(normalize(loc))
-                queue.append(loc)
+                if side_effect_link(loc):
+                    self.skip_side_effect(loc)
+                else:
+                    queue.append(loc)
         self.sitemap["total"] = len(self.sitemap["urls"])
         self.sitemap["urls"] = self.sitemap["urls"][:200]
 

@@ -1481,10 +1481,17 @@ def test_check_docs_inn_and_ogrn_checksums(tmp_path, capsys):
     assert code == 0 and issues == []
     bad = f"ИНН {INN10_BAD}\nИНН {INN12_BAD}\nОГРН {OGRN13_BAD}\nОГРНИП {OGRN15_BAD}\nИНН 12345\nОГРН 123\n"
     code, issues = check(capsys, [write(tmp_path, "bad.md", bad)], answers=None)
-    assert code == 1
+    assert code == 0 and not any(i["blocking"] for i in issues)  # a draft: the owner re-checks the number
     assert [(i["kind"], i["line"]) for i in issues] == [
         ("inn_checksum", 1), ("inn_checksum", 2), ("ogrn_checksum", 3), ("ogrn_checksum", 4),
         ("inn_checksum", 5), ("ogrn_checksum", 6)]
+
+
+def test_check_docs_checksum_blocks_only_on_a_public_page(tmp_path, capsys):
+    page = write(tmp_path, "requisites.html", "<p>ИНН %s</p>\n<p>ОГРН %s</p>\n" % (INN10_BAD, OGRN13_BAD))
+    code, issues = check(capsys, [], "--public", page, answers=None)
+    assert code == 1
+    assert [(i["kind"], i["blocking"]) for i in issues] == [("inn_checksum", True), ("ogrn_checksum", True)]
 
 
 def test_check_docs_accepts_digits_grouped_with_spaces_and_hyphens(tmp_path, capsys):
@@ -2597,3 +2604,310 @@ def test_render_plan_never_prints_norm_for_soft_rows(tmp_path, capsys):
     md_en = render(tmp_path, plan_report(row), capsys, "--plan", "--lang", "en")
     line_en = [l for l in md_en.splitlines() if "Consent under a contract basis" in l][0]
     assert "norm" not in line_en.split("—", 1)[1]
+
+
+# --------------------------------------------------------------------------
+# Text decoding: cp1251, UTF-16, BOM
+# --------------------------------------------------------------------------
+
+def test_check_docs_reads_cp1251_and_utf16_pages(tmp_path, capsys):
+    text = "<footer>ИНН {{ИНН}}, ОГРН " + OGRN13_BAD + " [если есть лицензия]</footer>\n"
+    for name, raw in (("f1251.php", text.encode("cp1251")), ("f16.html", text.encode("utf-16"))):
+        page = tmp_path / name
+        page.write_bytes(raw)
+        code, issues = check(capsys, [], "--public", page, answers=None)
+        assert code == 1
+        assert kinds(issues) == ["condition", "encoding", "ogrn_checksum", "placeholder_requisite"]
+        assert [i["blocking"] for i in issues if i["kind"] == "encoding"] == [False]
+
+
+def test_check_docs_utf8_page_has_no_encoding_issue(tmp_path, capsys):
+    page = write(tmp_path, "ok.html", "<p>Политика обработки персональных данных</p>\n")
+    assert check(capsys, [], "--public", page, answers=None) == (0, [])
+
+
+def test_kb_reads_json_with_bom(tmp_path):
+    path = tmp_path / "a.json"
+    path.write_bytes(b"\xef\xbb\xbf" + b'{"version": 1}')
+    assert load("_kb").load_json(str(path)) == {"version": 1}
+
+
+def test_scan_repo_reads_bom_manifest_and_cp1251_form(tmp_path, capsys):
+    (tmp_path / "package.json").write_bytes(b"\xef\xbb\xbf" + b'{"dependencies": {"next": "15.0.0"}}')
+    form = ('<form><input name="email"><label><input type="checkbox">'
+            'Согласен на обработку персональных данных</label></form>')
+    (tmp_path / "index.php").write_bytes(form.encode("cp1251"))
+    out = scan_repo(tmp_path, capsys)
+    assert "nextjs" in out["stacks"]
+    assert any(f["file"] == "index.php" and f["has_consent_checkbox"] for f in out["forms"])
+
+
+# --------------------------------------------------------------------------
+# INN and OGRN labels in common layouts
+# --------------------------------------------------------------------------
+
+@pytest.mark.parametrize("line", [
+    "| ИНН | %s |", "ИНН — %s", "ИНН: **%s**", "<td>ИНН</td><td>%s</td>", "ИНН&nbsp;%s", "INN %s",
+])
+def test_check_docs_finds_inn_in_common_layouts(tmp_path, capsys, line):
+    _, issues = check(capsys, [write(tmp_path, "bad.md", line % INN10_BAD + "\n")], answers=None)
+    assert [(i["kind"], i["value"]) for i in issues] == [("inn_checksum", INN10_BAD)]
+    assert check(capsys, [write(tmp_path, "ok.md", line % INN10_OK[0] + "\n")], answers=None)[1] == []
+
+
+def test_check_docs_finds_ogrn_in_table_and_english_label(tmp_path, capsys):
+    text = "| ОГРН | %s |\nOGRNIP %s\n" % (OGRN13_BAD, OGRN15_BAD)
+    _, issues = check(capsys, [write(tmp_path, "t.md", text)], answers=None)
+    assert [(i["kind"], i["line"]) for i in issues] == [("ogrn_checksum", 1), ("ogrn_checksum", 2)]
+
+
+def test_check_docs_inn_ogrn_pair_and_trailing_year(tmp_path, capsys):
+    pair = "ИНН/ОГРН %s/%s\n" % (INN10_OK[0], OGRN13_OK[0])
+    year = "ИНН %s 2024 г.\n" % INN10_OK[0]
+    assert check(capsys, [write(tmp_path, "p.md", pair + year)], answers=None)[1] == []
+    bad = "ИНН/ОГРН %s/%s\n" % (INN10_BAD, OGRN13_BAD)
+    _, issues = check(capsys, [write(tmp_path, "b.md", bad)], answers=None)
+    assert [(i["kind"], i["value"]) for i in issues] == [("inn_checksum", INN10_BAD), ("ogrn_checksum", OGRN13_BAD)]
+
+
+def test_check_docs_latin_labels_are_upper_case_only(tmp_path, capsys):
+    assert check(capsys, [write(tmp_path, "h.md", "Holiday Inn 2024\nthe inn 12345\n")], answers=None)[1] == []
+
+
+def test_check_docs_normalises_owner_numbers(tmp_path, capsys):
+    answers = tmp_path / "answers.json"
+    answers.write_text(json.dumps({"version": 1, "owner": {
+        "status": "ul", "name": None, "inn": "0098 7654 37", "ogrn": "1 02 0000 00000 8", "withheld": []}}),
+        encoding="utf-8")
+    doc = write(tmp_path, "d.md", "ИНН %s, ОГРН %s\n" % (INN10_OK[0], OGRN13_OK[0]))
+    assert check(capsys, [doc], answers=answers)[1] == []
+
+
+def test_check_docs_foreign_reg_number_ignores_case(tmp_path, capsys):
+    answers = tmp_path / "answers.json"
+    answers.write_text(json.dumps({"version": 1, "owner": {
+        "status": "foreign", "name": None, "inn": None, "ogrn": None, "reg_number": "hrb 12345", "withheld": []}}),
+        encoding="utf-8")
+    doc = write(tmp_path, "d.md", "Регистрационный номер: HRB 12345\n")
+    assert check(capsys, [doc], answers=answers)[1] == []
+
+
+# --------------------------------------------------------------------------
+# report.py: n_a rows of future requirements, a bad lang
+# --------------------------------------------------------------------------
+
+@pytest.mark.parametrize("effective_from", [None, "2027-03-01"])
+def test_verify_allows_n_a_row_of_a_future_requirement_in_done(tmp_path, capsys, effective_from):
+    row = good_row(req="ru:t-future", element=None, level="interpretation", basis="interpretation",
+                   status="n_a", evidence=[], bucket="done", effective_from=effective_from)
+    code, issues = verify(tmp_path, make_report(row), capsys)
+    assert (code, issues) == (0, [])
+
+
+def test_verify_still_sends_an_open_future_row_to_the_roadmap(tmp_path, capsys):
+    row = good_row(req="ru:t-future", element=None, level="interpretation", basis="interpretation",
+                   status="not_visible", evidence=[], bucket="owner", effective_from=None)
+    code, issues = verify(tmp_path, make_report(row), capsys)
+    assert code == 1 and [i["rule"] for i in issues] == ["future_not_roadmap"]
+
+
+def test_render_rejects_a_non_string_lang(tmp_path, capsys):
+    path = tmp_path / "report.json"
+    path.write_text(json.dumps(make_report(good_row(), lang=["ru"])), encoding="utf-8")
+    code, _ = run_main("report", ["render", path, "--kb", KB], capsys)
+    assert code == 2
+
+
+# --------------------------------------------------------------------------
+# scan_repo.py: build output, legal pages that are not pages
+# --------------------------------------------------------------------------
+
+def test_scan_repo_skips_build_output_and_names_it(tmp_path, capsys):
+    page = '<title>Политика конфиденциальности</title><script src="https://mc.yandex.ru/metrika/tag.js"></script>'
+    for folder in ("out/privacy", ".output/public", ".vercel/output/static", "target/site", "storybook-static"):
+        (tmp_path / folder).mkdir(parents=True)
+        (tmp_path / folder / "index.html").write_text(page, encoding="utf-8")
+    (tmp_path / "index.html").write_text(page, encoding="utf-8")
+    out = scan_repo(tmp_path, capsys)
+    assert [p["file"] for p in out["legal_pages"]] == ["index.html"]
+    assert {"out", ".output", ".vercel", "target", "storybook-static"} <= set(out["stats"]["skipped_dirs"])
+    assert "node_modules" not in out["stats"]["skipped_dirs"]
+
+
+def test_scan_repo_scans_a_skipped_folder_given_as_the_root(tmp_path, capsys):
+    (tmp_path / "out").mkdir()
+    (tmp_path / "out" / "privacy.html").write_text("<title>Политика конфиденциальности</title>", encoding="utf-8")
+    out = scan_repo(tmp_path / "out", capsys)
+    assert [p["file"] for p in out["legal_pages"]] == ["privacy.html"]
+
+
+@pytest.mark.parametrize("rel, text", [
+    ("src/components/PrivacyIcon.tsx", "export const PrivacyIcon = () => <svg />;"),
+    ("src/components/OfferCard.tsx", "export const OfferCard = () => <div>-20%</div>;"),
+    ("README.md", "# Shopify refund webhook handler\n"),
+    ("docs/api.md", "# Контакты API и возврат ошибок\n"),
+])
+def test_scan_repo_does_not_call_components_and_docs_legal_pages(tmp_path, capsys, rel, text):
+    path = tmp_path / rel
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+    assert scan_repo(tmp_path, capsys)["legal_pages"] == []
+
+
+# --------------------------------------------------------------------------
+# scan_url.py: links with side effects, quoted charset, sitemap entities
+# --------------------------------------------------------------------------
+
+class QuietHandler(http.server.SimpleHTTPRequestHandler):
+    gets = []
+
+    def do_GET(self):
+        QuietHandler.gets.append(self.path)
+        super().do_GET()
+
+    def log_message(self, *args):
+        pass
+
+
+@pytest.fixture()
+def side_effect_scan(tmp_path):
+    """A site whose home page and sitemap link to pages that act when fetched; (scan output, requested paths)."""
+    (tmp_path / "index.html").write_text(
+        '<html><body><a href="/about.html">О нас</a><a href="/logout">Выйти</a>'
+        '<a href="/unsubscribe?token=abc">Отписаться</a><a href="/account/delete">Удалить аккаунт</a>'
+        '<a href="/promo.html?token=xyz">Промо</a></body></html>', encoding="utf-8")
+    for name in ("about.html", "list.html", "cdata-page.html", "promo.html"):
+        (tmp_path / name).write_text("<html><body><p>ok</p></body></html>", encoding="utf-8")
+    handler = functools.partial(QuietHandler, directory=str(tmp_path))
+    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+    base = f"http://127.0.0.1:{server.server_address[1]}"
+    (tmp_path / "sitemap.xml").write_text(
+        '<?xml version="1.0" encoding="UTF-8"?><urlset>'
+        f"<url><loc>{base}/unsubscribe?token=zzz</loc></url>"
+        f"<url><loc>{base}/list.html?page=2&amp;sort=asc</loc></url>"
+        f"<url><loc><![CDATA[{base}/cdata-page.html]]></loc></url></urlset>", encoding="utf-8")
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    QuietHandler.gets.clear()
+    result = run_cli("scan_url", base + "/", "--delay", "0", "--timeout", "5", "--catalog", CATALOG)
+    server.shutdown()
+    server.server_close()
+    assert result.returncode == 0, result.stderr
+    return json.loads(result.stdout), list(QuietHandler.gets)
+
+
+def test_scan_url_skips_links_with_side_effects(side_effect_scan):
+    out, requested = side_effect_scan
+    paths = {path.split("?")[0] for path in requested}
+    assert "/about.html" in paths
+    assert not paths & {"/logout", "/unsubscribe", "/account/delete", "/promo.html"}
+    skipped = {s["url"].split("/", 3)[3] for s in out["skipped"] if s["reason"] == "side_effect_link"}
+    assert skipped == {"logout", "unsubscribe?token=abc", "account/delete", "promo.html?token=xyz",
+                       "unsubscribe?token=zzz"}
+
+
+def test_scan_url_sitemap_unescapes_and_reads_cdata(side_effect_scan):
+    _, requested = side_effect_scan
+    assert "/list.html?page=2&sort=asc" in requested and "/cdata-page.html" in requested
+
+
+def test_scan_url_decode_reads_quoted_charset():
+    module = load("scan_url")
+
+    class Reply:
+        body = "Привет".encode("cp1251")
+
+        def header(self, name):
+            return 'text/html; charset="windows-1251"'
+
+    assert module.decode(Reply()) == "Привет"
+
+
+# --------------------------------------------------------------------------
+# kb.py and registry.py: small failures
+# --------------------------------------------------------------------------
+
+def test_kb_accepts_kb_before_the_subcommand():
+    result = run_cli("kb", "--kb", REAL_KB, "list")
+    assert result.returncode == 0, result.stderr
+    assert '"id": "ru:' in result.stdout or '"id":"ru:' in result.stdout
+    after = run_cli("kb", "list", "--kb", REAL_KB)
+    assert after.returncode == 0 and after.stdout == result.stdout
+
+
+def test_kb_extract_into_a_file_path_exits_2(tmp_path):
+    blocker = tmp_path / "file"
+    blocker.write_text("x", encoding="utf-8")
+    result = run_cli("kb", "extract", "--to", blocker / "x", "--kb", REAL_KB)
+    assert result.returncode == 2 and "Traceback" not in result.stderr and "cannot write" in result.stderr
+
+
+def test_registry_offline_whois_stub_for_a_cyrillic_domain(tmp_path, monkeypatch, capsys):
+    (tmp_path / "whois-пример.рф.json").write_text(
+        json.dumps({"status": "ok", "data": {"domain": "ПРИМЕР.РФ"}, "url": "whois.tcinet.ru:43"}), encoding="utf-8")
+    monkeypatch.setenv("LEGAL_KIT_OFFLINE", "1")
+    monkeypatch.setenv("LEGAL_KIT_STUBS", str(tmp_path))
+    code, out = run_json("registry", ["whois", "пример.рф"], capsys)
+    assert code == 0 and out["status"] == "ok"
+
+
+# --------------------------------------------------------------------------
+# Final review fixes
+# --------------------------------------------------------------------------
+
+def test_check_docs_keeps_utf8_when_a_few_bytes_are_invalid(tmp_path, capsys):
+    text = "<footer>ИНН %s, ОГРН %s [если есть лицензия]</footer>\n" % (INN10_BAD, OGRN13_BAD)
+    for name, raw in (("stray.php", "<p>Caf\xe9</p>\n".encode("latin-1") + text.encode("utf-8")),
+                      ("cut.php", text.encode("utf-8") + "Я".encode("utf-8")[:1])):
+        page = tmp_path / name
+        page.write_bytes(raw)
+        code, issues = check(capsys, [], "--public", page, answers=None)
+        assert code == 1, name
+        assert kinds(issues) == ["condition", "encoding", "inn_checksum", "ogrn_checksum"], name
+        assert [i["encoding"] for i in issues if i["kind"] == "encoding"] == ["utf-8-damaged"]
+
+
+def test_check_docs_reads_utf16_without_a_bom(tmp_path, capsys):
+    text = "<footer>ИНН %s</footer>\n" % INN10_BAD
+    for codec in ("utf-16-le", "utf-16-be"):
+        page = tmp_path / (codec + ".html")
+        page.write_bytes(text.encode(codec))
+        code, issues = check(capsys, [], "--public", page, answers=None)
+        assert code == 1 and kinds(issues) == ["encoding", "inn_checksum"], codec
+
+
+@pytest.mark.parametrize("text", [
+    "| ИНН | ОГРН |\n|---|---|\n| %s | %s |\n" % (INN10_OK[0], OGRN13_OK[0]),
+    "<tr><th>ИНН</th><th>ОГРН</th></tr><tr><td>%s</td><td>%s</td></tr>\n" % (INN10_OK[0], OGRN13_OK[0]),
+    "ИНН: —\n\n2. Предмет договора\n",
+    "ИНН: —\n2. Предмет договора\n",
+    "ИНН — 10 цифр, ОГРН — 13 цифр\n",
+])
+def test_check_docs_label_does_not_borrow_a_number_from_elsewhere(tmp_path, capsys, text):
+    assert check(capsys, [write(tmp_path, "t.md", text)], "--public", write(tmp_path, "p.md", text), answers=None)[1] == []
+
+
+@pytest.mark.parametrize("text", ["<td>ИНН</td>\n  <td>%s</td>\n", "ИНН\n%s\n", "ИНН&#160;%s\n"])
+def test_check_docs_label_reaches_a_number_on_the_next_line(tmp_path, capsys, text):
+    _, issues = check(capsys, [write(tmp_path, "n.md", text % INN10_BAD)], answers=None)
+    assert [(i["kind"], i["value"]) for i in issues] == [("inn_checksum", INN10_BAD)]
+
+
+def test_check_docs_unclosed_tags_after_labels_stay_fast(tmp_path, capsys):
+    started = time.monotonic()
+    check(capsys, [write(tmp_path, "big.md", "ИНН <" * 100000)], answers=None)
+    assert time.monotonic() - started < 2
+
+
+@pytest.mark.parametrize("rel", ["app/price-list/oferta/page.tsx", "app/mailing-list/soglasie/page.tsx",
+                                 "legal/item/privacy.html", "pages/link/privacy.vue"])
+def test_scan_repo_component_words_in_a_folder_do_not_hide_a_page(tmp_path, capsys, rel):
+    path = tmp_path / rel
+    path.parent.mkdir(parents=True)
+    path.write_text("<div>text</div>", encoding="utf-8")
+    assert [p["file"] for p in scan_repo(tmp_path, capsys)["legal_pages"]] == [rel]
+
+
+def test_scan_url_unescapes_only_xml_entities_in_sitemap_urls():
+    module = load("scan_url")
+    assert module.xml_unescape("https://a.test/c?id=1&param=2&amp;region=3&#38;copy=4") == \
+        "https://a.test/c?id=1&param=2&region=3&copy=4"

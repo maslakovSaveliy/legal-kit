@@ -73,7 +73,7 @@ In a bot, a payment through a provider asks for the receipt contact (e-mail or p
 
 - An existing route for the same document has priority: update that page in place ([documents.md](documents.md#existing-legal-pages)).
 - Otherwise use `/legal/privacy`, `/legal/offer`, `/legal/refund`, `/legal/requisites`, created only for documents that were drafted. Other documents take a slug under `/legal/` the same way.
-- A page is built only from a draft with no unresolved `{{…}}` other than requisites in `owner.withheld` ([documents.md](documents.md#drafts-and-public-pages)). A draft that still misses a document fact or a requisite stays in `.legal/drafts/`: no route, no footer link to it, and a «Сделать вам» item naming the missing values. The same holds for paste artifacts.
+- A page is built only from a draft with no unresolved `{{…}}` other than requisites in `owner.withheld`, the passages left out under [Drafts and public pages](documents.md#drafts-and-public-pages) aside: a passage dropped while its fact is unknown does not hold the page. A draft that still misses a document fact or a requisite stays in `.legal/drafts/`: no route, no footer link to it, and a «Сделать вам» item naming the missing values. The same holds for paste artifacts.
 - Pages use the layout of an existing content page, are reachable without login and are not hidden from search.
 - Mobile apps do not bundle document texts: a Documents screen (or the About screen) opens the hosted URLs, kept in one constants file, and is linked from settings and from every form that collects data.
 - A mobile app without a website has nowhere to host them: write the pages to `.legal/paste/html/`, keep the constants as clearly marked TODO values, and add a «Сделать вам» item: publish the pages and put their URLs into the constants file.
@@ -158,7 +158,7 @@ Catalogs and other shared files take the kind of their main change. On a rerun:
 
 ## Verify
 
-1. Run the project's own checks from the stack guide's Verify section that can run as the project stands: typecheck, lint, build, tests, with the lockfile's package manager. Install nothing. When dependencies are not installed, add «build not run: dependencies not installed» and the install command (for example `npm ci`) to `not_checked`.
+1. Run the project's own checks from the stack guide's Verify section that can run as the project stands: typecheck, lint, build, tests, with the lockfile's package manager. Install nothing: no package manager install, no `npx` download (`npx --no-install`), no `pub get`, no `pod install`. Project tests that need a database run only when its configured host is local (`localhost`, `127.0.0.1`, `::1` or a local socket); otherwise they are not run and `not_checked` says so. When dependencies are not installed, add «build not run: dependencies not installed» and the install command (for example `npm ci`) to `not_checked`.
 2. Fix every failure the edits caused. A failure that existed before the run is reported, not "fixed" by unrelated changes.
 3. Run `scripts/check_docs.py` with the drafts and, each after its own `--public`, every page and project file the run created or edited outside `.legal/` plus the paste artifacts ([documents.md](documents.md#check-the-drafts)); it must exit 0. Fill a blocking placeholder from `answers.json`, turn a runtime one into the project's interpolation; if the value is unknown, undo this run's change to that file, keep the draft and add a «Сделать вам» item.
 4. Repeat the Detect grep: counter calls appear only inside the gated loader. With a dev server and a browser, load the page with empty storage and confirm no request to counter hosts before Accept.
@@ -168,7 +168,7 @@ Catalogs and other shared files take the kind of their main change. On a rerun:
 
 - Write paste-ready artifacts to `.legal/paste/<platform>/` (`tilda`, `wordpress`, `bitrix`, or `html` for any other site): page HTML, the banner and loader snippet, form settings, footer block. Match the site's look from the prod screenshots.
 - Give numbered placement steps in «Сделать вам», following [no-code.md](../stacks/no-code.md) for the platform's menus.
-- Use computer use or the user's browser to place them only if the user asks; the user logs in, the skill never asks for or types admin passwords.
+- The user places them by the numbered steps. The skill never works in a site's admin panel and never asks for or types admin passwords.
 - Record the artifacts in `state.json` like project files.
 - They are produced even when the user said not to change anything: they live in `.legal/` and change nothing of the user's.
 

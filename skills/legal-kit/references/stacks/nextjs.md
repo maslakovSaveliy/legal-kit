@@ -172,6 +172,6 @@ Find the footer (`components/Footer*`, `layout/footer`, `<footer>` in `app/layou
 - Do not hard-code Russian or English UI text in components when the project has catalogs.
 
 ## Verify and record state
-- `npx tsc --noEmit`, `npm run lint` (the project's script; `next lint` was removed in Next 16, so a bare `next lint` call means an older Next), `npm run build`, `npm test` if present. Use the lockfile's package manager.
+- `npx --no-install tsc --noEmit`, `npm run lint` (the project's script; `next lint` was removed in Next 16, so a bare `next lint` call means an older Next), `npm run build`, `npm test` if present. Use the lockfile's package manager.
 - Rerun the grep from Detect: remaining counter hosts must appear only inside the gated component. In a browser with empty storage, no request to counter hosts may occur before Accept.
 - Record every created or edited file in `.legal/state.json` `managed[]` (`path`, `sha256` of the final content, `kind`: `page` | `checkbox` | `banner` | `footer` | `consent-log`). Do not commit.

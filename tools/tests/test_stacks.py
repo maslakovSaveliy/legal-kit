@@ -373,3 +373,17 @@ def test_mobile_regrant_reenables_sending_and_revoke_is_consistent(stack):
     assert "setDataSendingEnabled(on)" in text, f"{stack}.md: a re-grant in the same session never re-enables sending"
     assert "one per category" in text and "withdraw all" in text, f"{stack}.md: revoke semantics differ from the other mobile stacks"
 
+
+
+INSTALLING = ("flutter pub get", "pod install", "expo prebuild", "dbDelta", "npm install", "npm ci", "pip install",
+              "composer install")
+
+
+@pytest.mark.parametrize("path", sorted(STACKS_DIR.glob("*.md")), ids=lambda p: p.name)
+def test_stack_guides_run_nothing_that_installs_or_migrates(path):
+    """Hard rule 8: a guide names an installing command only to forbid it or to hand it to the owner."""
+    for line in path.read_text(encoding="utf-8").splitlines():
+        hit = next((word for word in INSTALLING if word in line), None)
+        assert hit is None or "«Сделать вам»" in line or "never" in line.lower(), (path.name, line[:120])
+        for call in re.findall(r"`npx [^`]+`", line):
+            assert "--no-install" in call, (path.name, call)

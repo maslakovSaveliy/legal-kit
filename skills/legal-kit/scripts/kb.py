@@ -25,6 +25,7 @@ import argparse  # noqa: E402
 
 def build_parser():
     parser = argparse.ArgumentParser(prog="kb.py", description="Read requirement cards from the pack's cards.tar.gz.")
+    parser.add_argument("--kb", dest="kb_before", help="jurisdiction pack directory; also accepted after the command")
     sub = parser.add_subparsers(dest="command", required=True)
     card = sub.add_parser("card", help="print cards as Markdown")
     card.add_argument("ref", nargs="+", help="ru:<slug>, <slug> or cards/<slug>.md; several ids print in turn")
@@ -36,7 +37,7 @@ def build_parser():
     extract = sub.add_parser("extract", help="write every card into <dir>/cards/")
     extract.add_argument("--to", required=True, help="target directory")
     for command in sub.choices.values():
-        command.add_argument("--kb", default=_kb.DEFAULT_KB, help="jurisdiction pack directory (default: bundled ru)")
+        command.add_argument("--kb", help="jurisdiction pack directory (default: bundled ru)")
     return parser
 
 
@@ -77,10 +78,13 @@ def search(cards, text, limit):
 
 def extract(cards, target):
     folder = os.path.join(target, "cards")
-    os.makedirs(folder, exist_ok=True)
-    for key, body in cards.items():
-        with open(os.path.join(folder, key[3:] + ".md"), "w", encoding="utf-8", newline="") as handle:
-            handle.write(body)
+    try:
+        os.makedirs(folder, exist_ok=True)
+        for key, body in cards.items():
+            with open(os.path.join(folder, key[3:] + ".md"), "w", encoding="utf-8", newline="") as handle:
+                handle.write(body)
+    except OSError as exc:
+        raise _kb.KbError("cannot write %s: %s" % (folder, exc.strerror or exc))
     return {"extracted": len(cards), "dir": target}
 
 
@@ -89,7 +93,7 @@ def main(argv=None):
     if args is None:
         return code
     try:
-        cards = _kb.load_cards(args.kb)
+        cards = _kb.load_cards(args.kb or args.kb_before or _kb.DEFAULT_KB)
         if args.command == "card":
             parts = []
             for ref in args.ref:

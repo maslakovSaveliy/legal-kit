@@ -46,7 +46,7 @@ Requirements for websites, web apps, mobile apps (iOS, Android) and bots or mini
 | N | New technologies (AI and experimental regimes) |
 | O | Bots and mini apps in messengers (Telegram, MAX) |
 
-Each requirement record carries the owner statuses it applies to (`ul`, `ip`, `npd`, `foreign`), business models (`b2b`, `b2c`), product kinds (`site`, `webapp`, `ios`, `android`), obligation (`general`, `conditional`, `sectoral`) and norm dates. Applicability is decided per record, never per direction.
+Each requirement record carries the owner statuses it applies to (`ul`, `ip`, `npd`, `foreign`), business models (`b2b`, `b2c`), product kinds (`site`, `webapp`, `ios`, `android`, `bot`), obligation (`general`, `conditional`, `sectoral`) and norm dates. Applicability is decided per record, never per direction.
 
 ## Required files
 

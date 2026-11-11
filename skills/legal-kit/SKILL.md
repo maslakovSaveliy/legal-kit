@@ -63,7 +63,7 @@ Everything the skill keeps lives in `.legal/`:
 | Path | Content |
 |---|---|
 | `answers.json` | owner facts, withheld requisites, document facts and decisions; schema in [owner-questions.md](references/jurisdictions/ru/owner-questions.md#схема-answersjson) |
-| `state.json` | `{"managed": [{"path", "sha256", "kind"}]}` for every file the skill created or edited; `kind` is `page`, `checkbox`, `banner`, `footer` or `consent-log` |
+| `state.json` | `{"managed": [{"path", "sha256", "kind"}]}` for every file the skill created or edited; `kind` is `page`, `checkbox`, `banner`, `footer`, `consent-log`, `rules` or `agent-link` |
 | `sources.json` | runtime sources: `[{"url", "fetched_at", "quote", "kind"}]`, quote at most 25 words, kind `official`, `market` or `platform`; created as `[]` at intake |
 | `report.json`, `report-YYYY-MM-DD.md` | the report and its rendering |
 | `drafts/<doc>.md` | document drafts for the owner; they may keep placeholders, public pages may not |
@@ -75,15 +75,16 @@ Everything the skill keeps lives in `.legal/`:
 
 ## Scripts
 
-All print JSON (except `render`) and never change the project. Exact flags: `--help` of each script and the workflow file named here.
+They print JSON, except `render`, `rules.py` and `kb.py card`, which print Markdown, and never change the project; only `kb.py extract` writes, into the folder it is given. Exact flags: `--help` of each script and the workflow file named here.
 
 | Script | Phase | Does |
 |---|---|---|
 | `scripts/scan_repo.py ROOT` | 1 | stacks, features with file and line, legal pages, forms, design inventory |
 | `scripts/scan_url.py URL` | 1 | static crawl: features, forms, legal links, third-party hosts, cookies; `js_executed` is always false |
 | `scripts/registry.py egrul\|npd\|whois\|cbr\|rkn ARG` | 1 | one registry lookup: `ok`, `not_found`, `manual` or `error` |
+| `scripts/kb.py card\|search\|list\|extract` | 2, 5 | the requirement cards from `cards.tar.gz`: a card or one section of it, a text search, the list |
 | `scripts/select.py --answers .legal/answers.json --features …` | 2 | applicable and filtered requirements, templates and documents with their triggers, owner questions, owner checks |
-| `scripts/check_docs.py DRAFT… [--public PAGE]… --answers .legal/answers.json` | 5, 6 | placeholders (requisite, fact or runtime; blocking only on public pages), conditions, INN and OGRN checksums, mismatches, forbidden clauses (`risk` never blocks) |
+| `scripts/check_docs.py DRAFT… [--public PAGE]… --answers .legal/answers.json` | 5, 6 | placeholders (requisite, fact or runtime; blocking only on public pages), conditions, INN and OGRN checksums (blocking only on public pages), mismatches, forbidden clauses (`risk` never blocks) |
 | `scripts/report.py verify\|render` | 7 | checks the report against the base; renders it as Markdown, or `plan.md` with `--plan` |
 | `scripts/rules.py --select …` | 7 | `.legal/RULES.md`: the rules of `references/rules/` that apply, at most 60 lines |
 
@@ -98,9 +99,9 @@ Run the phases in order. Phases 0 to 4 never touch the project's files outside `
 - Detect the user's language: the dialog, the questions and the report use it; documents stay in Russian.
 - Load `.legal/answers.json`, `.legal/state.json` and the previous `.legal/report.json` (a rerun). Create `.legal/.gitignore` and `.legal/sources.json` (`[]`) if missing.
 - Write facts from the prompt into `answers.json` at once (status, name, INN, URLs, product kind, requisites the owner withholds into `owner.withheld`); unknown stays `null`, nothing is guessed. A value the prompt gives is never asked again: later it is shown as confirmed. A `localhost` URL is a recon target, never stored in `product.urls`.
-- Choose the jurisdiction (`ru` when the owner or the users are in Russia and nothing points to another country) and the mode: `repo+prod`, `repo-only`, `prod-only`, or `plan` / `feature` by the words of the request ([plan.md](references/workflow/plan.md#choosing-the-mode)). Store listings are not a live URL.
+- Choose the jurisdiction (`ru` when the owner or the users are in Russia and nothing points to another country) and the mode: `repo+prod`, `repo-only`, `prod-only`, or `plan` / `feature` by the words of the request ([plan.md](references/workflow/plan.md#choosing-the-mode)). With a repo, store listings are not a live URL; with no code, a store listing or a bot link alone is the `prod-only` target.
 - Record whether the git tree is clean before anything is written.
-- **Gate:** if the prompt and `answers.json` lack the product, the owner or a URL or repo, ask the start questions for the keys still empty (at most 5, one message) and wait. Code or any URL, a local one included, answers what the product is and where it runs. If the owner is still unknown afterwards, continue with `null` and guess from the footer and WHOIS.
+- **Gate:** if the prompt and `answers.json` lack the product, the owner or a URL or repo, ask the start questions for the keys still empty (at most 5, one message) and wait. Code or any URL, a local one included, answers what the product is and where it runs. If the owner is still unknown afterwards, continue with `null` and guess from the footer and WHOIS. Mode `feature` skips this gate.
 
 ### Phase 1. Recon (read-only, no waiting)
 
@@ -142,7 +143,7 @@ Run the phases in order. Phases 0 to 4 never touch the project's files outside `
 - Consent at a form follows the fork table, except that the user's explicit wish for consent there («согласие у формы», kept in `decisions.consent_at_forms`) gets a separate unchecked consent checkbox; without it the contract-basis notice stays and the checkbox is offered in «Спорно».
 - Documents without templates: from `documents/<doc>.md` into `.legal/drafts/<doc>.md`.
 - Existing legal pages are edited, never duplicated; offers are checked against `forbidden-clauses.json`.
-- Run `scripts/check_docs.py` on the drafts. Drafts may keep placeholders for the owner; a draft that still has any placeholder other than a withheld requisite does not become a public page ([documents.md](references/workflow/documents.md#drafts-and-public-pages)).
+- Run `scripts/check_docs.py` on the drafts. Drafts may keep placeholders for the owner; a draft that still has any placeholder other than a withheld requisite does not become a public page, but a passage left out for an unknown fact does not hold the page ([documents.md](references/workflow/documents.md#drafts-and-public-pages)).
 
 ### Phase 6. Integration
 

@@ -243,3 +243,14 @@ def test_skill_fits_skills_sh_snapshot():
     assert len(sizes) <= SNAPSHOT_MAX_FILES, f"{len(sizes)} text files in the skill folder"
     assert not big, f"text files over {SNAPSHOT_MAX_FILE_BYTES} bytes: {big}"
     assert sum(sizes.values()) <= SNAPSHOT_MAX_TOTAL_BYTES, f"{sum(sizes.values())} bytes of text"
+
+
+def test_readme_counts_match_the_evals():
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    evals = len(json.loads((ROOT / "evals" / "evals.json").read_text(encoding="utf-8"))["evals"])
+    queries = json.loads((ROOT / "evals" / "triggers.json").read_text(encoding="utf-8"))
+    positive = sum(1 for query in queries if query["should_trigger"])
+    assert "%d сценариев" % evals in readme and "%d scenarios" % evals in readme
+    assert "%d запросов" % len(queries) in readme and "%d queries" % len(queries) in readme
+    assert "%d должны его запускать, %d нет" % (positive, len(queries) - positive) in readme
+    assert "%d should trigger it, %d should not" % (positive, len(queries) - positive) in readme

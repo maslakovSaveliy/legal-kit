@@ -159,7 +159,7 @@ python3 <skill>/scripts/report.py verify .legal/report.json --kb <skill>/referen
 | `source_required` | add the URL from `.legal/sources.json` to `sources` |
 | `source_not_allowlisted` | the URL is not official or not a platform domain: label the row and the source `market` |
 | `missing_evidence` | add the file and line or the URL; without evidence the status is `not_visible` |
-| `future_not_roadmap` | move the row to `roadmap`, or set `effective_from` to the in-force date it relies on |
+| `future_not_roadmap` | move the row to `roadmap`, or set `effective_from` to the in-force date it relies on; an `n_a` row is exempt and stays in `done` |
 | `effective_from_unknown` | use one of the requirement's own dates |
 | `uncovered_req` | add the row of that applicable requirement; `n_a` with the reason when it does not apply |
 | `planned_outside_plan` | status `planned` or bucket `plan` in a report whose mode is not `plan`: use the audit statuses |
@@ -199,7 +199,7 @@ Short, in the user's language:
   - every id of `applicable` in `.legal/evidence/select.json` is the `req` of a row (an `n_a` row with the reason when it does not apply);
   - rows of `present`, `missing`, `partial` have evidence;
   - `official_runtime` and `platform` rows have URLs, and `official_runtime` URLs and `official` sources are on the allowlist ([research-rules.md](research-rules.md#official-sources));
-  - each `effective_from` is one of the requirement's dates, no row outside `roadmap` has a future date, and no row with a `null` date belongs to a requirement with a future date unless it is in `roadmap`.
+  - each `effective_from` is one of the requirement's dates, no row outside `roadmap` has a future date, and no row with a `null` date belongs to a requirement with a future date unless it is in `roadmap` (`n_a` rows aside: they stay in `done`).
 - Render by hand into `.legal/report-YYYY-MM-DD.md` with the same sections: title with the product name; product, mode, date; «База требований: <date from BASE.md>»; summary by direction; «Сделано», «Сделать вам», «Спорно», «Дорожная карта» as tables, one line per row, grouped by direction (`### <letter> <name>` from the requirement's `dir`):
 
   ```

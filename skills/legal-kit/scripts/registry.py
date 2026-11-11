@@ -369,9 +369,17 @@ def cbr(ogrn):
     return manual("cbr", ogrn, "The page format was not recognised")
 
 
+def idn_name(domain):
+    """The Unicode form of a punycode domain (xn--e1afmkfd.xn--p1ai -> пример.рф); the input when it has none."""
+    try:
+        return domain.encode("ascii").decode("idna")
+    except UnicodeError:
+        return domain
+
+
 def lookup(kind, key, day):
     if offline():
-        names = [key] if kind != "whois" else [key, urllib.parse.unquote(key)]
+        names = [key] if kind != "whois" else [key, urllib.parse.unquote(key), idn_name(key)]
         stub = stub_answer(kind, names)
         if stub is not None:
             return stub

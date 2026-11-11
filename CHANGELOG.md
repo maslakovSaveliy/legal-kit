@@ -2,6 +2,32 @@
 
 ## [Unreleased]
 
+Fixes from a review of 0.2.2.
+
+### Scripts
+
+- `check_docs.py` and `scan_repo.py` read files in windows-1251 and UTF-16 and files with a BOM instead of replacing their text: a legacy page with a leftover placeholder no longer passes as clean. A UTF-8 file with a few invalid bytes keeps its text, with those bytes replaced. `check_docs.py` adds a non-blocking `encoding` issue in each case.
+- `check_docs.py` finds an INN or OGRN in a table, after bold marks or a dash, in HTML cells, after `&nbsp;`, as a pair `ИНН/ОГРН a/b` and under the capital Latin labels `INN`, `OGRN`, `OGRNIP`; a number followed by a year is no longer glued to it; a label never takes a number from across a blank line, a table rule row or the next table row; numbers in `answers.json` are compared without their grouping.
+- A failed check digit blocks only on a public page: a draft keeps the number as the owner gave it, the page that needs it stays a draft.
+- `report.py verify` leaves an `n_a` row of a requirement with a future date in `done`; `render` exits 2 on a `lang` that is not a string.
+- `scan_repo.py` skips build output (`out`, `.output`, `.vercel`, `target`, `storybook-static`) and names the skipped build and vendor folders in `stats.skipped_dirs`; a component named after a legal page, a README and developer docs are no longer listed as legal pages.
+- `scan_url.py` does not fetch links that may act when opened (logout, unsubscribe, delete, cancel, confirm, a token in the query) and lists them in `skipped`; it reads a quoted charset and sitemap entries with entities or CDATA.
+- `rules.py` names no file that may be missing and prints no rule for a requirement the report rated `n_a`.
+- `kb.py` takes `--kb` before the command too and reports an unwritable target without a traceback; offline whois stubs are found for Cyrillic domains.
+
+### Workflow and stacks
+
+- Stack guides install nothing: no `flutter pub get`, `pod install` or `expo prebuild`, `npx --no-install` everywhere, an Xcode or SwiftPM build only with packages already fetched; the WordPress consent log is a recipe for the owner's developer, not a table created on the site; paste artifacts are placed by the user.
+- Project tests that need a database run only when its configured host is local.
+- `owner.country` may be `null`: signs of a foreign owner found in recon are confirmed in the block before any registry lookup.
+- An app with only a store listing and a bot without a repo run as `prod-only`: that one page is read, the platform's site is not crawled, and a live bot is never messaged.
+- A passage left out for an unknown fact does not hold a page back, in every file that states the rule; mode `feature` skips the start gate and scans the code before `select.py`.
+- One list of `state.json` kinds, `kb.py` in the scripts table, `bot` among the product kinds, `rkn` among the registry commands.
+
+### Docs
+
+- README: 14 eval scenarios and 30 trigger queries; English example prompts for the plan and feature modes.
+
 ## [0.2.2] - 2026-11-11
 
 Fixes from a live run on a Tilda site with a foreign owner.

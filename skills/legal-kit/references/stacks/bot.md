@@ -9,6 +9,7 @@ Contents: [Detect](#detect) | [Legal pages](#legal-pages) | [Consent checkbox in
 - MAX: `@maxhub/max-bot-api`, `maxapi`, `max_client`; calls to `platform-api2.max.ru` (earlier `platform-api.max.ru`). The MAX documentation asks bot servers to trust the root certificate of the Russian Ministry of Digital Development: an HTTP client without it fails the TLS check.
 - Mini app: `telegram-web-app.js`, `window.Telegram.WebApp`, `@telegram-apps/sdk`, `@twa-dev/sdk`; MAX Bridge exposes `window.WebApp`.
 - Payments: `send_invoice` / `sendInvoice` with `provider_token` (a payment provider), currency `XTR` (Telegram Stars), `pre_checkout_query` handlers.
+- The skill never sends a message to a live bot and presses none of its buttons (no `/start`): it reads the bot's public page (`t.me/<bot>`, the MAX profile) and the code. Without a repo the run is `prod-only` and the chat flow goes to `not_checked`.
 - Find the start handler (`/start`, `bot_started`), the menu and command list, the place where the bot asks for a phone number (`request_contact`, a contact button), and where user data is written (own database, `CloudStorage`, platform-side storage).
 
 ## Legal pages

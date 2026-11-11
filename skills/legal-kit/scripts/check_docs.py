@@ -17,10 +17,12 @@ artifacts). Reads optionally .legal/answers.json
   ogrn_checksum          OGRN/OGRNIP next to "ОГРН"/"ОГРНИП" with a wrong length or check digit
   mismatch               INN, OGRN or owner name differs from answers.json (or is not confirmed there)
   forbidden_clause       an offer contains a clause from forbidden-clauses.json (severity violation|risk)
+  encoding               the file is not clean UTF-8: read as cp1251 or utf-16, or as UTF-8 with invalid bytes replaced
 
-Blocking: placeholders in drafts never block; in a public file every placeholder blocks except a requisite
-listed in answers.json owner.withheld (a runtime one must become the project's own interpolation). A forbidden clause blocks with severity violation, not with risk.
-Every other kind blocks.
+Blocking: placeholders and failed check digits never block in drafts; in a public file a failed check digit blocks,
+and so does every placeholder except a requisite listed in answers.json owner.withheld (a runtime one must become
+the project's own interpolation). A forbidden clause blocks with severity violation, not with risk. `encoding`
+never blocks. Every other kind blocks.
 
 Exit codes: 0 no blocking issue, 1 blocking issues found, 2 bad input.
 """
@@ -67,9 +69,22 @@ RUNTIME_PLACEHOLDERS = frozenset((
     "ПОЛЕ", "ОБЪЯСНЕНИЕ", "ССЫЛКА_НА_НОРМУ_ФЗ",
 ))
 # digits may be grouped with spaces, no-break spaces or hyphens: "7707 083893", "0098-7654-37"
-_NUMBER = r"(\d(?:[\d \u00a0\u202f-]*\d)?)"
-INN_RE = re.compile(r"(?<!\w)ИНН(?!\w)(?:\s*/\s*КПП)?[\s:№#.,\u00a0-]*" + _NUMBER + r"(?:\s*/\s*\d+)?", re.I)
-OGRN_RE = re.compile(r"(?<!\w)ОГРН(?:ИП)?(?!\w)[\s:№#.,\u00a0-]*" + _NUMBER, re.I)
+# "ИНН — 10 цифр" describes the number, it is not one
+_NUMBER = r"(\d(?:[\d \u00a0\u202f-]*\d)?)(?!\d)(?![ \t\u00a0]*(?:цифр|знак|символ|digit))"
+# between a label and its number: punctuation, a table bar, emphasis marks, a dash, tags and &nbsp;
+# ("| ИНН | 7707083893 |", "ИНН: **7707083893**", "<td>ИНН</td><td>7707083893</td>", "ИНН — 7707083893")
+# The gap stays inside one block: it does not cross a blank line, a table rule row (|---|), the end of a table row
+# (</tr>) or a dash that ends its line ("ИНН: —"), so a header cell never borrows a number of the next row.
+_SEP = (r"(?:<(?!/?tr\b)[^>\n]{1,200}>|&nbsp;|&\#160;|[ \t\r\u00a0:№#.,|*_]|-(?!--)|[\u2014\u2013](?![ \t\r]*\n)"
+        r"|\n(?![ \t\r]*\n))*")
+# the Latin labels of a translation only in capitals: "Holiday Inn 2024" is not a requisite
+_INN_LABEL = r"(?:(?i:ИНН)|INN)(?!\w)"
+_OGRN_LABEL = r"(?:(?i:ОГРН(?:ИП)?)|OGRN(?:IP)?)(?!\w)"
+INN_RE = re.compile(r"(?<!\w)" + _INN_LABEL + r"(?:\s*/\s*(?i:КПП))?" + _SEP + _NUMBER + r"(?:\s*/\s*\d+)?")
+OGRN_RE = re.compile(r"(?<!\w)" + _OGRN_LABEL + _SEP + _NUMBER)
+# "ИНН/ОГРН 7707083893/1027700132195": the first number is the INN, the second the OGRN
+PAIR_RE = re.compile(r"(?<!\w)" + _INN_LABEL + r"\s*/\s*" + _OGRN_LABEL + _SEP + _NUMBER + r"\s*/\s*" + _NUMBER)
+INN_LENGTHS, OGRN_LENGTHS = (10, 12), (13, 15)
 # the label a foreign company's drafts print instead of INN and OGRN (documents.md, Placeholders)
 REG_NUMBER_RE = re.compile(r"(?<!\w)регистрационный номер(?!\w)", re.I)
 GROUPING = re.compile(r"[ \u00a0\u202f-]")
@@ -127,31 +142,69 @@ def fold_plain(text):
     return fold(text)[0].strip(" .,;:!?")
 
 
-def digits_issue(file, line, kind, value, label, expected):
-    return {"file": file, "line": line, "kind": kind, "value": value, "blocking": True,
+def digits_issue(file, line, kind, value, label, expected, blocking):
+    return {"file": file, "line": line, "kind": kind, "value": value, "blocking": blocking,
             "message": "%s %r: %s (expected %s)" % (label, value, "wrong length or check digit", expected)}
 
 
-def check_numbers(path, text, starts, owner):
-    """INN/OGRN checksum and mismatch issues as (line, column, issue)."""
+def split_number(raw, lengths):
+    """The digits of one requisite out of a matched run of digit groups.
+
+    A first group that already has a full length stands alone ("7707083893 2024 г." is an INN and a year);
+    otherwise the groups are one number written with spaces ("0098 7654 37"), cut at the longest prefix of a
+    full length when the whole run is too long."""
+    groups = [group for group in GROUPING.split(raw) if group]
+    if len(groups[0]) in lengths:
+        return groups[0]
+    whole = "".join(groups)
+    if len(whole) in lengths:
+        return whole
+    best, prefix = None, ""
+    for group in groups:
+        prefix += group
+        if len(prefix) in lengths:
+            best = prefix
+    if best:
+        return best
+    return whole if len(whole) <= max(lengths) else groups[0]
+
+
+def find_numbers(text):
+    """([(offset, inn)], [(offset, ogrn)]) in the order of the text."""
+    inns, ogrns = [], []
+    for match in PAIR_RE.finditer(text):
+        inns.append((match.start(), split_number(match.group(1), INN_LENGTHS)))
+        ogrns.append((match.start(2), split_number(match.group(2), OGRN_LENGTHS)))
+    # a pair is read once: blank it out, keeping every offset, before the single labels are searched
+    rest = PAIR_RE.sub(lambda match: " " * len(match.group(0)), text)
+    inns.extend((match.start(), split_number(match.group(1), INN_LENGTHS)) for match in INN_RE.finditer(rest))
+    ogrns.extend((match.start(), split_number(match.group(1), OGRN_LENGTHS)) for match in OGRN_RE.finditer(rest))
+    return sorted(inns), sorted(ogrns)
+
+
+def check_numbers(path, text, starts, owner, public=False):
+    """INN/OGRN checksum and mismatch issues as (line, column, issue).
+
+    A failed check digit blocks only on a public page: in a draft the number stays as the owner gave it."""
     found = []
     inns, ogrns = [], []
     foreign = owner is not None and owner.get("status") == "foreign"
-    for match in INN_RE.finditer(text):
-        value, line = GROUPING.sub("", match.group(1)), line_of(starts, match.start())
-        inns.append((line, match.start(), value))
+    inn_hits, ogrn_hits = find_numbers(text)
+    for offset, value in inn_hits:
+        line = line_of(starts, offset)
+        inns.append((line, offset, value))
         if not _kb.inn_valid(value):
-            found.append((line, match.start(), digits_issue(path, line, "inn_checksum", value, "INN", "10 or 12 digits")))
-    for match in OGRN_RE.finditer(text):
-        value, line = GROUPING.sub("", match.group(1)), line_of(starts, match.start())
-        ogrns.append((line, match.start(), value))
+            found.append((line, offset, digits_issue(path, line, "inn_checksum", value, "INN", "10 or 12 digits", public)))
+    for offset, value in ogrn_hits:
+        line = line_of(starts, offset)
+        ogrns.append((line, offset, value))
         if foreign:
-            found.append((line, match.start(), {
+            found.append((line, offset, {
                 "file": path, "line": line, "kind": "mismatch", "field": "ogrn", "value": value, "blocking": True,
                 "message": "a foreign company has no OGRN/OGRNIP: print the country and registration number"}))
         elif not _kb.ogrn_valid(value):
-            found.append((line, match.start(),
-                          digits_issue(path, line, "ogrn_checksum", value, "OGRN/OGRNIP", "13 or 15 digits")))
+            found.append((line, offset,
+                          digits_issue(path, line, "ogrn_checksum", value, "OGRN/OGRNIP", "13 or 15 digits", public)))
     if owner is None:
         return found, inns, ogrns
 
@@ -159,7 +212,7 @@ def check_numbers(path, text, starts, owner):
         found.append((line, column, {"file": path, "line": line, "kind": "mismatch", "field": field,
                                      "value": value, "blocking": True, "message": message}))
 
-    expected_inn = owner.get("inn")
+    expected_inn = GROUPING.sub("", owner.get("inn") or "")
     for line, column, value in inns:
         if not _kb.inn_valid(value):
             continue
@@ -167,7 +220,7 @@ def check_numbers(path, text, starts, owner):
             mismatch(line, column, "inn", value, "the document has an INN but answers.json does not (not confirmed)")
         elif value != expected_inn:
             mismatch(line, column, "inn", value, "INN %s differs from the owner INN in answers.json" % value)
-    expected_ogrn = owner.get("ogrn")
+    expected_ogrn = GROUPING.sub("", owner.get("ogrn") or "")
     for line, column, value in ogrns:
         if foreign or not _kb.ogrn_valid(value):
             continue
@@ -181,7 +234,7 @@ def check_numbers(path, text, starts, owner):
     if foreign:
         regs = [(line_of(starts, m.start()), m.start(), "") for m in REG_NUMBER_RE.finditer(text)]
         expected_reg = GROUPING.sub("", owner.get("reg_number") or "")
-        if regs and expected_reg and expected_reg not in GROUPING.sub("", text):
+        if regs and expected_reg and expected_reg.casefold() not in GROUPING.sub("", text).casefold():
             line, column, _ = regs[0]
             mismatch(line, column, "reg_number", owner.get("reg_number"),
                      "the registration number from answers.json is not in the document")
@@ -257,9 +310,14 @@ def placeholder_issue(path, line, match, public, withheld):
 
 
 def check_file(path, owner, clauses, kind, public=False, withheld=()):
-    text = _kb.read_text(path)
+    text, encoding = _kb.read_text_enc(path)
     starts = line_starts(text)
     found = []
+    if encoding != "utf-8":
+        found.append((1, -1, {"file": path, "line": 1, "kind": "encoding", "encoding": encoding, "blocking": False,
+                              "message": ("the file has bytes that are not valid UTF-8; they were replaced"
+                                          if encoding == "utf-8-damaged" else
+                                          "the file is not UTF-8 and was read as %s" % encoding)}))
     for match in PLACEHOLDER_RE.finditer(text):
         line = line_of(starts, match.start())
         found.append((line, match.start(), placeholder_issue(path, line, match, public, withheld)))
@@ -269,7 +327,7 @@ def check_file(path, owner, clauses, kind, public=False, withheld=()):
         line = line_of(starts, match.start())
         found.append((line, match.start(), {"file": path, "line": line, "kind": "condition",
                                             "text": match.group(0)[:100], "blocking": True}))
-    numbers, _, _ = check_numbers(path, text, starts, owner)
+    numbers, _, _ = check_numbers(path, text, starts, owner, public)
     found.extend(numbers)
     if is_offer(path, text, kind):
         found.extend(check_clauses(path, text, [c for c in clauses if re.search(r"oferta|offer", c.get("template", ""))]))
@@ -281,8 +339,8 @@ def build_parser():
     parser = argparse.ArgumentParser(
         prog="check_docs.py",
         description="Check drafted documents and public pages: leftover placeholders and condition markers, "
-                    "INN/OGRN checksums, mismatches with answers.json, forbidden offer clauses. Prints JSON; "
-                    "exits 1 only on blocking issues.",
+                    "INN/OGRN checksums (blocking on public pages), mismatches with answers.json, forbidden offer "
+                    "clauses. Prints JSON; exits 1 only on blocking issues.",
         epilog="List the drafts before the options and give --public once per file, for example: check_docs.py "
                ".legal/drafts/*.md --public legal/privacy.html --public components/Footer.tsx "
                "--answers .legal/answers.json")

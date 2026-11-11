@@ -125,7 +125,7 @@ No footer in an app. Link the four documents from the Documents screen, the sign
 - RU strings and documents are authoritative. EN strings are translations; add `documents.translationNotice` and show it on the Documents screen when the language is EN.
 
 ## Verify and record state
-- `xcodebuild -scheme <Scheme> -destination 'generic/platform=iOS Simulator' build` (take the scheme from `xcodebuild -list`); `swift build` / `swift test` for plain SPM packages; `swiftlint` only if `.swiftlint.yml` exists.
+- Only when the project's packages are already fetched (the build must download nothing; otherwise «Сборка не запускалась» goes to `not_checked`): `xcodebuild -scheme <Scheme> -destination 'generic/platform=iOS Simulator' build` (take the scheme from `xcodebuild -list`); `swift build` / `swift test` for plain SPM packages; `swiftlint` only if `.swiftlint.yml` exists.
 - Search check: `AppMetrica.activate` and `setAnalyticsCollectionEnabled(true)` appear only in `AnalyticsConsent`.
 - If a simulator is available, launch on a fresh install and confirm the banner shows and no analytics call happens before Accept.
 - Record every created or edited file in `.legal/state.json` `managed[]` (`path`, `sha256` of the final content, `kind`: `page` | `checkbox` | `banner` | `footer` | `consent-log`). Do not commit.

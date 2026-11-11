@@ -69,7 +69,7 @@ Every item names its requirement id, its level and its basis (norm, practice, in
 One canonical rebuild in every mode. `RULES.md` is for the code still to be written, so it needs the planned features too, which the audit's own `select.json` does not have:
 
 1. `select.py --planned <ids of product.planned_features> --features <found ids> --answers .legal/answers.json --today <date> > .legal/evidence/select-rules.json` (in mode `plan` the run's `select.json` already is this file);
-2. `rules.py --select .legal/evidence/select-rules.json --stacks <stack ids> --lang <lang> --today <date> [--report .legal/report.json] > .legal/RULES.md`, with `--report` whenever `.legal/report.json` exists (after `report.py verify` exits 0), so a requirement the run rated `interpretation` is never «норма».
+2. `rules.py --select .legal/evidence/select-rules.json --stacks <stack ids> --lang <ru|en> --today <date> [--report .legal/report.json] > .legal/RULES.md` (`ru` for a Russian dialog, `en` for any other language), with `--report` whenever `.legal/report.json` exists (after `report.py verify` exits 0), so a requirement the run rated `interpretation` is never «норма» and one rated `n_a` in every row gives no rule.
 
 - It picks the rules of `references/rules/` ([the library](../rules/README.md)) whose requirements are applicable and whose features were found or planned, at most 60 lines.
 - A line: `- <rule> — <requirement ids>, <label>; как: legal-kit references/stacks/<stack>.md`. The label is never stronger than the requirements allow, nor than the level the run gave the row in `report.json`: a requirement the run rated `interpretation` (for example consent under a contract basis) is never «норма».
@@ -91,7 +91,7 @@ One canonical rebuild in every mode. `RULES.md` is for the code still to be writ
 
 1. Map the function to the catalog, one quote per feature.
 2. Read `answers.json` when it exists. When it does not, ask nothing: take the facts from the prompt and mark the rest «предполагаю: …». Create `.legal/answers.json` (only `product.planned_features` and the prompt's facts, the rest `null`), `.legal/.gitignore` and `.legal/sources.json`.
-3. Run `select.py --planned <ids> --features <found>` so the rules see what exists, for example the consent mechanism.
+3. With code, run `scan_repo.py` first and take its feature ids as `<found>`; without code `--features` is left out. Run `select.py --planned <ids> --features <found> --answers .legal/answers.json --today <date> > .legal/evidence/select-rules.json`, so the rules see what exists, for example the consent mechanism.
 4. Give the rules of this function in the chat, with links to the sections of the stack guide. When the agent writes the code in the same session, it writes it by these rules.
 5. Rebuild `.legal/RULES.md` by the canonical rebuild ([RULES.md](#rulesmd)), with `--report` when `.legal/report.json` exists, when it exists or the owner asks; update `state.json`.
 

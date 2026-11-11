@@ -115,6 +115,6 @@ Find the footer component (`src/components/Footer*`, `layouts/`). Add Полит
 - No catalogs in the project: keep the strings in one constants file; do not add an i18n library.
 
 ## Verify and record state
-- `npx tsc --noEmit`, `npm run lint`, `npm run build`, `npm test` if present (use the lockfile's package manager).
+- `npx --no-install tsc --noEmit`, `npm run lint`, `npm run build`, `npm test` if present (use the lockfile's package manager).
 - `grep` from Detect again: counter hosts must remain only in the loader. In a browser with empty storage, no request to counter hosts before Accept.
 - Record every created or edited file in `.legal/state.json` `managed[]` (`path`, `sha256` of the final content, `kind`: `page` | `checkbox` | `banner` | `footer` | `consent-log`). Do not commit.
