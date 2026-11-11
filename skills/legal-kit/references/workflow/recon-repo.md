@@ -28,7 +28,7 @@ The scanner reads `references/features/catalog.json`, skips `node_modules`, buil
 | `legal_pages` | existing legal pages `[{file, kind}]` |
 | `forms` | `[{file, line, fields, has_consent_checkbox, prechecked, checkboxes}]` |
 | `design` | `ui_libs`, `tokens`, `i18n` (`lib`, `catalogs`), `footer`, `checkbox`, `layout`, `routes` |
-| `stats`, `warnings` | counts and files that could not be read |
+| `stats`, `warnings` | counts and files that could not be read; `stats.skipped_dirs` names the skipped build and vendor folders (`out`, `dist`, `target`, `vendor`…): when the product's own source lives in one, scan it as the root, `scan_repo.py <folder>` |
 
 ## Confirm the signals
 

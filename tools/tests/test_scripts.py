@@ -2716,3 +2716,39 @@ def test_render_rejects_a_non_string_lang(tmp_path, capsys):
     path.write_text(json.dumps(make_report(good_row(), lang=["ru"])), encoding="utf-8")
     code, _ = run_main("report", ["render", path, "--kb", KB], capsys)
     assert code == 2
+
+
+# --------------------------------------------------------------------------
+# scan_repo.py: build output, legal pages that are not pages
+# --------------------------------------------------------------------------
+
+def test_scan_repo_skips_build_output_and_names_it(tmp_path, capsys):
+    page = '<title>Политика конфиденциальности</title><script src="https://mc.yandex.ru/metrika/tag.js"></script>'
+    for folder in ("out/privacy", ".output/public", ".vercel/output/static", "target/site", "storybook-static"):
+        (tmp_path / folder).mkdir(parents=True)
+        (tmp_path / folder / "index.html").write_text(page, encoding="utf-8")
+    (tmp_path / "index.html").write_text(page, encoding="utf-8")
+    out = scan_repo(tmp_path, capsys)
+    assert [p["file"] for p in out["legal_pages"]] == ["index.html"]
+    assert {"out", ".output", ".vercel", "target", "storybook-static"} <= set(out["stats"]["skipped_dirs"])
+    assert "node_modules" not in out["stats"]["skipped_dirs"]
+
+
+def test_scan_repo_scans_a_skipped_folder_given_as_the_root(tmp_path, capsys):
+    (tmp_path / "out").mkdir()
+    (tmp_path / "out" / "privacy.html").write_text("<title>Политика конфиденциальности</title>", encoding="utf-8")
+    out = scan_repo(tmp_path / "out", capsys)
+    assert [p["file"] for p in out["legal_pages"]] == ["privacy.html"]
+
+
+@pytest.mark.parametrize("rel, text", [
+    ("src/components/PrivacyIcon.tsx", "export const PrivacyIcon = () => <svg />;"),
+    ("src/components/OfferCard.tsx", "export const OfferCard = () => <div>-20%</div>;"),
+    ("README.md", "# Shopify refund webhook handler\n"),
+    ("docs/api.md", "# Контакты API и возврат ошибок\n"),
+])
+def test_scan_repo_does_not_call_components_and_docs_legal_pages(tmp_path, capsys, rel, text):
+    path = tmp_path / rel
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+    assert scan_repo(tmp_path, capsys)["legal_pages"] == []

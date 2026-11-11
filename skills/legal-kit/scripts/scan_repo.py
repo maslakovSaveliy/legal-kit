@@ -40,7 +40,12 @@ SKIP_DIRS = {
     "coverage", "vendor", ".legal", ".idea", ".vscode", ".gradle", ".expo", ".nuxt", ".svelte-kit", ".turbo",
     ".cache", ".tox", ".mypy_cache", ".pytest_cache", "DerivedData", ".superpowers",
     "secrets", ".secrets", ".ssh", ".aws", ".gnupg", ".kube",
+    "out", ".output", ".vercel", "target", "storybook-static", "bower_components", ".parcel-cache",
 }
+# Skipped folders whose name a project may also use for its own source: the result names them
+# (stats.skipped_dirs), so a product that lives in one can be scanned with that folder as the root.
+GENERATED_DIRS = {"build", "dist", "out", ".output", ".vercel", "target", "storybook-static", "vendor", "coverage"}
+MAX_SKIPPED_DIRS = 20
 DOC_DIRS = {"docs", "doc", "documentation"}
 DOC_EXTS = {".md", ".mdx", ".rst", ".txt"}
 # generated, minified or secret-bearing files are never read
@@ -79,10 +84,15 @@ def is_manifest(name):
     return name in MANIFEST_NAMES or bool(re.match(r"^requirements.*\.txt$", name))
 
 
-def walk(root):
-    """All files below root (skipping noise directories and symlinks) as (rel, abs, size), sorted."""
+def walk(root, skipped=None):
+    """All files below root (skipping noise directories and symlinks) as (rel, abs, size), sorted.
+
+    The skipped folders of GENERATED_DIRS are appended to ``skipped`` as paths relative to root."""
     found = []
     for dirpath, dirnames, filenames in os.walk(root):
+        if skipped is not None:
+            skipped.extend(os.path.relpath(os.path.join(dirpath, d), root).replace(os.sep, "/")
+                           for d in dirnames if d in GENERATED_DIRS)
         dirnames[:] = sorted(d for d in dirnames if d not in SKIP_DIRS)
         for name in sorted(filenames):
             full = os.path.join(dirpath, name)
@@ -186,7 +196,10 @@ LEGAL_KINDS = (
 LEGAL_PAGE_EXTS = {".html", ".htm", ".md", ".mdx", ".php", ".twig", ".njk", ".liquid", ".hbs", ".ejs", ".pug",
                    ".tsx", ".jsx", ".vue", ".svelte", ".astro", ".dart", ".swift", ".kt", ".pdf", ".docx", ".txt",
                    ".jinja", ".j2"}
-NON_PAGE_WORDS = {"test", "tests", "spec", "stories", "story", "mock", "mocks", "fixture", "fixtures", "snapshots"}
+NON_PAGE_WORDS = {"test", "tests", "spec", "stories", "story", "mock", "mocks", "fixture", "fixtures", "snapshots",
+                  # a component named after a legal page is a part of a page, not the page
+                  "icon", "card", "button", "link", "modal", "item", "list"}
+NON_PAGE_DOCS = re.compile(r"^(?:readme|changelog|contributing|history)\b", re.I)
 PAGE_STEMS = {"page", "index"}
 HEADING_KINDS = (
     ("cookie", re.compile(r"cookie|куки", re.I)),
@@ -218,6 +231,9 @@ def legal_kind_by_path(rel):
 
 def legal_kind_by_heading(rel, text):
     if os.path.splitext(rel)[1].lower() not in LEGAL_PAGE_EXTS or not text:
+        return None
+    folders, name = rel.split("/")[:-1], rel.rsplit("/", 1)[-1]
+    if NON_PAGE_DOCS.match(name) or DOC_DIRS & set(folders):  # developer docs talk about refunds and contacts too
         return None
     head = text[:4096]
     match = (re.search(r"<title[^>]*>(.*?)</title>", head, re.I | re.S)
@@ -664,7 +680,8 @@ def feature_flags(rel, ext, text, manifest):
 def scan(root, catalog_path, gate=True):
     catalog = _kb.load_catalog(catalog_path)
     warnings = list(catalog.warnings)
-    files = walk(root)
+    skipped_dirs = []
+    files = walk(root, skipped_dirs)
     rels = [rel for rel, _, _ in files]
 
     evidence, forms, legal, footer_markup = {}, [], {}, []
@@ -725,7 +742,7 @@ def scan(root, catalog_path, gate=True):
         "forms": forms,
         "design": design_inventory(rels, npm, pubspec, footer_markup),
         "stats": {"files_seen": len(files), "files_scanned": scanned, "skipped_large": skipped_large,
-                  "skipped_binary": skipped_binary},
+                  "skipped_binary": skipped_binary, "skipped_dirs": sorted(skipped_dirs)[:MAX_SKIPPED_DIRS]},
         "warnings": sorted(set(warnings)),
     }
 
