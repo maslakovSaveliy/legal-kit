@@ -1481,10 +1481,17 @@ def test_check_docs_inn_and_ogrn_checksums(tmp_path, capsys):
     assert code == 0 and issues == []
     bad = f"ИНН {INN10_BAD}\nИНН {INN12_BAD}\nОГРН {OGRN13_BAD}\nОГРНИП {OGRN15_BAD}\nИНН 12345\nОГРН 123\n"
     code, issues = check(capsys, [write(tmp_path, "bad.md", bad)], answers=None)
-    assert code == 1
+    assert code == 0 and not any(i["blocking"] for i in issues)  # a draft: the owner re-checks the number
     assert [(i["kind"], i["line"]) for i in issues] == [
         ("inn_checksum", 1), ("inn_checksum", 2), ("ogrn_checksum", 3), ("ogrn_checksum", 4),
         ("inn_checksum", 5), ("ogrn_checksum", 6)]
+
+
+def test_check_docs_checksum_blocks_only_on_a_public_page(tmp_path, capsys):
+    page = write(tmp_path, "requisites.html", "<p>ИНН %s</p>\n<p>ОГРН %s</p>\n" % (INN10_BAD, OGRN13_BAD))
+    code, issues = check(capsys, [], "--public", page, answers=None)
+    assert code == 1
+    assert [(i["kind"], i["blocking"]) for i in issues] == [("inn_checksum", True), ("ogrn_checksum", True)]
 
 
 def test_check_docs_accepts_digits_grouped_with_spaces_and_hyphens(tmp_path, capsys):

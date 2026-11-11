@@ -136,8 +136,8 @@ def fold_plain(text):
     return fold(text)[0].strip(" .,;:!?")
 
 
-def digits_issue(file, line, kind, value, label, expected):
-    return {"file": file, "line": line, "kind": kind, "value": value, "blocking": True,
+def digits_issue(file, line, kind, value, label, expected, blocking):
+    return {"file": file, "line": line, "kind": kind, "value": value, "blocking": blocking,
             "message": "%s %r: %s (expected %s)" % (label, value, "wrong length or check digit", expected)}
 
 
@@ -176,8 +176,10 @@ def find_numbers(text):
     return sorted(inns), sorted(ogrns)
 
 
-def check_numbers(path, text, starts, owner):
-    """INN/OGRN checksum and mismatch issues as (line, column, issue)."""
+def check_numbers(path, text, starts, owner, public=False):
+    """INN/OGRN checksum and mismatch issues as (line, column, issue).
+
+    A failed check digit blocks only on a public page: in a draft the number stays as the owner gave it."""
     found = []
     inns, ogrns = [], []
     foreign = owner is not None and owner.get("status") == "foreign"
@@ -186,7 +188,7 @@ def check_numbers(path, text, starts, owner):
         line = line_of(starts, offset)
         inns.append((line, offset, value))
         if not _kb.inn_valid(value):
-            found.append((line, offset, digits_issue(path, line, "inn_checksum", value, "INN", "10 or 12 digits")))
+            found.append((line, offset, digits_issue(path, line, "inn_checksum", value, "INN", "10 or 12 digits", public)))
     for offset, value in ogrn_hits:
         line = line_of(starts, offset)
         ogrns.append((line, offset, value))
@@ -196,7 +198,7 @@ def check_numbers(path, text, starts, owner):
                 "message": "a foreign company has no OGRN/OGRNIP: print the country and registration number"}))
         elif not _kb.ogrn_valid(value):
             found.append((line, offset,
-                          digits_issue(path, line, "ogrn_checksum", value, "OGRN/OGRNIP", "13 or 15 digits")))
+                          digits_issue(path, line, "ogrn_checksum", value, "OGRN/OGRNIP", "13 or 15 digits", public)))
     if owner is None:
         return found, inns, ogrns
 
@@ -317,7 +319,7 @@ def check_file(path, owner, clauses, kind, public=False, withheld=()):
         line = line_of(starts, match.start())
         found.append((line, match.start(), {"file": path, "line": line, "kind": "condition",
                                             "text": match.group(0)[:100], "blocking": True}))
-    numbers, _, _ = check_numbers(path, text, starts, owner)
+    numbers, _, _ = check_numbers(path, text, starts, owner, public)
     found.extend(numbers)
     if is_offer(path, text, kind):
         found.extend(check_clauses(path, text, [c for c in clauses if re.search(r"oferta|offer", c.get("template", ""))]))
@@ -329,8 +331,8 @@ def build_parser():
     parser = argparse.ArgumentParser(
         prog="check_docs.py",
         description="Check drafted documents and public pages: leftover placeholders and condition markers, "
-                    "INN/OGRN checksums, mismatches with answers.json, forbidden offer clauses. Prints JSON; "
-                    "exits 1 only on blocking issues.",
+                    "INN/OGRN checksums (blocking on public pages), mismatches with answers.json, forbidden offer "
+                    "clauses. Prints JSON; exits 1 only on blocking issues.",
         epilog="List the drafts before the options and give --public once per file, for example: check_docs.py "
                ".legal/drafts/*.md --public legal/privacy.html --public components/Footer.tsx "
                "--answers .legal/answers.json")

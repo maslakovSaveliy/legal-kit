@@ -83,7 +83,7 @@ All print JSON (except `render`) and never change the project. Exact flags: `--h
 | `scripts/scan_url.py URL` | 1 | static crawl: features, forms, legal links, third-party hosts, cookies; `js_executed` is always false |
 | `scripts/registry.py egrul\|npd\|whois\|cbr\|rkn ARG` | 1 | one registry lookup: `ok`, `not_found`, `manual` or `error` |
 | `scripts/select.py --answers .legal/answers.json --features …` | 2 | applicable and filtered requirements, templates and documents with their triggers, owner questions, owner checks |
-| `scripts/check_docs.py DRAFT… [--public PAGE]… --answers .legal/answers.json` | 5, 6 | placeholders (requisite, fact or runtime; blocking only on public pages), conditions, INN and OGRN checksums, mismatches, forbidden clauses (`risk` never blocks) |
+| `scripts/check_docs.py DRAFT… [--public PAGE]… --answers .legal/answers.json` | 5, 6 | placeholders (requisite, fact or runtime; blocking only on public pages), conditions, INN and OGRN checksums (blocking only on public pages), mismatches, forbidden clauses (`risk` never blocks) |
 | `scripts/report.py verify\|render` | 7 | checks the report against the base; renders it as Markdown, or `plan.md` with `--plan` |
 | `scripts/rules.py --select …` | 7 | `.legal/RULES.md`: the rules of `references/rules/` that apply, at most 60 lines |
 

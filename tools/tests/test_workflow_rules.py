@@ -7,6 +7,8 @@ from pathlib import Path
 
 SKILL = Path(__file__).resolve().parents[2] / "skills" / "legal-kit"
 WORKFLOW = SKILL / "references" / "workflow"
+SKILL_MD = SKILL / "SKILL.md"
+RU = SKILL / "references" / "jurisdictions" / "ru"
 
 
 def read(name):
@@ -134,3 +136,9 @@ def test_no_repo_step_points_to_the_no_code_guide():
     assert "references/stacks/no-code.md" in line
     guide = (SKILL / "references" / "stacks" / "no-code.md").read_text(encoding="utf-8")
     assert "`data-tilda-cookie-type`" in guide
+
+
+def test_bad_checksum_keeps_the_page_a_draft():
+    text = read("documents.md")
+    assert "fails its check digit" in text and "stays a draft" in text
+    assert "| `inn_checksum`, `ogrn_checksum` | on a public page |" in text
