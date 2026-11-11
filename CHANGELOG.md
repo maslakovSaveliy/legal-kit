@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.2.3] - 2026-11-11
+
 Fixes from a review of 0.2.2.
 
 ### Scripts
