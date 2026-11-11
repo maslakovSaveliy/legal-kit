@@ -2752,3 +2752,71 @@ def test_scan_repo_does_not_call_components_and_docs_legal_pages(tmp_path, capsy
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
     assert scan_repo(tmp_path, capsys)["legal_pages"] == []
+
+
+# --------------------------------------------------------------------------
+# scan_url.py: links with side effects, quoted charset, sitemap entities
+# --------------------------------------------------------------------------
+
+class QuietHandler(http.server.SimpleHTTPRequestHandler):
+    gets = []
+
+    def do_GET(self):
+        QuietHandler.gets.append(self.path)
+        super().do_GET()
+
+    def log_message(self, *args):
+        pass
+
+
+@pytest.fixture()
+def side_effect_scan(tmp_path):
+    """A site whose home page and sitemap link to pages that act when fetched; (scan output, requested paths)."""
+    (tmp_path / "index.html").write_text(
+        '<html><body><a href="/about.html">О нас</a><a href="/logout">Выйти</a>'
+        '<a href="/unsubscribe?token=abc">Отписаться</a><a href="/account/delete">Удалить аккаунт</a>'
+        '<a href="/promo.html?token=xyz">Промо</a></body></html>', encoding="utf-8")
+    for name in ("about.html", "list.html", "cdata-page.html", "promo.html"):
+        (tmp_path / name).write_text("<html><body><p>ok</p></body></html>", encoding="utf-8")
+    handler = functools.partial(QuietHandler, directory=str(tmp_path))
+    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+    base = f"http://127.0.0.1:{server.server_address[1]}"
+    (tmp_path / "sitemap.xml").write_text(
+        '<?xml version="1.0" encoding="UTF-8"?><urlset>'
+        f"<url><loc>{base}/unsubscribe?token=zzz</loc></url>"
+        f"<url><loc>{base}/list.html?page=2&amp;sort=asc</loc></url>"
+        f"<url><loc><![CDATA[{base}/cdata-page.html]]></loc></url></urlset>", encoding="utf-8")
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    QuietHandler.gets.clear()
+    result = run_cli("scan_url", base + "/", "--delay", "0", "--timeout", "5", "--catalog", CATALOG)
+    server.shutdown()
+    server.server_close()
+    assert result.returncode == 0, result.stderr
+    return json.loads(result.stdout), list(QuietHandler.gets)
+
+
+def test_scan_url_skips_links_with_side_effects(side_effect_scan):
+    out, requested = side_effect_scan
+    paths = {path.split("?")[0] for path in requested}
+    assert "/about.html" in paths
+    assert not paths & {"/logout", "/unsubscribe", "/account/delete", "/promo.html"}
+    skipped = {s["url"].split("/", 3)[3] for s in out["skipped"] if s["reason"] == "side_effect_link"}
+    assert skipped == {"logout", "unsubscribe?token=abc", "account/delete", "promo.html?token=xyz",
+                       "unsubscribe?token=zzz"}
+
+
+def test_scan_url_sitemap_unescapes_and_reads_cdata(side_effect_scan):
+    _, requested = side_effect_scan
+    assert "/list.html?page=2&sort=asc" in requested and "/cdata-page.html" in requested
+
+
+def test_scan_url_decode_reads_quoted_charset():
+    module = load("scan_url")
+
+    class Reply:
+        body = "Привет".encode("cp1251")
+
+        def header(self, name):
+            return 'text/html; charset="windows-1251"'
+
+    assert module.decode(Reply()) == "Привет"
