@@ -159,3 +159,11 @@ def test_owner_country_may_be_unknown_and_recon_signals_reach_the_block():
     intake = read("intake.md")
     assert '"country": "string | null' in questions
     assert "found in recon" in intake and "the country is a blocking part of item 3" in intake
+
+
+def test_listing_only_app_and_repo_less_bot_run_as_prod_only():
+    intake, safety = read("intake.md"), read("safety.md")
+    mode = intake[intake.index("### Mode"):intake.index("### Git tree")]
+    assert "only a store listing" in mode and "only a bot link" in mode and "`prod-only`" in mode
+    assert "never sends a message to a live bot" in safety
+    assert "never sends a message to a live bot" in (SKILL / "references" / "stacks" / "bot.md").read_text(encoding="utf-8")
