@@ -2633,3 +2633,53 @@ def test_scan_repo_reads_bom_manifest_and_cp1251_form(tmp_path, capsys):
     out = scan_repo(tmp_path, capsys)
     assert "nextjs" in out["stacks"]
     assert any(f["file"] == "index.php" and f["has_consent_checkbox"] for f in out["forms"])
+
+
+# --------------------------------------------------------------------------
+# INN and OGRN labels in common layouts
+# --------------------------------------------------------------------------
+
+@pytest.mark.parametrize("line", [
+    "| ИНН | %s |", "ИНН — %s", "ИНН: **%s**", "<td>ИНН</td><td>%s</td>", "ИНН&nbsp;%s", "INN %s",
+])
+def test_check_docs_finds_inn_in_common_layouts(tmp_path, capsys, line):
+    _, issues = check(capsys, [write(tmp_path, "bad.md", line % INN10_BAD + "\n")], answers=None)
+    assert [(i["kind"], i["value"]) for i in issues] == [("inn_checksum", INN10_BAD)]
+    assert check(capsys, [write(tmp_path, "ok.md", line % INN10_OK[0] + "\n")], answers=None)[1] == []
+
+
+def test_check_docs_finds_ogrn_in_table_and_english_label(tmp_path, capsys):
+    text = "| ОГРН | %s |\nOGRNIP %s\n" % (OGRN13_BAD, OGRN15_BAD)
+    _, issues = check(capsys, [write(tmp_path, "t.md", text)], answers=None)
+    assert [(i["kind"], i["line"]) for i in issues] == [("ogrn_checksum", 1), ("ogrn_checksum", 2)]
+
+
+def test_check_docs_inn_ogrn_pair_and_trailing_year(tmp_path, capsys):
+    pair = "ИНН/ОГРН %s/%s\n" % (INN10_OK[0], OGRN13_OK[0])
+    year = "ИНН %s 2024 г.\n" % INN10_OK[0]
+    assert check(capsys, [write(tmp_path, "p.md", pair + year)], answers=None)[1] == []
+    bad = "ИНН/ОГРН %s/%s\n" % (INN10_BAD, OGRN13_BAD)
+    _, issues = check(capsys, [write(tmp_path, "b.md", bad)], answers=None)
+    assert [(i["kind"], i["value"]) for i in issues] == [("inn_checksum", INN10_BAD), ("ogrn_checksum", OGRN13_BAD)]
+
+
+def test_check_docs_latin_labels_are_upper_case_only(tmp_path, capsys):
+    assert check(capsys, [write(tmp_path, "h.md", "Holiday Inn 2024\nthe inn 12345\n")], answers=None)[1] == []
+
+
+def test_check_docs_normalises_owner_numbers(tmp_path, capsys):
+    answers = tmp_path / "answers.json"
+    answers.write_text(json.dumps({"version": 1, "owner": {
+        "status": "ul", "name": None, "inn": "0098 7654 37", "ogrn": "1 02 0000 00000 8", "withheld": []}}),
+        encoding="utf-8")
+    doc = write(tmp_path, "d.md", "ИНН %s, ОГРН %s\n" % (INN10_OK[0], OGRN13_OK[0]))
+    assert check(capsys, [doc], answers=answers)[1] == []
+
+
+def test_check_docs_foreign_reg_number_ignores_case(tmp_path, capsys):
+    answers = tmp_path / "answers.json"
+    answers.write_text(json.dumps({"version": 1, "owner": {
+        "status": "foreign", "name": None, "inn": None, "ogrn": None, "reg_number": "hrb 12345", "withheld": []}}),
+        encoding="utf-8")
+    doc = write(tmp_path, "d.md", "Регистрационный номер: HRB 12345\n")
+    assert check(capsys, [doc], answers=answers)[1] == []
