@@ -100,7 +100,7 @@ Run the phases in order. Phases 0 to 4 never touch the project's files outside `
 - Write facts from the prompt into `answers.json` at once (status, name, INN, URLs, product kind, requisites the owner withholds into `owner.withheld`); unknown stays `null`, nothing is guessed. A value the prompt gives is never asked again: later it is shown as confirmed. A `localhost` URL is a recon target, never stored in `product.urls`.
 - Choose the jurisdiction (`ru` when the owner or the users are in Russia and nothing points to another country) and the mode: `repo+prod`, `repo-only`, `prod-only`, or `plan` / `feature` by the words of the request ([plan.md](references/workflow/plan.md#choosing-the-mode)). With a repo, store listings are not a live URL; with no code, a store listing or a bot link alone is the `prod-only` target.
 - Record whether the git tree is clean before anything is written.
-- **Gate:** if the prompt and `answers.json` lack the product, the owner or a URL or repo, ask the start questions for the keys still empty (at most 5, one message) and wait. Code or any URL, a local one included, answers what the product is and where it runs. If the owner is still unknown afterwards, continue with `null` and guess from the footer and WHOIS.
+- **Gate:** if the prompt and `answers.json` lack the product, the owner or a URL or repo, ask the start questions for the keys still empty (at most 5, one message) and wait. Code or any URL, a local one included, answers what the product is and where it runs. If the owner is still unknown afterwards, continue with `null` and guess from the footer and WHOIS. Mode `feature` skips this gate.
 
 ### Phase 1. Recon (read-only, no waiting)
 
@@ -142,7 +142,7 @@ Run the phases in order. Phases 0 to 4 never touch the project's files outside `
 - Consent at a form follows the fork table, except that the user's explicit wish for consent there («согласие у формы», kept in `decisions.consent_at_forms`) gets a separate unchecked consent checkbox; without it the contract-basis notice stays and the checkbox is offered in «Спорно».
 - Documents without templates: from `documents/<doc>.md` into `.legal/drafts/<doc>.md`.
 - Existing legal pages are edited, never duplicated; offers are checked against `forbidden-clauses.json`.
-- Run `scripts/check_docs.py` on the drafts. Drafts may keep placeholders for the owner; a draft that still has any placeholder other than a withheld requisite does not become a public page ([documents.md](references/workflow/documents.md#drafts-and-public-pages)).
+- Run `scripts/check_docs.py` on the drafts. Drafts may keep placeholders for the owner; a draft that still has any placeholder other than a withheld requisite does not become a public page, but a passage left out for an unknown fact does not hold the page ([documents.md](references/workflow/documents.md#drafts-and-public-pages)).
 
 ### Phase 6. Integration
 

@@ -91,7 +91,7 @@ One canonical rebuild in every mode. `RULES.md` is for the code still to be writ
 
 1. Map the function to the catalog, one quote per feature.
 2. Read `answers.json` when it exists. When it does not, ask nothing: take the facts from the prompt and mark the rest «предполагаю: …». Create `.legal/answers.json` (only `product.planned_features` and the prompt's facts, the rest `null`), `.legal/.gitignore` and `.legal/sources.json`.
-3. Run `select.py --planned <ids> --features <found>` so the rules see what exists, for example the consent mechanism.
+3. With code, run `scan_repo.py` first and take its feature ids as `<found>`; without code `--features` is left out. Run `select.py --planned <ids> --features <found> --answers .legal/answers.json --today <date> > .legal/evidence/select-rules.json`, so the rules see what exists, for example the consent mechanism.
 4. Give the rules of this function in the chat, with links to the sections of the stack guide. When the agent writes the code in the same session, it writes it by these rules.
 5. Rebuild `.legal/RULES.md` by the canonical rebuild ([RULES.md](#rulesmd)), with `--report` when `.legal/report.json` exists, when it exists or the owner asks; update `state.json`.
 

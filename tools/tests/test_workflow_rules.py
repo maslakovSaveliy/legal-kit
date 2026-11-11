@@ -167,3 +167,15 @@ def test_listing_only_app_and_repo_less_bot_run_as_prod_only():
     assert "only a store listing" in mode and "only a bot link" in mode and "`prod-only`" in mode
     assert "never sends a message to a live bot" in safety
     assert "never sends a message to a live bot" in (SKILL / "references" / "stacks" / "bot.md").read_text(encoding="utf-8")
+
+
+def test_left_out_passages_do_not_hold_a_page_back():
+    for name in ("ui-integration.md", "documents.md"):
+        assert "passages left out under" in read(name), name
+    assert "a passage left out for an unknown fact does not hold the page" in SKILL_MD.read_text(encoding="utf-8")
+
+
+def test_feature_mode_skips_the_start_gate_and_scans_the_code():
+    feature = section(read("plan.md"), "Feature mode")
+    assert "Mode `feature` skips this gate" in SKILL_MD.read_text(encoding="utf-8")
+    assert "scan_repo.py" in feature and ".legal/evidence/select-rules.json" in feature
