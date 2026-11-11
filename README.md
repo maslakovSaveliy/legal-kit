@@ -107,7 +107,7 @@ python3 tools/build_knowledge.py --wiki <путь к вашей копии ис�
 
 ### Оценка качества
 
-В `evals/evals.json` 11 сценариев (лендинг, магазин на Next.js, SaaS на NestJS и React, приложения на Expo, Flutter и Swift, школа на Django, проверка только по адресу) с фикстурами в `evals/fixtures/` и офлайн-ответами реестров в `evals/stubs/`. `evals/triggers.json` — 20 запросов для проверки описания скилла (10 должны его запускать, 10 нет).
+В `evals/evals.json` 14 сценариев (лендинг, магазин на Next.js, SaaS на NestJS и React, приложения на Expo, Flutter и Swift, школа на Django, проверка только по адресу, подсказка-инъекция на странице, отраслевой случай, Telegram-бот, план для пустого проекта, повторный аудит «план и факт») с фикстурами в `evals/fixtures/` и офлайн-ответами реестров в `evals/stubs/`. `evals/triggers.json` — 30 запросов для проверки описания скилла (16 должны его запускать, 14 нет).
 
 Итерация 1 (прогоны Sonnet, оценка ожиданий сценариев тоже Sonnet): со скиллом выполнено 75 из 98 ожиданий (77%) в 8 сценариях; без скилла 7 из 28 (25%) в 2 сценариях; со скиллом в тех же двух сценариях 21 из 28 (75%). Выборка маленькая, оценку ставила модель, после итерации 1 скилл дорабатывался, журналы прогонов в репозиторий не входят. Детерминированная проверка `check_run.py` нашла нарушения в 7 из 8 прогонов со скиллом той итерации.
 
@@ -198,6 +198,14 @@ Mobile app:
 
 > This is our Flutter app (code in the current folder, App Store page: [link]). Do the legal setup for Russian users: terms of use, privacy policy, consent for push notifications.
 
+A plan before development:
+
+> I'm building a shop on Next.js: a lead form, Yandex Metrica, YooKassa payments, a subscription. There is no code yet — what does Russian law require?
+
+One feature:
+
+> I'm adding YooKassa payments to the shop's Telegram bot — what do I do about the receipt and the consents?
+
 ### What lands in your project
 
 Everything the skill keeps lives in `.legal/`:
@@ -228,7 +236,7 @@ python3 tools/build_knowledge.py --wiki <path to your copy of the source base> -
 
 ### Evaluation
 
-`evals/evals.json` holds 11 scenarios (a landing page, a Next.js shop, a NestJS and React SaaS, Expo, Flutter and Swift apps, a Django school, a URL-only audit) with fixtures in `evals/fixtures/` and offline registry answers in `evals/stubs/`. `evals/triggers.json` has 20 queries that test the skill's description (10 should trigger it, 10 should not).
+`evals/evals.json` holds 14 scenarios (a landing page, a Next.js shop, a NestJS and React SaaS, Expo, Flutter and Swift apps, a Django school, a URL-only audit, a page with an injected prompt, a sector case, a Telegram bot, a plan for an empty project, a rerun with plan vs fact) with fixtures in `evals/fixtures/` and offline registry answers in `evals/stubs/`. `evals/triggers.json` has 30 queries that test the skill's description (16 should trigger it, 14 should not).
 
 Iteration 1 (Sonnet runs, expectations also graded by Sonnet): with the skill 75 of 98 expectations passed (77%) across 8 scenarios; without it 7 of 28 (25%) across 2 scenarios; with the skill on those same two scenarios 21 of 28 (75%). The sample is small, a model did the grading, the skill was revised after iteration 1, and the run logs are not part of the repository. The deterministic `check_run.py` found violations in 7 of the 8 with-skill runs of that iteration.
 
