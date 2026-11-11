@@ -340,3 +340,12 @@ def test_rules_how_link_does_not_depend_on_stacks_order(tmp_path):
     a = run_rules(tmp_path, data, "--stacks", "nextjs,bot").stdout
     b = run_rules(tmp_path, data, "--stacks", "bot,nextjs").stdout
     assert a == b
+
+
+@pytest.mark.parametrize("path", rule_files(), ids=lambda p: p.stem)
+def test_rule_lists_have_no_duplicates(path):
+    head = path.read_text(encoding="utf-8").split("---")[1]
+    for key in ("reqs", "features", "products", "stacks"):
+        match = re.search(r"^%s: \[(.*)\]$" % key, head, re.M)
+        items = [item.strip() for item in match.group(1).split(",") if item.strip()] if match else []
+        assert len(items) == len(set(items)), (key, items)

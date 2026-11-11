@@ -2820,3 +2820,31 @@ def test_scan_url_decode_reads_quoted_charset():
             return 'text/html; charset="windows-1251"'
 
     assert module.decode(Reply()) == "Привет"
+
+
+# --------------------------------------------------------------------------
+# kb.py and registry.py: small failures
+# --------------------------------------------------------------------------
+
+def test_kb_accepts_kb_before_the_subcommand():
+    result = run_cli("kb", "--kb", REAL_KB, "list")
+    assert result.returncode == 0, result.stderr
+    assert '"id": "ru:' in result.stdout or '"id":"ru:' in result.stdout
+    after = run_cli("kb", "list", "--kb", REAL_KB)
+    assert after.returncode == 0 and after.stdout == result.stdout
+
+
+def test_kb_extract_into_a_file_path_exits_2(tmp_path):
+    blocker = tmp_path / "file"
+    blocker.write_text("x", encoding="utf-8")
+    result = run_cli("kb", "extract", "--to", blocker / "x", "--kb", REAL_KB)
+    assert result.returncode == 2 and "Traceback" not in result.stderr and "cannot write" in result.stderr
+
+
+def test_registry_offline_whois_stub_for_a_cyrillic_domain(tmp_path, monkeypatch, capsys):
+    (tmp_path / "whois-пример.рф.json").write_text(
+        json.dumps({"status": "ok", "data": {"domain": "ПРИМЕР.РФ"}, "url": "whois.tcinet.ru:43"}), encoding="utf-8")
+    monkeypatch.setenv("LEGAL_KIT_OFFLINE", "1")
+    monkeypatch.setenv("LEGAL_KIT_STUBS", str(tmp_path))
+    code, out = run_json("registry", ["whois", "пример.рф"], capsys)
+    assert code == 0 and out["status"] == "ok"
