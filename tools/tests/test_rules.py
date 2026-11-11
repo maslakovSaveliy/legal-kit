@@ -227,7 +227,32 @@ def test_rules_never_exceeds_max_lines(tmp_path):
     out = run_rules(tmp_path, data, "--max-lines", "5").stdout
     lines = out.rstrip("\n").splitlines()
     assert len(lines) <= 5
-    assert "ещё" in lines[-1] and "plan.md" in lines[-1]
+    assert "ещё" in lines[-1] and "references/rules/" in lines[-1]
+
+
+def test_rules_output_names_no_file_that_may_be_missing(tmp_path):
+    # an audit writes no plan.md and feature mode writes no report: neither is named
+    out = run_rules(tmp_path, select_out(["ru:t-always"], planned=["payments.yookassa"])).stdout
+    assert "Политика опубликована" in out and "plan.md" not in out and "report-" not in out
+    out = run_rules(tmp_path, select_out(["ru:t-always"], planned=["payments.yookassa"]), "--lang", "en").stdout
+    assert "Policy is published" in out and "plan.md" not in out and "report-" not in out
+
+
+def test_rules_drop_requirements_the_report_marks_n_a(tmp_path):
+    report = tmp_path / "report.json"
+    report.write_text(json.dumps({"rows": [{"req": "ru:t-always", "status": "n_a", "level": "interpretation",
+                                              "basis": "interpretation"}]}), encoding="utf-8")
+    result = run_rules(tmp_path, select_out(["ru:t-always"], planned=["payments.yookassa"]), "--report", report)
+    assert result.returncode == 0 and "Политика опубликована" not in result.stdout
+
+
+def test_rules_keep_a_requirement_with_one_open_row(tmp_path):
+    report = tmp_path / "report.json"
+    rows = [{"req": "ru:t-always", "status": "n_a", "level": "interpretation", "basis": "interpretation"},
+            {"req": "ru:t-always", "status": "missing", "level": "mandatory", "basis": "norm"}]
+    report.write_text(json.dumps({"rows": rows}), encoding="utf-8")
+    result = run_rules(tmp_path, select_out(["ru:t-always"], planned=["payments.yookassa"]), "--report", report)
+    assert result.returncode == 0 and "Политика опубликована" in result.stdout
 
 
 def test_rules_default_limit_is_60_lines(tmp_path):

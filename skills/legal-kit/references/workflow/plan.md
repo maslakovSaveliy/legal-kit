@@ -69,7 +69,7 @@ Every item names its requirement id, its level and its basis (norm, practice, in
 One canonical rebuild in every mode. `RULES.md` is for the code still to be written, so it needs the planned features too, which the audit's own `select.json` does not have:
 
 1. `select.py --planned <ids of product.planned_features> --features <found ids> --answers .legal/answers.json --today <date> > .legal/evidence/select-rules.json` (in mode `plan` the run's `select.json` already is this file);
-2. `rules.py --select .legal/evidence/select-rules.json --stacks <stack ids> --lang <lang> --today <date> [--report .legal/report.json] > .legal/RULES.md`, with `--report` whenever `.legal/report.json` exists (after `report.py verify` exits 0), so a requirement the run rated `interpretation` is never «норма».
+2. `rules.py --select .legal/evidence/select-rules.json --stacks <stack ids> --lang <ru|en> --today <date> [--report .legal/report.json] > .legal/RULES.md` (`ru` for a Russian dialog, `en` for any other language), with `--report` whenever `.legal/report.json` exists (after `report.py verify` exits 0), so a requirement the run rated `interpretation` is never «норма» and one rated `n_a` in every row gives no rule.
 
 - It picks the rules of `references/rules/` ([the library](../rules/README.md)) whose requirements are applicable and whose features were found or planned, at most 60 lines.
 - A line: `- <rule> — <requirement ids>, <label>; как: legal-kit references/stacks/<stack>.md`. The label is never stronger than the requirements allow, nor than the level the run gave the row in `report.json`: a requirement the run rated `interpretation` (for example consent under a contract basis) is never «норма».
