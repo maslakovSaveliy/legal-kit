@@ -2848,3 +2848,66 @@ def test_registry_offline_whois_stub_for_a_cyrillic_domain(tmp_path, monkeypatch
     monkeypatch.setenv("LEGAL_KIT_STUBS", str(tmp_path))
     code, out = run_json("registry", ["whois", "пример.рф"], capsys)
     assert code == 0 and out["status"] == "ok"
+
+
+# --------------------------------------------------------------------------
+# Final review fixes
+# --------------------------------------------------------------------------
+
+def test_check_docs_keeps_utf8_when_a_few_bytes_are_invalid(tmp_path, capsys):
+    text = "<footer>ИНН %s, ОГРН %s [если есть лицензия]</footer>\n" % (INN10_BAD, OGRN13_BAD)
+    for name, raw in (("stray.php", "<p>Caf\xe9</p>\n".encode("latin-1") + text.encode("utf-8")),
+                      ("cut.php", text.encode("utf-8") + "Я".encode("utf-8")[:1])):
+        page = tmp_path / name
+        page.write_bytes(raw)
+        code, issues = check(capsys, [], "--public", page, answers=None)
+        assert code == 1, name
+        assert kinds(issues) == ["condition", "encoding", "inn_checksum", "ogrn_checksum"], name
+        assert [i["encoding"] for i in issues if i["kind"] == "encoding"] == ["utf-8-damaged"]
+
+
+def test_check_docs_reads_utf16_without_a_bom(tmp_path, capsys):
+    text = "<footer>ИНН %s</footer>\n" % INN10_BAD
+    for codec in ("utf-16-le", "utf-16-be"):
+        page = tmp_path / (codec + ".html")
+        page.write_bytes(text.encode(codec))
+        code, issues = check(capsys, [], "--public", page, answers=None)
+        assert code == 1 and kinds(issues) == ["encoding", "inn_checksum"], codec
+
+
+@pytest.mark.parametrize("text", [
+    "| ИНН | ОГРН |\n|---|---|\n| %s | %s |\n" % (INN10_OK[0], OGRN13_OK[0]),
+    "<tr><th>ИНН</th><th>ОГРН</th></tr><tr><td>%s</td><td>%s</td></tr>\n" % (INN10_OK[0], OGRN13_OK[0]),
+    "ИНН: —\n\n2. Предмет договора\n",
+    "ИНН: —\n2. Предмет договора\n",
+    "ИНН — 10 цифр, ОГРН — 13 цифр\n",
+])
+def test_check_docs_label_does_not_borrow_a_number_from_elsewhere(tmp_path, capsys, text):
+    assert check(capsys, [write(tmp_path, "t.md", text)], "--public", write(tmp_path, "p.md", text), answers=None)[1] == []
+
+
+@pytest.mark.parametrize("text", ["<td>ИНН</td>\n  <td>%s</td>\n", "ИНН\n%s\n", "ИНН&#160;%s\n"])
+def test_check_docs_label_reaches_a_number_on_the_next_line(tmp_path, capsys, text):
+    _, issues = check(capsys, [write(tmp_path, "n.md", text % INN10_BAD)], answers=None)
+    assert [(i["kind"], i["value"]) for i in issues] == [("inn_checksum", INN10_BAD)]
+
+
+def test_check_docs_unclosed_tags_after_labels_stay_fast(tmp_path, capsys):
+    started = time.monotonic()
+    check(capsys, [write(tmp_path, "big.md", "ИНН <" * 100000)], answers=None)
+    assert time.monotonic() - started < 2
+
+
+@pytest.mark.parametrize("rel", ["app/price-list/oferta/page.tsx", "app/mailing-list/soglasie/page.tsx",
+                                 "legal/item/privacy.html", "pages/link/privacy.vue"])
+def test_scan_repo_component_words_in_a_folder_do_not_hide_a_page(tmp_path, capsys, rel):
+    path = tmp_path / rel
+    path.parent.mkdir(parents=True)
+    path.write_text("<div>text</div>", encoding="utf-8")
+    assert [p["file"] for p in scan_repo(tmp_path, capsys)["legal_pages"]] == [rel]
+
+
+def test_scan_url_unescapes_only_xml_entities_in_sitemap_urls():
+    module = load("scan_url")
+    assert module.xml_unescape("https://a.test/c?id=1&param=2&amp;region=3&#38;copy=4") == \
+        "https://a.test/c?id=1&param=2&region=3&copy=4"

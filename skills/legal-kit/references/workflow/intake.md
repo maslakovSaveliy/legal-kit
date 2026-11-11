@@ -84,7 +84,7 @@ Write what the prompt states into `answers.json` before any question, so nothing
 
 - Code is available when the working directory or the given path holds the product's source. The live URL is the production address or a URL the prompt gives for the running website (a local one included).
 - With code, store listings are not a live URL: a mobile repo whose only pages are store listings is `repo-only`; the listings are still inspected ([recon-stores.md](recon-stores.md)).
-- A product with no code and only a store listing, or only a bot link (`t.me/…`, a MAX link), runs as `prod-only`: the listing or the bot's public page is the recon target, and what it cannot show (screens, consent flow, data flows) goes to `not_checked`. A live bot is only read, never messaged ([safety.md](safety.md#the-live-product-and-third-parties)).
+- A product with no code and only a store listing, or only a bot link (`t.me/…`, a MAX link), runs as `prod-only`: the listing or the bot's public page is the recon target, and what it cannot show (screens, consent flow, data flows) goes to `not_checked`. Read that one page; do not crawl the platform's site with `scan_url.py`, which is for the product's own origin. A live bot is only read, never messaged ([safety.md](safety.md#the-live-product-and-third-parties)).
 - Without code, a URL, a store listing or a bot link there is nothing to inspect: ask start question 2 or 3 — unless the owner describes a product to build, which is mode `plan`.
 - Mode `plan` (no product yet, or the request says it is a new project) and mode `feature` (one function being added now) are chosen by the words of the request: [plan.md](plan.md#choosing-the-mode). Plan requested over code that already has features: offer the audit in one line.
 

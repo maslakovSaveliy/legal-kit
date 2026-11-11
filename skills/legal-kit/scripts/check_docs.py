@@ -17,10 +17,12 @@ artifacts). Reads optionally .legal/answers.json
   ogrn_checksum          OGRN/OGRNIP next to "ОГРН"/"ОГРНИП" with a wrong length or check digit
   mismatch               INN, OGRN or owner name differs from answers.json (or is not confirmed there)
   forbidden_clause       an offer contains a clause from forbidden-clauses.json (severity violation|risk)
+  encoding               the file is not clean UTF-8: read as cp1251 or utf-16, or as UTF-8 with invalid bytes replaced
 
-Blocking: placeholders in drafts never block; in a public file every placeholder blocks except a requisite
-listed in answers.json owner.withheld (a runtime one must become the project's own interpolation). A forbidden clause blocks with severity violation, not with risk.
-Every other kind blocks.
+Blocking: placeholders and failed check digits never block in drafts; in a public file a failed check digit blocks,
+and so does every placeholder except a requisite listed in answers.json owner.withheld (a runtime one must become
+the project's own interpolation). A forbidden clause blocks with severity violation, not with risk. `encoding`
+never blocks. Every other kind blocks.
 
 Exit codes: 0 no blocking issue, 1 blocking issues found, 2 bad input.
 """
@@ -67,10 +69,14 @@ RUNTIME_PLACEHOLDERS = frozenset((
     "ПОЛЕ", "ОБЪЯСНЕНИЕ", "ССЫЛКА_НА_НОРМУ_ФЗ",
 ))
 # digits may be grouped with spaces, no-break spaces or hyphens: "7707 083893", "0098-7654-37"
-_NUMBER = r"(\d(?:[\d \u00a0\u202f-]*\d)?)"
+# "ИНН — 10 цифр" describes the number, it is not one
+_NUMBER = r"(\d(?:[\d \u00a0\u202f-]*\d)?)(?!\d)(?![ \t\u00a0]*(?:цифр|знак|символ|digit))"
 # between a label and its number: punctuation, a table bar, emphasis marks, a dash, tags and &nbsp;
 # ("| ИНН | 7707083893 |", "ИНН: **7707083893**", "<td>ИНН</td><td>7707083893</td>", "ИНН — 7707083893")
-_SEP = r"(?:<[^>]+>|&nbsp;|[\s:№#.,|*_\u00a0\u2014\u2013-])*"
+# The gap stays inside one block: it does not cross a blank line, a table rule row (|---|), the end of a table row
+# (</tr>) or a dash that ends its line ("ИНН: —"), so a header cell never borrows a number of the next row.
+_SEP = (r"(?:<(?!/?tr\b)[^>\n]{1,200}>|&nbsp;|&\#160;|[ \t\r\u00a0:№#.,|*_]|-(?!--)|[\u2014\u2013](?![ \t\r]*\n)"
+        r"|\n(?![ \t\r]*\n))*")
 # the Latin labels of a translation only in capitals: "Holiday Inn 2024" is not a requisite
 _INN_LABEL = r"(?:(?i:ИНН)|INN)(?!\w)"
 _OGRN_LABEL = r"(?:(?i:ОГРН(?:ИП)?)|OGRN(?:IP)?)(?!\w)"
@@ -309,7 +315,9 @@ def check_file(path, owner, clauses, kind, public=False, withheld=()):
     found = []
     if encoding != "utf-8":
         found.append((1, -1, {"file": path, "line": 1, "kind": "encoding", "encoding": encoding, "blocking": False,
-                              "message": "the file is not UTF-8 and was read as %s" % encoding}))
+                              "message": ("the file has bytes that are not valid UTF-8; they were replaced"
+                                          if encoding == "utf-8-damaged" else
+                                          "the file is not UTF-8 and was read as %s" % encoding)}))
     for match in PLACEHOLDER_RE.finditer(text):
         line = line_of(starts, match.start())
         found.append((line, match.start(), placeholder_issue(path, line, match, public, withheld)))

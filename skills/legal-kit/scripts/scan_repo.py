@@ -116,11 +116,10 @@ def read_text(path):
             data = handle.read(MAX_FILE_BYTES + 1)
     except OSError:
         return None
-    if data.startswith((b"\xff\xfe", b"\xfe\xff")):  # UTF-16 text is full of NUL bytes
-        return _kb.decode_bytes(data)[0]
-    if b"\x00" in data[:8192]:
+    text, encoding = _kb.decode_bytes(data)
+    if encoding != "utf-16" and b"\x00" in data[:8192]:  # UTF-16 text is full of NUL bytes, a binary file too
         return None
-    return _kb.decode_bytes(data)[0]
+    return text
 
 
 class LineIndex:
@@ -196,9 +195,10 @@ LEGAL_KINDS = (
 LEGAL_PAGE_EXTS = {".html", ".htm", ".md", ".mdx", ".php", ".twig", ".njk", ".liquid", ".hbs", ".ejs", ".pug",
                    ".tsx", ".jsx", ".vue", ".svelte", ".astro", ".dart", ".swift", ".kt", ".pdf", ".docx", ".txt",
                    ".jinja", ".j2"}
-NON_PAGE_WORDS = {"test", "tests", "spec", "stories", "story", "mock", "mocks", "fixture", "fixtures", "snapshots",
-                  # a component named after a legal page is a part of a page, not the page
-                  "icon", "card", "button", "link", "modal", "item", "list"}
+NON_PAGE_WORDS = {"test", "tests", "spec", "stories", "story", "mock", "mocks", "fixture", "fixtures", "snapshots"}
+# a component named after a legal page (PrivacyIcon, OfferCard) is a part of a page, not the page; only the file
+# name counts: a folder may be called price-list or item
+COMPONENT_WORDS = {"icon", "card", "button", "link", "modal", "item", "list"}
 NON_PAGE_DOCS = re.compile(r"^(?:readme|changelog|contributing|history)\b", re.I)
 PAGE_STEMS = {"page", "index"}
 HEADING_KINDS = (
@@ -221,6 +221,8 @@ def legal_kind_by_path(rel):
     if NON_PAGE_WORDS & set(words):
         return None
     stem_words = set(tokens(stem))
+    if COMPONENT_WORDS & stem_words:
+        return None
     parent_words = set(tokens(rel.rsplit("/", 1)[0])) if "/" in rel else set()
     pool = stem_words | (parent_words if stem_words and stem_words <= PAGE_STEMS else set())
     for kind, keywords in LEGAL_KINDS:

@@ -203,3 +203,15 @@ def test_small_lists_are_current():
                       if "product kinds" in line)
     assert "`bot`" in kinds_line
     assert "registry.py egrul|npd|whois|cbr|rkn" in (RU / "registries.md").read_text(encoding="utf-8")
+
+
+def test_swift_build_runs_only_with_packages_already_fetched():
+    text = (SKILL / "references" / "stacks" / "swift.md").read_text(encoding="utf-8")
+    line = next(line for line in text.splitlines() if "xcodebuild -scheme" in line)
+    assert "already fetched" in line and "not_checked" in line
+
+
+def test_platform_pages_are_read_not_crawled():
+    intake = read("intake.md")
+    mode = intake[intake.index("### Mode"):intake.index("### Git tree")]
+    assert "do not crawl" in mode

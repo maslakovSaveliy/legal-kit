@@ -28,7 +28,6 @@ if HERE not in sys.path:
 import _kb  # noqa: E402  (must come first: it protects the stdlib `select` module)
 
 import argparse  # noqa: E402
-import html  # noqa: E402
 import re  # noqa: E402
 import socket  # noqa: E402
 import time  # noqa: E402
@@ -307,6 +306,23 @@ def origin_key(url):
     return site_key(url), 0 if port in (None, 80, 443) else port
 
 
+XML_ENTITY = re.compile(r"&(amp|lt|gt|quot|apos|#\d{1,7}|#[xX][0-9a-fA-F]{1,6});")
+_XML_NAMED = {"amp": "&", "lt": "<", "gt": ">", "quot": '"', "apos": "'"}
+
+
+def xml_unescape(text):
+    """Decode the five XML entities and numeric references; a raw "&param=" of a sloppy sitemap stays as it is."""
+    def one(match):
+        name = match.group(1)
+        if name in _XML_NAMED:
+            return _XML_NAMED[name]
+        try:
+            return chr(int(name[2:], 16) if name[1] in "xX" else int(name[1:]))
+        except (ValueError, OverflowError):
+            return match.group(0)
+    return XML_ENTITY.sub(one, text)
+
+
 def side_effect_link(url):
     """True for a link whose path names an action (logout, unsubscribe, delete…) or whose query carries a token."""
     parts = urlsplit(url)
@@ -531,7 +547,7 @@ class Crawler:
             if fetched == 1:
                 self.sitemap["found"] = True
             text = decode(reply)
-            locs = [html.unescape(loc) for loc in LOC_RE.findall(text)]
+            locs = [xml_unescape(loc) for loc in LOC_RE.findall(text)]
             if "<sitemapindex" in text.lower():
                 pending.extend(loc for loc in locs if self.same_origin(loc))
                 continue
