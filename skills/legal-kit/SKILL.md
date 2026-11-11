@@ -63,7 +63,7 @@ Everything the skill keeps lives in `.legal/`:
 | Path | Content |
 |---|---|
 | `answers.json` | owner facts, withheld requisites, document facts and decisions; schema in [owner-questions.md](references/jurisdictions/ru/owner-questions.md#схема-answersjson) |
-| `state.json` | `{"managed": [{"path", "sha256", "kind"}]}` for every file the skill created or edited; `kind` is `page`, `checkbox`, `banner`, `footer` or `consent-log` |
+| `state.json` | `{"managed": [{"path", "sha256", "kind"}]}` for every file the skill created or edited; `kind` is `page`, `checkbox`, `banner`, `footer`, `consent-log`, `rules` or `agent-link` |
 | `sources.json` | runtime sources: `[{"url", "fetched_at", "quote", "kind"}]`, quote at most 25 words, kind `official`, `market` or `platform`; created as `[]` at intake |
 | `report.json`, `report-YYYY-MM-DD.md` | the report and its rendering |
 | `drafts/<doc>.md` | document drafts for the owner; they may keep placeholders, public pages may not |
@@ -75,13 +75,14 @@ Everything the skill keeps lives in `.legal/`:
 
 ## Scripts
 
-All print JSON (except `render`) and never change the project. Exact flags: `--help` of each script and the workflow file named here.
+They print JSON, except `render`, `rules.py` and `kb.py card`, which print Markdown, and never change the project; only `kb.py extract` writes, into the folder it is given. Exact flags: `--help` of each script and the workflow file named here.
 
 | Script | Phase | Does |
 |---|---|---|
 | `scripts/scan_repo.py ROOT` | 1 | stacks, features with file and line, legal pages, forms, design inventory |
 | `scripts/scan_url.py URL` | 1 | static crawl: features, forms, legal links, third-party hosts, cookies; `js_executed` is always false |
 | `scripts/registry.py egrul\|npd\|whois\|cbr\|rkn ARG` | 1 | one registry lookup: `ok`, `not_found`, `manual` or `error` |
+| `scripts/kb.py card\|search\|list\|extract` | 2, 5 | the requirement cards from `cards.tar.gz`: a card or one section of it, a text search, the list |
 | `scripts/select.py --answers .legal/answers.json --features …` | 2 | applicable and filtered requirements, templates and documents with their triggers, owner questions, owner checks |
 | `scripts/check_docs.py DRAFT… [--public PAGE]… --answers .legal/answers.json` | 5, 6 | placeholders (requisite, fact or runtime; blocking only on public pages), conditions, INN and OGRN checksums (blocking only on public pages), mismatches, forbidden clauses (`risk` never blocks) |
 | `scripts/report.py verify\|render` | 7 | checks the report against the base; renders it as Markdown, or `plan.md` with `--plan` |

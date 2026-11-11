@@ -184,4 +184,4 @@ Right after the reply (or at once, when the block did not wait), before research
 
 ## Without python3
 
-Nothing in these phases needs Python. Read and write the JSON files with any editor, keep the schema from owner-questions.md, and check the git tree with `git status --porcelain --untracked-files=all`.
+Nothing in these phases needs Python. Read and write the JSON files with any editor, keep the schema from owner-questions.md, and check the git tree with `git status --porcelain --untracked-files=all -- . ':(exclude).legal'`.

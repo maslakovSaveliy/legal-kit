@@ -179,3 +179,27 @@ def test_feature_mode_skips_the_start_gate_and_scans_the_code():
     feature = section(read("plan.md"), "Feature mode")
     assert "Mode `feature` skips this gate" in SKILL_MD.read_text(encoding="utf-8")
     assert "scan_repo.py" in feature and ".legal/evidence/select-rules.json" in feature
+
+
+def test_state_kinds_are_one_list():
+    skill = SKILL_MD.read_text(encoding="utf-8")
+    row = next(line for line in skill.splitlines() if line.startswith("| `state.json` |"))
+    table = read("ui-integration.md")
+    for kind in ("page", "checkbox", "banner", "footer", "consent-log", "rules", "agent-link"):
+        assert "`%s`" % kind in row, kind
+        assert "| `%s` |" % kind in table, kind
+
+
+def test_scripts_table_matches_the_scripts_folder():
+    skill = SKILL_MD.read_text(encoding="utf-8")
+    for script in sorted(p.name for p in (SKILL / "scripts").glob("*.py") if not p.name.startswith("_")):
+        assert "| `scripts/%s" % script in skill, script
+    assert "All print JSON (except `render`)" not in skill  # rules.py and kb.py card print Markdown, kb.py extract writes
+
+
+def test_small_lists_are_current():
+    assert "':(exclude).legal'" in section(read("intake.md"), "Without python3")
+    kinds_line = next(line for line in (RU / "JURISDICTION.md").read_text(encoding="utf-8").splitlines()
+                      if "product kinds" in line)
+    assert "`bot`" in kinds_line
+    assert "registry.py egrul|npd|whois|cbr|rkn" in (RU / "registries.md").read_text(encoding="utf-8")
