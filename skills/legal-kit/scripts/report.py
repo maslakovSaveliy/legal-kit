@@ -311,9 +311,10 @@ def verify_row(index, row, requirements, elements, today, sectoral_ids=None, mod
             issue("missing_evidence", "status %s needs evidence: a list of {file, line} or {url}" % row["status"])
 
     flagged_future = False
+    open_row = row.get("status") != "n_a"  # a requirement that does not apply has nothing to wait for: it stays done
     if requirement is not None:
         own_date = _kb.single_effective_date(requirement)
-        if own_date is not None and own_date > today and row.get("bucket") != "roadmap":
+        if own_date is not None and own_date > today and row.get("bucket") != "roadmap" and open_row:
             flagged_future = True
             issue("future_not_roadmap", "the requirement applies from %s, after %s: bucket must be roadmap"
                   % (own_date.isoformat(), today.isoformat()))
@@ -323,7 +324,8 @@ def verify_row(index, row, requirements, elements, today, sectoral_ids=None, mod
                 or "none"))
         if row.get("effective_from") is None:
             row_date = _kb.latest_requirement_date(requirement)
-    if row_date is not None and row_date > today and row.get("bucket") != "roadmap" and not flagged_future:
+    if (row_date is not None and row_date > today and row.get("bucket") != "roadmap" and not flagged_future
+            and open_row):
         issue("future_not_roadmap", "applies from %s, which is after %s: put it in the roadmap bucket"
               % (row_date.isoformat(), today.isoformat()))
     return issues
@@ -675,7 +677,7 @@ def render_plan(report, requirements, base, lang):
 def cmd_render(args):
     report = load_report(args.report)
     lang = args.lang or report.get("lang") or "ru"
-    if lang not in TEXT:
+    if not isinstance(lang, str) or lang not in TEXT:
         raise _kb.KbError("lang must be ru or en, got %r" % (lang,))
     requirements = _kb.load_requirements(args.kb)
     draw = render_plan if args.plan else render

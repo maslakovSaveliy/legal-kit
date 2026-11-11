@@ -2690,3 +2690,29 @@ def test_check_docs_foreign_reg_number_ignores_case(tmp_path, capsys):
         encoding="utf-8")
     doc = write(tmp_path, "d.md", "Регистрационный номер: HRB 12345\n")
     assert check(capsys, [doc], answers=answers)[1] == []
+
+
+# --------------------------------------------------------------------------
+# report.py: n_a rows of future requirements, a bad lang
+# --------------------------------------------------------------------------
+
+@pytest.mark.parametrize("effective_from", [None, "2027-03-01"])
+def test_verify_allows_n_a_row_of_a_future_requirement_in_done(tmp_path, capsys, effective_from):
+    row = good_row(req="ru:t-future", element=None, level="interpretation", basis="interpretation",
+                   status="n_a", evidence=[], bucket="done", effective_from=effective_from)
+    code, issues = verify(tmp_path, make_report(row), capsys)
+    assert (code, issues) == (0, [])
+
+
+def test_verify_still_sends_an_open_future_row_to_the_roadmap(tmp_path, capsys):
+    row = good_row(req="ru:t-future", element=None, level="interpretation", basis="interpretation",
+                   status="not_visible", evidence=[], bucket="owner", effective_from=None)
+    code, issues = verify(tmp_path, make_report(row), capsys)
+    assert code == 1 and [i["rule"] for i in issues] == ["future_not_roadmap"]
+
+
+def test_render_rejects_a_non_string_lang(tmp_path, capsys):
+    path = tmp_path / "report.json"
+    path.write_text(json.dumps(make_report(good_row(), lang=["ru"])), encoding="utf-8")
+    code, _ = run_main("report", ["render", path, "--kb", KB], capsys)
+    assert code == 2
