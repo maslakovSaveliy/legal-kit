@@ -257,9 +257,12 @@ def placeholder_issue(path, line, match, public, withheld):
 
 
 def check_file(path, owner, clauses, kind, public=False, withheld=()):
-    text = _kb.read_text(path)
+    text, encoding = _kb.read_text_enc(path)
     starts = line_starts(text)
     found = []
+    if encoding != "utf-8":
+        found.append((1, -1, {"file": path, "line": 1, "kind": "encoding", "encoding": encoding, "blocking": False,
+                              "message": "the file is not UTF-8 and was read as %s" % encoding}))
     for match in PLACEHOLDER_RE.finditer(text):
         line = line_of(starts, match.start())
         found.append((line, match.start(), placeholder_issue(path, line, match, public, withheld)))

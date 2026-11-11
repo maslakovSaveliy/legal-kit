@@ -117,6 +117,7 @@ Drafts come first, before any option; every public file gets its own `--public` 
 | `inn_checksum`, `ogrn_checksum` | always | the number is wrong where it came from: re-check the source, never adjust digits; leave it to the owner in «Сделать вам» |
 | `mismatch` | always | the text differs from `answers.json`: use the confirmed value |
 | `forbidden_clause` | severity `violation` | remove or rewrite it; severity `risk` is reported without blocking and goes to «Спорно» ([Existing legal pages](#existing-legal-pages)) |
+| `encoding` | never | the file is not UTF-8 and was read as the named encoding (`cp1251` or `utf-16`): its text was still checked; convert the page to UTF-8 when the project allows it |
 
 Repeat until it exits 0. The pages built from the drafts carry the same text, without the passages left out under [Drafts and public pages](#drafts-and-public-pages).
 

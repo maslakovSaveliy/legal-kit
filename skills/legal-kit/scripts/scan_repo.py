@@ -106,9 +106,11 @@ def read_text(path):
             data = handle.read(MAX_FILE_BYTES + 1)
     except OSError:
         return None
+    if data.startswith((b"\xff\xfe", b"\xfe\xff")):  # UTF-16 text is full of NUL bytes
+        return _kb.decode_bytes(data)[0]
     if b"\x00" in data[:8192]:
         return None
-    return data.decode("utf-8", errors="replace")
+    return _kb.decode_bytes(data)[0]
 
 
 class LineIndex:

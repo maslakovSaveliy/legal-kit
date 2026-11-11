@@ -113,12 +113,32 @@ def csv_list(value):
 # Files
 # --------------------------------------------------------------------------
 
-def read_text(path):
+def decode_bytes(data):
+    """(text, encoding) of a file's bytes; encoding is "utf-8", "utf-16" or "cp1251".
+
+    A BOM decides first. Without one the bytes are UTF-8 when they decode strictly; otherwise they are read
+    as windows-1251 (legacy Russian pages), so Cyrillic text is checked instead of turning into U+FFFD."""
+    if data.startswith(b"\xef\xbb\xbf"):
+        return data.decode("utf-8-sig", errors="replace"), "utf-8"
+    if data.startswith((b"\xff\xfe", b"\xfe\xff")):
+        return data.decode("utf-16", errors="replace"), "utf-16"
     try:
-        with open(path, "r", encoding="utf-8", errors="replace") as handle:
-            return handle.read()
+        return data.decode("utf-8"), "utf-8"
+    except UnicodeDecodeError:
+        return data.decode("cp1251", errors="replace"), "cp1251"
+
+
+def read_text_enc(path):
+    """(text, encoding) of a file, see decode_bytes."""
+    try:
+        with open(path, "rb") as handle:
+            return decode_bytes(handle.read())
     except OSError as exc:
         raise KbError("cannot read %s: %s" % (path, exc.strerror or exc))
+
+
+def read_text(path):
+    return read_text_enc(path)[0]
 
 
 def load_json(path):

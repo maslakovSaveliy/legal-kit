@@ -2597,3 +2597,39 @@ def test_render_plan_never_prints_norm_for_soft_rows(tmp_path, capsys):
     md_en = render(tmp_path, plan_report(row), capsys, "--plan", "--lang", "en")
     line_en = [l for l in md_en.splitlines() if "Consent under a contract basis" in l][0]
     assert "norm" not in line_en.split("—", 1)[1]
+
+
+# --------------------------------------------------------------------------
+# Text decoding: cp1251, UTF-16, BOM
+# --------------------------------------------------------------------------
+
+def test_check_docs_reads_cp1251_and_utf16_pages(tmp_path, capsys):
+    text = "<footer>ИНН {{ИНН}}, ОГРН " + OGRN13_BAD + " [если есть лицензия]</footer>\n"
+    for name, raw in (("f1251.php", text.encode("cp1251")), ("f16.html", text.encode("utf-16"))):
+        page = tmp_path / name
+        page.write_bytes(raw)
+        code, issues = check(capsys, [], "--public", page, answers=None)
+        assert code == 1
+        assert kinds(issues) == ["condition", "encoding", "ogrn_checksum", "placeholder_requisite"]
+        assert [i["blocking"] for i in issues if i["kind"] == "encoding"] == [False]
+
+
+def test_check_docs_utf8_page_has_no_encoding_issue(tmp_path, capsys):
+    page = write(tmp_path, "ok.html", "<p>Политика обработки персональных данных</p>\n")
+    assert check(capsys, [], "--public", page, answers=None) == (0, [])
+
+
+def test_kb_reads_json_with_bom(tmp_path):
+    path = tmp_path / "a.json"
+    path.write_bytes(b"\xef\xbb\xbf" + b'{"version": 1}')
+    assert load("_kb").load_json(str(path)) == {"version": 1}
+
+
+def test_scan_repo_reads_bom_manifest_and_cp1251_form(tmp_path, capsys):
+    (tmp_path / "package.json").write_bytes(b"\xef\xbb\xbf" + b'{"dependencies": {"next": "15.0.0"}}')
+    form = ('<form><input name="email"><label><input type="checkbox">'
+            'Согласен на обработку персональных данных</label></form>')
+    (tmp_path / "index.php").write_bytes(form.encode("cp1251"))
+    out = scan_repo(tmp_path, capsys)
+    assert "nextjs" in out["stacks"]
+    assert any(f["file"] == "index.php" and f["has_consent_checkbox"] for f in out["forms"])
