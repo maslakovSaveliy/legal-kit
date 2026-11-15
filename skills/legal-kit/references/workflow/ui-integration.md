@@ -28,6 +28,8 @@ Edit the repo only when all hold:
 
 Otherwise make no repo edits: the drafts stay in `.legal/drafts/` and each fix becomes a step in «Сделать вам». Never commit, push, stash, reset or delete files.
 
+Outside phase 0 and the confirmation block the skill asks nothing: a step the code cannot settle (a new table or collection, an endpoint the project does not show, a hand edit of a project file) is not done and goes to «Сделать вам» with what the owner needs to do it. Stack guides follow this rule.
+
 Scope of the edits:
 
 - Build only what an applicable row needs: no banner or loader without a counter or SDK, no checkbox without a form that collects data, no page for a document that was not drafted. A product that needs only an owner block in the footer gets only that.

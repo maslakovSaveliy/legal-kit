@@ -240,3 +240,13 @@ def test_unattended_run_does_not_wait_and_edits_only_with_leave():
     assert "it is `true` on a clean tree and `false` otherwise" in waiting  # «просто сделай» keeps its rule
     skill = SKILL_MD.read_text(encoding="utf-8")
     assert skill.count("or says that nobody can answer") == 2
+
+
+def test_no_question_outside_phase_0_and_the_block():
+    gate = section(read("ui-integration.md"), "Gate")
+    assert "Outside phase 0 and the confirmation block the skill asks nothing" in gate
+    assert "goes to «Сделать вам»" in gate
+    plan = read("plan.md")
+    assert "without the owner's word" not in plan
+    choosing = section(plan, "Choosing the mode")
+    assert "`product.planned_features`" in choosing and "the mode was changed" in choosing

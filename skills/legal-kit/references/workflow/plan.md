@@ -25,7 +25,7 @@ Decide in phase 0, from the words of the request first and the project second.
 | `plan` | no code, or the scan finds no features and no legal pages; or the request says «создаю», «новый проект», «до разработки», «перед запуском», "new project", "build checklist"; or the owner gives a spec or mockups | `.legal/plan.md`, `.legal/RULES.md`, drafts in `.legal/drafts/`, `report.json` with `mode: "plan"` |
 | `feature` | an existing project gets one function now: «добавляю оплату», «делаю форму заявки», «пишу бота» | the rules for that function in the chat; `.legal/RULES.md` rebuilt when it exists or is asked for; no report |
 
-- Plan requested, but the scan found features: say in one line that code already exists and offer the audit; do not write a plan over a working product without the owner's word.
+- Plan requested, but the scan found features: run the audit. The owner's words go to `product.planned_features` and are compared with the code (plan vs fact); one line of the chat says the mode was changed from `plan` to the audit because code already exists.
 - The mode is recorded in `report.json` (`mode`). The feature mode writes no report.
 
 ## Features in the owner's words
