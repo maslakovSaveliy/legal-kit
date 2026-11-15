@@ -5,6 +5,8 @@ Each test pins one sentence-level rule; the wording may change, the pinned terms
 
 from pathlib import Path
 
+import pytest
+
 SKILL = Path(__file__).resolve().parents[2] / "skills" / "legal-kit"
 WORKFLOW = SKILL / "references" / "workflow"
 SKILL_MD = SKILL / "SKILL.md"
@@ -250,3 +252,74 @@ def test_no_question_outside_phase_0_and_the_block():
     assert "without the owner's word" not in plan
     choosing = section(plan, "Choosing the mode")
     assert "`product.planned_features`" in choosing and "the mode was changed" in choosing
+
+
+# Hard rules 7 and 8, the gates and the manual fallback, pinned by their terms (plan 2026-11-16, task 5).
+
+def pins(text, terms):
+    """Return the pinned terms missing from text; each test asserts this is empty."""
+    return [term for term in terms if term not in text]
+
+
+RULE7_SKILL = ("never click «Принять»/\"Accept\"", "Never bypass a captcha, a geo-block or a login wall",
+               "Never ask for passport data or Gosuslugi credentials", "no data entry, form submissions")
+RULE7_SAFETY = ("clicking «Принять»/\"Accept\" is never allowed", "Never solve, skip or bypass a captcha",
+                "a geo-block or a login wall", "Never ask for or accept Gosuslugi logins, passwords or codes, passport data",
+                "Never type data into the product's forms, submit them")
+RULE8_SKILL = ("Never commit or push.", "Never install dependencies.", "Never apply a migration",
+               "a generator that connects to the database runs only when the configured host is `localhost`, `127.0.0.1`, `::1` or a local socket")
+RULE8_SAFETY = ("Never commit, push", "Never install, add or upgrade dependencies", "never apply a migration to any database",
+                "A migration generator that connects to the database runs only when the configured host is `localhost`")
+RULE8_UI = ("Never commit, push, stash, reset or delete files", "Never install or upgrade dependencies",
+            "Never apply a migration to any database",
+            "only when the database host configured in the project is `localhost`, `127.0.0.1`, `::1` or a local socket")
+JUST_DO_IT = ("a sector stays unconfirmed and is not applied",
+              "requisites come only from the prompt, `answers.json` and `ok` registry answers",
+              "`block_counters` is taken as `true`")
+SKILL_SCOPE = ("There is no second block.", "never remove the product's own widgets", "never invent a configuration file")
+WORKFLOW_FILES = sorted(p.name for p in WORKFLOW.glob("*.md"))
+
+
+def test_rule_7_looks_and_never_acts_outside_the_project():
+    assert pins(skill_text(), RULE7_SKILL) == []
+    assert pins(section(read("safety.md"), "The live product and third parties")
+                + section(read("safety.md"), "Captcha, geo-blocks and logins"), RULE7_SAFETY) == []
+
+
+def test_rule_8_leaves_git_dependencies_and_databases_alone():
+    assert pins(skill_text(), RULE8_SKILL) == []
+    assert pins(section(read("safety.md"), "The user's repository"), RULE8_SAFETY) == []
+    assert pins(read("ui-integration.md"), RULE8_UI) == []
+
+
+def test_just_do_it_still_confirms_nothing_on_a_guess():
+    assert pins(subsection(read("intake.md"), "Waiting or not"), JUST_DO_IT) == []
+
+
+def test_skill_keeps_one_block_and_the_products_own_parts():
+    assert pins(skill_text(), SKILL_SCOPE) == []
+
+
+def test_verification_never_passes_by_deleting_a_finding():
+    assert pins(section(read("report.md"), "Verify"), ("Never pass verification by deleting a true finding",)) == []
+
+
+def without_python3(text):
+    return section(text, "Without python3").split("\n", 2)[2].strip()
+
+
+@pytest.mark.parametrize("name", WORKFLOW_FILES)
+def test_every_workflow_file_has_a_manual_fallback(name):
+    assert without_python3(read(name))
+
+
+@pytest.mark.parametrize("terms,source", [
+    (RULE7_SKILL + RULE8_SKILL + SKILL_SCOPE, lambda: skill_text()),
+    (RULE7_SAFETY + RULE8_SAFETY, lambda: read("safety.md")),
+    (RULE8_UI, lambda: read("ui-integration.md")),
+    (JUST_DO_IT, lambda: read("intake.md")),
+], ids=["skill", "safety", "ui-integration", "intake"])
+def test_pins_report_each_term_cut_from_a_copy(terms, source):
+    text = source()
+    for term in terms:
+        assert pins(text.replace(term, ""), terms) == [term], term
