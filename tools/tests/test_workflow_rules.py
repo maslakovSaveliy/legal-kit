@@ -323,3 +323,9 @@ def test_pins_report_each_term_cut_from_a_copy(terms, source):
     text = source()
     for term in terms:
         assert pins(text.replace(term, ""), terms) == [term], term
+
+
+def test_manual_check_reads_a_header_table_by_column():
+    manual = section(read("documents.md"), "Without python3")
+    assert "a table with a header row" in manual and "under the column whose header cell is the label" in manual
+    assert "only when the table has one value row" in manual
