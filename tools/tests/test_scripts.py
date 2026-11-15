@@ -3000,3 +3000,50 @@ def test_check_docs_header_table_of_one_megabyte_stays_fast(tmp_path, capsys, ki
     started = time.monotonic()
     _, issues = check(capsys, [write(tmp_path, "big.md", text)], answers=None)
     assert time.monotonic() - started < 2 and issues == []
+
+
+# Review fixes: escaped bars, upper-case HTML tags, a nested table in a value cell.
+
+@pytest.mark.parametrize("text,expected", [
+    ("| ИНН | ОГРН |\n|---|---|\n| %s | %s |\na \\| b\n" % (INN10_BAD, OGRN13_BAD),
+     [("inn_checksum", INN10_BAD, 3), ("ogrn_checksum", OGRN13_BAD, 3)]),
+    ("a \\| b\n|---|---|\n| x | y |\n", []),
+    ("| ИНН |\n|---|\n\\|\\|\n| %s |\n" % INN10_BAD, []),
+], ids=["ends-a-table", "not-a-header", "not-a-row"])
+def test_check_docs_line_with_only_escaped_bars_is_not_a_table_row(tmp_path, capsys, text, expected):
+    _, issues = check(capsys, [write(tmp_path, "e.md", text)], answers=None)
+    assert [(i["kind"], i["value"], i["line"]) for i in issues] == expected
+
+
+UPPER_TABLE = ("<TABLE><THEAD><TR><TH>ИНН</TH><TH>ОГРН</TH></TR></THEAD><TBODY>\n"
+               "<TR><TD>%s</TD>\n<TD>%s</TD></TR></TBODY></TABLE>" % (INN10_BAD, OGRN13_BAD))
+
+
+@pytest.mark.parametrize("text", [UPPER_TABLE, UPPER_TABLE.replace("TR>", "Tr>")], ids=["upper", "mixed"])
+def test_check_docs_header_table_with_upper_case_tags(tmp_path, capsys, text):
+    _, issues = check(capsys, [write(tmp_path, "u.html", text)], answers=None)
+    assert [(i["kind"], i["value"], i["line"]) for i in issues] == [
+        ("inn_checksum", INN10_BAD, 2), ("ogrn_checksum", OGRN13_BAD, 3)]
+
+
+def test_check_docs_column_decides_the_kind_over_a_label_from_another_row(monkeypatch):
+    # A label pass that crosses a row boundary (as the case-sensitive </tr> stop did in 0.2.3) must not win.
+    module = load("check_docs")
+    loose = module._SEP.replace("<(?!/?", "<(?!/?$")  # a row stop that never matches
+    monkeypatch.setattr(module, "OGRN_RE", module.re.compile(r"(?<!\w)" + module._OGRN_LABEL + loose + module._NUMBER))
+    inns, ogrns, _ = module.find_numbers(UPPER_TABLE)
+    assert [value for _, value in inns] == [INN10_BAD] and [value for _, value in ogrns] == [OGRN13_BAD]
+
+
+def test_check_docs_header_table_reads_a_number_in_a_nested_table(tmp_path, capsys):
+    text = ("<table><tr><th>ИНН</th></tr>\n<tr><td><table><tr><td>%s</td></tr></table></td></tr></table>\n"
+            % INN10_BAD)
+    _, issues = check(capsys, [write(tmp_path, "n.html", text)], answers=None)
+    assert [(i["kind"], i["value"], i["line"]) for i in issues] == [("inn_checksum", INN10_BAD, 2)]
+
+
+def test_check_docs_unclosed_nested_tables_stay_fast(tmp_path, capsys):
+    text = "<table><tr><th>ИНН</th></tr><tr><td>" + "<table><tr><td>" * 60000
+    started = time.monotonic()
+    _, issues = check(capsys, [write(tmp_path, "nest.html", text)], answers=None)
+    assert time.monotonic() - started < 2 and issues == []
