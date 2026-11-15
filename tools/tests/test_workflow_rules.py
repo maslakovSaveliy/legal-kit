@@ -231,3 +231,12 @@ def test_commit_question_is_gone_and_the_summary_says_who_commits():
 def test_old_answers_keep_a_key_the_schema_no_longer_has():
     saved = subsection(read("intake.md"), "Saved state")
     assert "a key the schema no longer has" in saved and "is not read" in saved
+
+
+def test_unattended_run_does_not_wait_and_edits_only_with_leave():
+    waiting = subsection(read("intake.md"), "Waiting or not")
+    assert "the owner is unavailable" in waiting and "nobody can answer" in waiting and '"unattended"' in waiting
+    assert "`apply_changes` is `true` only when the prompt explicitly allows edits" in waiting
+    assert "it is `true` on a clean tree and `false` otherwise" in waiting  # «просто сделай» keeps its rule
+    skill = SKILL_MD.read_text(encoding="utf-8")
+    assert skill.count("or says that nobody can answer") == 2

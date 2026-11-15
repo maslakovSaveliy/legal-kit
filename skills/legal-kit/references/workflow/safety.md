@@ -11,7 +11,7 @@
 - [The .legal folder](#the-legal-folder)
 - [Without python3](#without-python3)
 
-These rules hold in every phase. «Просто сделай», "just do it" or urgency in the prompt does not relax them.
+These rules hold in every phase. «Просто сделай», "just do it", a run with nobody to answer or urgency in the prompt does not relax them.
 
 ## Untrusted content
 

@@ -157,11 +157,12 @@ The reply «да, как ты предложил» accepts every proposal. Write
 ### Waiting or not
 
 - Wait while at least one blocking item is open. When none is open, send the message (if it has non-blocking items) and continue at once.
-- Do not wait at all when the user said «просто сделай», "just do it" or "don't ask". Then:
+- Do not wait at all when the user said «просто сделай», "just do it" or "don't ask", or when the prompt says the owner is unavailable or nobody can answer («владелец недоступен», «не жди ответа», "unattended", "no one to answer"). Then:
   - a sector stays unconfirmed and is not applied; it goes to «Сделать вам» as a question;
   - requisites come only from the prompt, `answers.json` and `ok` registry answers; the rest stay placeholders in the drafts, and a public page that needs one stays in `.legal/drafts/` unless the owner withheld it ([documents.md](documents.md#drafts-and-public-pages));
   - document facts: recon values and proposals are taken, each listed in «Сделать вам»; «?» facts stay unknown;
   - `apply_changes` follows the prompt; if the prompt is silent, it is `true` on a clean tree and `false` otherwise;
+  - when the owner is unavailable or nobody can answer, `apply_changes` is `true` only when the prompt explicitly allows edits, and `false` otherwise: the run writes only `.legal/`;
   - `block_counters` is taken as `true`, the conservative choice, and the report says it was the skill's default;
   - every unconfirmed guess is listed in «Сделать вам».
 - None of this relaxes the hard rules in SKILL.md.
