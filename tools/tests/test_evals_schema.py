@@ -489,7 +489,6 @@ def test_answers_follow_the_canonical_skeleton(path):
         assert set(answers["business"]["sectors"]) <= SECTORS
     else:
         assert answers["business"]["sectors"] == [], "no feature-map.json to check sector keys against"
-    assert answers["decisions"]["commit_legal_dir"] in (False, None)
     assert answers["product"]["repo"] == "."
 
 

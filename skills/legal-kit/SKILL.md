@@ -122,7 +122,7 @@ Run the phases in order. Phases 0 to 4 never touch the project's files outside `
 
 [intake.md](references/workflow/intake.md#phase-3-confirmation-block)
 
-- One message, at most 10 items from owner-questions.md, each with the skill's guess and its source; it opens with the values from the prompt shown as confirmed, and includes «Применять правки?», «Блокировать счётчики до согласия?» and «Коммитить `.legal/`?» unless already answered.
+- One message, at most 10 items from owner-questions.md, each with the skill's guess and its source; it opens with the values from the prompt shown as confirmed, and includes «Применять правки?» and «Блокировать счётчики до согласия?» unless already answered.
 - «Факты для документов» is one item: a fill-in list of what the drafts need besides requisites (retention per purpose, database region, recipients and their countries, support hours, delivery and return terms), derived from recon where possible, with a proposal marked «предложение, измените при необходимости» where the value is a business choice, «?» otherwise; stored in `document_facts` ([intake.md](references/workflow/intake.md#document-facts)).
 - Blocking items (owner status, B2C or B2B, sector, minors, requisites used in drafts, applying edits, holding counters, editing over a dirty tree, a «?» fact a public page needs) wait for the answer. Every other item is phrased «предполагаю …» and the run goes on.
 - **Gate:** wait only while a blocking item is open, and not at all when the user said «просто сделай». There is no second block.

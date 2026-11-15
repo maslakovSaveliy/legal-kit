@@ -41,7 +41,7 @@ Decide in phase 0, from the words of the request first and the project second.
 1. Phase 0: the usual intake, mode `plan`; facts and planned features from the prompt go to `answers.json` at once.
 2. Phase 1: recon of what exists (an empty repo, a spec, mockups). Features found in code go to `--features` as usual.
 3. Phase 2: `select.py --planned <ids> [--features <ids>] --answers .legal/answers.json --today <date> > .legal/evidence/select.json`.
-4. Phase 3: the confirmation block, at most 10 items, nothing already in the prompt. «Применять правки?» and «Коммитить `.legal/`?» are not asked: there is no code. Instead, only when `CLAUDE.md`, `AGENTS.md` or a `.cursor/rules/` folder exists, ask whether to add the link line ([below](#link-for-the-coding-agent)); `decisions.agent_rules_link`. Ask about holding counters when analytics is planned.
+4. Phase 3: the confirmation block, at most 10 items, nothing already in the prompt. «Применять правки?» is not asked: there is no code. Instead, only when `CLAUDE.md`, `AGENTS.md` or a `.cursor/rules/` folder exists, ask whether to add the link line ([below](#link-for-the-coding-agent)); `decisions.agent_rules_link`. Ask about holding counters when analytics is planned.
 5. Phase 5: drafts from the templates in `.legal/drafts/` as usual ([documents.md](documents.md#drafts-and-public-pages)). Unknown requisites stay placeholders; there are no public pages.
 6. Phase 6 is skipped: without code nothing is integrated.
 7. Phase 7: `report.json` with `mode: "plan"`, then `report.py verify --select .legal/evidence/select.json`, `render --plan`, `rules.py` and a short chat summary ([report.md](report.md#plan-mode)).

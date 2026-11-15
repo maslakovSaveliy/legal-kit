@@ -113,7 +113,6 @@ REQUIRED_ANSWER_KEYS = frozenset(
         "business.rkn_notified",
         "decisions.block_counters",
         "decisions.apply_changes",
-        "decisions.commit_legal_dir",
         "decisions.consent_at_forms",
         "document_facts",
     }

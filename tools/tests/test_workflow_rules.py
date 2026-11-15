@@ -215,3 +215,19 @@ def test_platform_pages_are_read_not_crawled():
     intake = read("intake.md")
     mode = intake[intake.index("### Mode"):intake.index("### Git tree")]
     assert "do not crawl" in mode
+
+
+# Improvements after 0.2.3 (plan 2026-11-16).
+
+def test_commit_question_is_gone_and_the_summary_says_who_commits():
+    hits = [str(p.relative_to(SKILL)) for p in SKILL.rglob("*") if p.is_file() and b"commit_legal_dir" in p.read_bytes()]
+    assert hits == []
+    assert "Коммитить `.legal/`?" not in SKILL_MD.read_text(encoding="utf-8")
+    summary = section(read("report.md"), "Chat summary")
+    assert "the owner commits `.legal/`" in summary and "`.legal/.gitignore`" in summary
+    assert "`answers.json` and `evidence/`" in summary
+
+
+def test_old_answers_keep_a_key_the_schema_no_longer_has():
+    saved = subsection(read("intake.md"), "Saved state")
+    assert "a key the schema no longer has" in saved and "is not read" in saved
