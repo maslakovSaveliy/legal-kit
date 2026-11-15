@@ -254,3 +254,19 @@ def test_readme_counts_match_the_evals():
     assert "%d запросов" % len(queries) in readme and "%d queries" % len(queries) in readme
     assert "%d должны его запускать, %d нет" % (positive, len(queries) - positive) in readme
     assert "%d should trigger it, %d should not" % (positive, len(queries) - positive) in readme
+
+
+README_VERSION_RE = re.compile(r"^Версия / version (\d+\.\d+\.\d+)\.", re.M)
+CHANGELOG_RELEASE_RE = re.compile(r"^## \[(\d+\.\d+\.\d+)\] - \d{4}-\d\d-\d\d$", re.M)
+
+
+def test_versions_agree_in_skill_plugin_readme_and_changelog():
+    # The git tag is not checked: a CI clone may have no tags.
+    front, _ = load_skill()
+    version = load_json(PLUGIN_JSON)["version"]
+    readme = README_VERSION_RE.findall((ROOT / "README.md").read_text(encoding="utf-8"))
+    changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+    assert changelog.index("## [Unreleased]") < CHANGELOG_RELEASE_RE.search(changelog).start()
+    assert front["metadata"]["version"] == version
+    assert readme == [version]
+    assert CHANGELOG_RELEASE_RE.search(changelog).group(1) == version
