@@ -2,9 +2,14 @@
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-16
+
+First improvements from the review of 0.2.2: no commit question, unattended runs, tables with a header row.
+
 ### Scripts
 
 - `check_docs.py` checks an INN or OGRN in a Markdown or HTML table with a header row: a header cell that is only the label (ИНН, ИНН/КПП, ОГРН, ОГРНИП, INN, OGRN, OGRNIP) makes its column checked row by row, at the right line. The number is compared with `answers.json` only when the table has one value row; a table of several rows lists recipients and gets the check digit test only.
+- A label no longer reaches a number through a table boundary written in upper case (`</TR>`, `<TBODY>`), which made an INN be reported as an OGRN.
 
 ### Workflow and stacks
 
