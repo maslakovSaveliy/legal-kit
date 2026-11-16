@@ -387,3 +387,13 @@ def test_stack_guides_run_nothing_that_installs_or_migrates(path):
         assert hit is None or "«Сделать вам»" in line or "never" in line.lower(), (path.name, line[:120])
         for call in re.findall(r"`npx [^`]+`", line):
             assert "--no-install" in call, (path.name, call)
+
+
+MID_RUN_QUESTIONS = ("ask the owner", "ask the user", "otherwise ask", "once the owner confirms",
+                     "with the user's go-ahead")
+
+
+@pytest.mark.parametrize("stack", STACKS)
+def test_stack_guides_ask_nothing_mid_run(stack):
+    text = (STACKS_DIR / f"{stack}.md").read_text(encoding="utf-8").lower()
+    assert [p for p in MID_RUN_QUESTIONS if p in text] == []

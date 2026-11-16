@@ -40,7 +40,7 @@ Read, if present:
 2. `.legal/state.json`: files the skill manages, with sha256. A non-empty `managed` list means this is a rerun ([ui-integration.md](ui-integration.md#reruns-and-statejson)).
 3. `.legal/report.json`: the previous report, for the comparison in the final summary.
 
-Never delete these files and never rebuild `answers.json` from scratch. If `answers.json` does not parse, stop and show the error; do not overwrite it.
+Never delete these files and never rebuild `answers.json` from scratch. In an older `answers.json`, a key the schema no longer has stays in the file as it is and is not read. If `answers.json` does not parse, stop and show the error; do not overwrite it.
 
 On the first write create, unless they exist: `.legal/.gitignore` with the two lines `answers.json` and `evidence/`, and `.legal/sources.json` holding `[]` (`report.py verify --sources` needs the file).
 
@@ -65,7 +65,7 @@ Write what the prompt states into `answers.json` before any question, so nothing
 
 - A `localhost`, `127.0.0.1` or other local URL is a recon target for this run, never stored in `product.urls`: that list holds production addresses only.
 - A fact the prompt does not state stays `null` (or keeps its saved value). Never fill it with a likely value: a name does not give a status, a domain does not give an owner.
-- "Do not commit" needs no key: the skill never commits. `decisions.commit_legal_dir` stays `null` until the owner answers.
+- "Do not commit" needs no key: the skill never commits.
 - Set `updated` to the current time in ISO 8601 UTC on every write.
 
 ### Jurisdiction
@@ -86,7 +86,7 @@ Write what the prompt states into `answers.json` before any question, so nothing
 - With code, store listings are not a live URL: a mobile repo whose only pages are store listings is `repo-only`; the listings are still inspected ([recon-stores.md](recon-stores.md)).
 - A product with no code and only a store listing, or only a bot link (`t.me/…`, a MAX link), runs as `prod-only`: the listing or the bot's public page is the recon target, and what it cannot show (screens, consent flow, data flows) goes to `not_checked`. Read that one page; do not crawl the platform's site with `scan_url.py`, which is for the product's own origin. A live bot is only read, never messaged ([safety.md](safety.md#the-live-product-and-third-parties)).
 - Without code, a URL, a store listing or a bot link there is nothing to inspect: ask start question 2 or 3 — unless the owner describes a product to build, which is mode `plan`.
-- Mode `plan` (no product yet, or the request says it is a new project) and mode `feature` (one function being added now) are chosen by the words of the request: [plan.md](plan.md#choosing-the-mode). Plan requested over code that already has features: offer the audit in one line.
+- Mode `plan` (no product yet, or the request says it is a new project) and mode `feature` (one function being added now) are chosen by the words of the request: [plan.md](plan.md#choosing-the-mode). Plan requested over code that already has features: run the audit and say so in one line.
 
 ### Git tree
 
@@ -127,7 +127,7 @@ Blocking items change what the run applies or writes; the run waits while one is
 - holding counters until consent (item 8), when a counter or SDK was found;
 - document facts (item 10), only while a public page needs a fact marked «?» (nothing in recon shows it and it is not a business choice the skill may propose).
 
-Every other item is non-blocking: revenue (item 6), the RKN notification (item 7), committing `.legal/` (the second question of item 9), document facts that all have a value from recon or a proposal, per-requirement questions. Phrase each as an assumption, «предполагаю: …; если не так, поправьте», and continue with that assumption.
+Every other item is non-blocking: revenue (item 6), the RKN notification (item 7), document facts that all have a value from recon or a proposal, per-requirement questions. Phrase each as an assumption, «предполагаю: …; если не так, поправьте», and continue with that assumption.
 
 ### Document facts
 
@@ -143,7 +143,7 @@ The reply «да, как ты предложил» accepts every proposal. Write
 
 1. Start from [owner-questions.md, section «Блок подтверждения»](../jurisdictions/ru/owner-questions.md#блок-подтверждения).
 2. Skip every item whose key already has a value given by the owner (`answers.json` from an earlier answer, or the prompt). Open the block with one line «Из вашего сообщения: …» that lists those values as confirmed, without a question; a registry answer that agrees with them joins that line («статус НПД подтверждён реестром»), one that differs is a mismatch item. Two exceptions: values this run wrote from an `ok` registry answer in phase 1 for keys the owner did not give are still shown in item 3 as guesses to confirm; and the sector item is asked when recon or a registry found evidence of a group that `business.sectors` does not list, even if `business.sectors` is `[]`.
-3. Skip items whose answer cannot change this run: holding counters when no counter or SDK was found; applying edits and committing `.legal/` when there is no repo; revenue when the product takes no payments; the responsible person when no policy is drafted.
+3. Skip items whose answer cannot change this run: holding counters when no counter or SDK was found; applying edits when there is no repo; revenue when the product takes no payments; the responsible person when no policy is drafted.
 4. Add, if room is left, the per-requirement questions (owner-questions.md, section «Вопросы по требованиям») whose answer changes which documents are drafted or what they say. Choose among the ids `scripts/select.py` lists under `owner_questions`.
 5. At most 10 items in total, blocking ones first; when room runs out, per-requirement questions go first, never item 10 while a drafted page needs a document fact. Everything else goes to the report, bucket `owner` («Сделать вам»).
 
@@ -157,11 +157,12 @@ The reply «да, как ты предложил» accepts every proposal. Write
 ### Waiting or not
 
 - Wait while at least one blocking item is open. When none is open, send the message (if it has non-blocking items) and continue at once.
-- Do not wait at all when the user said «просто сделай», "just do it" or "don't ask". Then:
+- Do not wait at all when the user said «просто сделай», "just do it" or "don't ask", or when the prompt says the owner is unavailable or nobody can answer («владелец недоступен», «не жди ответа», "unattended", "no one to answer"). Then:
   - a sector stays unconfirmed and is not applied; it goes to «Сделать вам» as a question;
   - requisites come only from the prompt, `answers.json` and `ok` registry answers; the rest stay placeholders in the drafts, and a public page that needs one stays in `.legal/drafts/` unless the owner withheld it ([documents.md](documents.md#drafts-and-public-pages));
   - document facts: recon values and proposals are taken, each listed in «Сделать вам»; «?» facts stay unknown;
   - `apply_changes` follows the prompt; if the prompt is silent, it is `true` on a clean tree and `false` otherwise;
+  - when the owner is unavailable or nobody can answer, `apply_changes` is `true` only when the prompt explicitly allows edits, and `false` otherwise: the run writes only `.legal/`;
   - `block_counters` is taken as `true`, the conservative choice, and the report says it was the skill's default;
   - every unconfirmed guess is listed in «Сделать вам».
 - None of this relaxes the hard rules in SKILL.md.

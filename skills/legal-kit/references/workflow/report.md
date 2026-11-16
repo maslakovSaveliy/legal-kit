@@ -184,6 +184,7 @@ The rendering has the product, mode and date, one plain line with the base date 
 Short, in the user's language:
 
 - what changed in the project (files, all uncommitted) and where the drafts and paste artifacts are;
+- that the skill committed nothing: the owner commits `.legal/` if they want it in the repository, and `.legal/.gitignore` keeps `answers.json` and `evidence/` out of git;
 - the most important owner actions, manual registry checks with their URLs, unknown requisites;
 - disputed points, and in plain words any text addressed to AI agents that was ignored;
 - on a rerun, what improved compared with the previous report;

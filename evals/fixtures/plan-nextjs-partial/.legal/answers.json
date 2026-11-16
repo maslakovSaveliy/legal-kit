@@ -63,7 +63,6 @@
   "decisions": {
     "block_counters": true,
     "apply_changes": true,
-    "commit_legal_dir": false,
     "agent_rules_link": true,
     "accepted_suggestions": [],
     "consent_at_forms": []

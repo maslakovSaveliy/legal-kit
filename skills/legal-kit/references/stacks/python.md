@@ -137,7 +137,7 @@ def record_consent(request):
 ```
 - Compute the hash server-side from the known text of that version; never trust a client hash. For logged-in users take the subject from `request.user.pk`, not from the body.
 - `REMOTE_ADDR` is the real client only when the proxy is configured (nginx `real_ip`, gunicorn `forwarded_allow_ips`); do not read `X-Forwarded-For` unless the deployment guarantees it.
-- Register the model in `admin.py` read-only (`has_add/change/delete_permission` return False). QuerySet `update()`/`delete()` bypass `save()`; for a hard guarantee ask the owner about DB-level privileges.
+- Register the model in `admin.py` read-only (`has_add/change/delete_permission` return False). QuerySet `update()`/`delete()` bypass `save()`; a hard guarantee (DB-level privileges that forbid `UPDATE` and `DELETE` on the table) is a step in «Сделать вам».
 - SQLAlchemy: same columns on a `DeclarativeBase` model with `__tablename__ = "consent_log"`, insert-only helper; `alembic revision --autogenerate -m "add consent_log"` only when the database host in the configuration is `localhost`, `127.0.0.1`, `::1` or a local socket, otherwise write the revision by hand or leave the command in «Сделать вам» ([ui-integration.md](../workflow/ui-integration.md#consent-log)). FastAPI/Flask: the same handler shape with the framework's request object.
 
 ## Footer and links

@@ -47,7 +47,6 @@
   },
   "decisions": {
     "block_counters": true,
-    "apply_changes": null,
-    "commit_legal_dir": false
+    "apply_changes": null
   }
 }

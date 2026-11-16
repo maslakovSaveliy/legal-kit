@@ -13,9 +13,10 @@ artifacts). Reads optionally .legal/answers.json
   placeholder_runtime    leftover {{NAME}} of a per-user or per-order value (buyer's name, order number, ...)
   placeholder_fact       leftover {{NAME}} of anything else (retention, hosting region, recipients, hours, ...)
   condition              leftover [если ...], [Если ...], [вставьте ...] or [... :] marker
-  inn_checksum           INN next to "ИНН" with a wrong length or check digit
-  ogrn_checksum          OGRN/OGRNIP next to "ОГРН"/"ОГРНИП" with a wrong length or check digit
-  mismatch               INN, OGRN or owner name differs from answers.json (or is not confirmed there)
+  inn_checksum           INN next to "ИНН" (or under an "ИНН" header cell) with a wrong length or check digit
+  ogrn_checksum          OGRN/OGRNIP next to "ОГРН"/"ОГРНИП" (or under such a header cell), wrong length or check digit
+  mismatch               INN, OGRN or owner name differs from answers.json (or is not confirmed there); a table with
+                         a header row is compared only when it has one value row (more rows list recipients)
   forbidden_clause       an offer contains a clause from forbidden-clauses.json (severity violation|risk)
   encoding               the file is not clean UTF-8: read as cp1251 or utf-16, or as UTF-8 with invalid bytes replaced
 
@@ -73,10 +74,11 @@ RUNTIME_PLACEHOLDERS = frozenset((
 _NUMBER = r"(\d(?:[\d \u00a0\u202f-]*\d)?)(?!\d)(?![ \t\u00a0]*(?:цифр|знак|символ|digit))"
 # between a label and its number: punctuation, a table bar, emphasis marks, a dash, tags and &nbsp;
 # ("| ИНН | 7707083893 |", "ИНН: **7707083893**", "<td>ИНН</td><td>7707083893</td>", "ИНН — 7707083893")
-# The gap stays inside one block: it does not cross a blank line, a table rule row (|---|), the end of a table row
-# (</tr>) or a dash that ends its line ("ИНН: —"), so a header cell never borrows a number of the next row.
-_SEP = (r"(?:<(?!/?tr\b)[^>\n]{1,200}>|&nbsp;|&\#160;|[ \t\r\u00a0:№#.,|*_]|-(?!--)|[\u2014\u2013](?![ \t\r]*\n)"
-        r"|\n(?![ \t\r]*\n))*")
+# The gap stays inside one block: it does not cross a blank line, a table rule row (|---|), a table row or section tag
+# in any case (<tr>, </TR>, <tbody>, </table>) or a dash that ends its line ("ИНН: —"), so a header cell never borrows
+# a number of the next row.
+_SEP = (r"(?:<(?!/?(?i:tr|thead|tbody|tfoot|table)\b)[^>\n]{1,200}>|&nbsp;|&\#160;|[ \t\r\u00a0:№#.,|*_]|-(?!--)"
+        r"|[\u2014\u2013](?![ \t\r]*\n)|\n(?![ \t\r]*\n))*")
 # the Latin labels of a translation only in capitals: "Holiday Inn 2024" is not a requisite
 _INN_LABEL = r"(?:(?i:ИНН)|INN)(?!\w)"
 _OGRN_LABEL = r"(?:(?i:ОГРН(?:ИП)?)|OGRN(?:IP)?)(?!\w)"
@@ -85,6 +87,19 @@ OGRN_RE = re.compile(r"(?<!\w)" + _OGRN_LABEL + _SEP + _NUMBER)
 # "ИНН/ОГРН 7707083893/1027700132195": the first number is the INN, the second the OGRN
 PAIR_RE = re.compile(r"(?<!\w)" + _INN_LABEL + r"\s*/\s*" + _OGRN_LABEL + _SEP + _NUMBER + r"\s*/\s*" + _NUMBER)
 INN_LENGTHS, OGRN_LENGTHS = (10, 12), (13, 15)
+# Tables with a header row ("| ИНН | ОГРН |" over "|---|---|", or <tr><th>ИНН</th>…): the label is in the header,
+# the numbers in the rows below, so the label pass above cannot reach them (table_numbers reads them by column).
+CELL_INN = re.compile(r"(?i:ИНН)(?:\s*/\s*(?i:КПП))?|INN")
+CELL_OGRN = re.compile(r"(?i:ОГРН(?:ИП)?)|OGRN(?:IP)?")
+CELL_MARKUP = re.compile(r"<[^<>\n]{0,200}>|&nbsp;|&#160;")
+CELL_LEAD = re.compile(r"(?:[ \t\r\n\u00a0*_]|<[^<>\n]{0,200}>|&nbsp;|&#160;)*")
+CELL_NUMBER = re.compile(_NUMBER)
+MD_RULE = re.compile(r"[ \t]*\|?[ \t]*:?-+:?[ \t]*(?:\|[ \t]*:?-+:?[ \t]*)*\|?[ \t]*")
+MD_BAR = re.compile(r"(?<!\\)\|")
+MAX_LABEL_CELL = 200
+# markup read before a cell's number (tags of a nested table included); the bound keeps unclosed nested cells linear
+MAX_CELL_LEAD = 1000
+HTML_TABLE_TAG = re.compile(r"<(/?)(table|tr|th|td)\b[^<>]{0,500}>", re.I)
 # the label a foreign company's drafts print instead of INN and OGRN (documents.md, Placeholders)
 REG_NUMBER_RE = re.compile(r"(?<!\w)регистрационный номер(?!\w)", re.I)
 GROUPING = re.compile(r"[ \u00a0\u202f-]")
@@ -169,36 +184,215 @@ def split_number(raw, lengths):
     return whole if len(whole) <= max(lengths) else groups[0]
 
 
+def _cell_label(text, start, end):
+    """"inn" or "ogrn" when a header cell holds only a label ("ИНН", "**ОГРН**", "ИНН/КПП", "<b>INN</b>")."""
+    if end - start > MAX_LABEL_CELL:
+        return None
+    label = CELL_MARKUP.sub("", text[start:end]).strip(" \t\r\n\u00a0*_`:")
+    if CELL_INN.fullmatch(label):
+        return "inn"
+    if CELL_OGRN.fullmatch(label):
+        return "ogrn"
+    return None
+
+
+def _cell_number(text, start, end):
+    """(offset, digits) of a number that opens the cell text[start:end], after markup; None for "—" or empty."""
+    lead = CELL_LEAD.match(text, start, min(end, start + MAX_CELL_LEAD))
+    match = CELL_NUMBER.match(text, lead.end(), end)
+    return (match.start(1), match.group(1)) if match else None
+
+
+def _markdown_rows(text):
+    """Tables of Markdown: lists of rows (row start, [(start, end) of each cell]), header row first."""
+    tables, rows, previous = [], None, None
+    position = 0
+    for line in text.splitlines(True):
+        start, position = position, position + len(line)
+        body = line.rstrip("\r\n")
+        bar = MD_BAR.search(body) is not None  # "a \\| b" has no bar: it is not a table row
+        if rows is not None:
+            if bar:
+                rows.append((start, _md_cells(start, body)))
+                continue
+            tables.append(rows)
+            rows = None
+        if previous is not None and bar and MD_RULE.fullmatch(body):
+            rows = [(previous[0], _md_cells(*previous))]
+            previous = None
+            continue
+        previous = (start, body) if bar else None
+    if rows is not None:
+        tables.append(rows)
+    return tables
+
+
+def _md_cells(start, body):
+    """Cell spans of one Markdown table row; the outer bars are optional, "\\|" is not a bar."""
+    bars = [m.start() for m in MD_BAR.finditer(body)]
+    edges = [-1] + bars + [len(body)]
+    cells = [(start + a + 1, start + b) for a, b in zip(edges, edges[1:])]
+    if not body[:bars[0]].strip():
+        cells = cells[1:]
+    if not body[bars[-1] + 1:].strip():
+        cells = cells[:-1]
+    return cells
+
+
+def _html_rows(text):
+    """Tables of HTML: lists of rows (row start, [(start, end) of each <th>/<td> cell]).
+
+    One pass over the table tags, so an unclosed cell or row costs nothing extra: a cell ends at the next cell,
+    row or table tag of its own table; a row ends at </tr>, the next <tr> or the table's end. A table opened inside
+    a cell is read as a table of its own, and the outer cell goes on after its </table>, so a number in a nested
+    table also belongs to the outer cell."""
+    tables, stack = [], []
+    rows, row, cell = [], None, None
+    for match in HTML_TABLE_TAG.finditer(text):
+        closing, name = match.group(1), match.group(2).lower()
+        if name == "table" and not closing and cell is not None:
+            stack.append((rows, row, cell))
+            rows, row, cell = [], None, None
+            continue
+        if cell is not None:
+            row[1].append((cell, match.start()))
+            cell = None
+        if name in ("th", "td"):
+            if not closing:
+                if row is None:
+                    row = (match.start(), [])
+                cell = match.end()
+            continue
+        if row is not None:
+            rows.append(row)
+            row = None
+        if name == "tr" and not closing:
+            row = (match.start(), [])
+        elif name == "table":
+            if rows:
+                tables.append(rows)
+            rows = []
+            if closing and stack:
+                rows, row, cell = stack.pop()
+    while True:
+        if cell is not None:
+            row[1].append((cell, len(text)))
+        if row is not None:
+            rows.append(row)
+        if rows:
+            tables.append(rows)
+        if not stack:
+            return tables
+        rows, row, cell = stack.pop()
+
+
+def _add_table_hits(values, inns, ogrns, single, row_starts):
+    """Add the numbers of one table's value rows; a table of exactly one value row marks them in single."""
+    hits = [hit for row in values for hit in row]
+    if len(values) == 1:
+        single.update(hit[1] for hit in hits)
+    for kind, offset, raw, row_start in hits:
+        row_starts[offset] = row_start
+        if kind == "inn":
+            inns.append((offset, split_number(raw, INN_LENGTHS)))
+        else:
+            ogrns.append((offset, split_number(raw, OGRN_LENGTHS)))
+
+
+def table_numbers(text):
+    """([(offset, inn)], [(offset, ogrn)], single_row_offsets, row_starts) of tables with a header row.
+
+    A header cell that holds only a label (ИНН, ИНН/КПП, ОГРН, ОГРНИП, INN, OGRN, OGRNIP) makes its column an INN
+    or OGRN column; the number that opens each cell of that column in the rows below is read with split_number at
+    its own offset. single_row_offsets holds the numbers of tables with exactly one value row: only those are the
+    owner's requisites. A table of several rows lists recipients, so its numbers get a check digit test only.
+    row_starts maps each number to where its row starts. A row is a header only when it has a label cell and no
+    cell that opens with a number, so a key-value row (| ИНН | 7707083893 |, <th>ИНН</th><td>…</td>) stays with
+    the label pass; a later header row starts a new table."""
+    inns, ogrns, single, row_starts = [], [], set(), {}
+    for rows in _markdown_rows(text) + _html_rows(text):
+        header, values = None, []
+        for row_start, cells in rows:
+            labels = [_cell_label(text, a, b) for a, b in cells]
+            if any(labels) and not any(_cell_number(text, a, b) for a, b in cells):
+                if header is not None:
+                    _add_table_hits(values, inns, ogrns, single, row_starts)
+                header, values = labels, []
+                continue
+            if header is None:
+                continue
+            row = []
+            for kind, (a, b) in zip(header, cells):
+                number = _cell_number(text, a, b) if kind else None
+                if number:
+                    row.append((kind, number[0], number[1], row_start))
+            values.append(row)
+        if header is not None:
+            _add_table_hits(values, inns, ogrns, single, row_starts)
+    return inns, ogrns, single, row_starts
+
+
 def find_numbers(text):
-    """([(offset, inn)], [(offset, ogrn)]) in the order of the text."""
+    """([(offset, inn)], [(offset, ogrn)], listed) in the order of the text.
+
+    listed holds the offsets of numbers from a table of several value rows: they are checked for their check
+    digit but not compared with answers.json. A number in a value cell of a header-row table is read once: by its
+    label when the label is in the same row ("| ИНН | 7707083893 |"), otherwise by its column, so a label that
+    reached it from another row never decides whether it is an INN or an OGRN."""
+    table_inns, table_ogrns, single, row_starts = table_numbers(text)
+
+    def from_another_row(label, number):
+        return number in row_starts and label < row_starts[number]
+
     inns, ogrns = [], []
+    seen = set()  # where each number read next to its label starts, so a table cell is not read twice
     for match in PAIR_RE.finditer(text):
+        if from_another_row(match.start(), match.start(1)) or from_another_row(match.start(), match.start(2)):
+            continue
         inns.append((match.start(), split_number(match.group(1), INN_LENGTHS)))
         ogrns.append((match.start(2), split_number(match.group(2), OGRN_LENGTHS)))
+        seen.update((match.start(1), match.start(2)))
     # a pair is read once: blank it out, keeping every offset, before the single labels are searched
     rest = PAIR_RE.sub(lambda match: " " * len(match.group(0)), text)
-    inns.extend((match.start(), split_number(match.group(1), INN_LENGTHS)) for match in INN_RE.finditer(rest))
-    ogrns.extend((match.start(), split_number(match.group(1), OGRN_LENGTHS)) for match in OGRN_RE.finditer(rest))
-    return sorted(inns), sorted(ogrns)
+    for pattern, lengths, hits in ((INN_RE, INN_LENGTHS, inns), (OGRN_RE, OGRN_LENGTHS, ogrns)):
+        for match in pattern.finditer(rest):
+            if from_another_row(match.start(), match.start(1)):
+                continue
+            hits.append((match.start(), split_number(match.group(1), lengths)))
+            seen.add(match.start(1))
+    listed = set()
+    for table_hits, hits in ((table_inns, inns), (table_ogrns, ogrns)):
+        for offset, value in table_hits:
+            if offset in seen:
+                continue
+            seen.add(offset)
+            hits.append((offset, value))
+            if offset not in single:
+                listed.add(offset)
+    return sorted(inns), sorted(ogrns), listed
 
 
 def check_numbers(path, text, starts, owner, public=False):
     """INN/OGRN checksum and mismatch issues as (line, column, issue).
 
-    A failed check digit blocks only on a public page: in a draft the number stays as the owner gave it."""
+    A failed check digit blocks only on a public page: in a draft the number stays as the owner gave it. Numbers of
+    a table with several value rows (a list of recipients) get the check digit test only: they are not the owner's,
+    so no mismatch, no name check and no foreign-owner OGRN rule."""
     found = []
     inns, ogrns = [], []
     foreign = owner is not None and owner.get("status") == "foreign"
-    inn_hits, ogrn_hits = find_numbers(text)
+    inn_hits, ogrn_hits, listed = find_numbers(text)
     for offset, value in inn_hits:
         line = line_of(starts, offset)
-        inns.append((line, offset, value))
+        if offset not in listed:
+            inns.append((line, offset, value))
         if not _kb.inn_valid(value):
             found.append((line, offset, digits_issue(path, line, "inn_checksum", value, "INN", "10 or 12 digits", public)))
     for offset, value in ogrn_hits:
         line = line_of(starts, offset)
-        ogrns.append((line, offset, value))
-        if foreign:
+        if offset not in listed:
+            ogrns.append((line, offset, value))
+        if foreign and offset not in listed:
             found.append((line, offset, {
                 "file": path, "line": line, "kind": "mismatch", "field": "ogrn", "value": value, "blocking": True,
                 "message": "a foreign company has no OGRN/OGRNIP: print the country and registration number"}))

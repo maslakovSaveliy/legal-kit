@@ -2,6 +2,20 @@
 
 ## [Unreleased]
 
+### Scripts
+
+- `check_docs.py` checks an INN or OGRN in a Markdown or HTML table with a header row: a header cell that is only the label (ИНН, ИНН/КПП, ОГРН, ОГРНИП, INN, OGRN, OGRNIP) makes its column checked row by row, at the right line. The number is compared with `answers.json` only when the table has one value row; a table of several rows lists recipients and gets the check digit test only.
+
+### Workflow and stacks
+
+- The confirmation block no longer asks whether to commit `.legal/`, and `decisions.commit_legal_dir` is gone from the `answers.json` schema; an older file keeps the key, which is not read. The chat summary says that the owner commits `.legal/` and that `.legal/.gitignore` keeps `answers.json` and `evidence/` out of git.
+- A prompt that says the owner is unavailable or nobody can answer runs without waiting, like «просто сделай», and edits the project's code only when the prompt explicitly allows it; otherwise it writes only `.legal/`.
+- Stack guides ask nothing mid-run: a step the code cannot settle (a new table or collection, an endpoint the project does not show, a `project.pbxproj` edit, DB-level privileges) goes to «Сделать вам». A plan requested over code with features runs the audit and keeps the owner's words in `product.planned_features`.
+
+### Tooling
+
+- Tests pin one version across SKILL.md, `plugin.json`, the README and the latest CHANGELOG release, and pin hard rules 7 and 8, the gates and a non-empty «Without python3» section in every workflow file.
+
 ## [0.2.3] - 2026-11-11
 
 Fixes from a review of 0.2.2.

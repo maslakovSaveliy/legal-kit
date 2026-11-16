@@ -2911,3 +2911,139 @@ def test_scan_url_unescapes_only_xml_entities_in_sitemap_urls():
     module = load("scan_url")
     assert module.xml_unescape("https://a.test/c?id=1&param=2&amp;region=3&#38;copy=4") == \
         "https://a.test/c?id=1&param=2&region=3&copy=4"
+
+
+# --------------------------------------------------------------------------
+# check_docs.py: INN and OGRN in tables with a header row (plan 2026-11-16, task 6)
+# --------------------------------------------------------------------------
+
+MD_TABLE = "# Получатели\n\n| ИНН | ОГРН |\n|---|---|\n| %s | %s |\n"
+HTML_TABLE = ("<table>\n  <tr><th>ИНН</th><th>ОГРН</th></tr>\n  <tr>\n    <td>%s</td>\n"
+              "    <td><b>%s</b></td>\n  </tr>\n</table>\n")
+
+
+def numbers(issues):
+    return [(i["kind"], i["value"], i["line"], i["blocking"]) for i in issues]
+
+
+@pytest.mark.parametrize("table,lines", [(MD_TABLE, (5, 5)), (HTML_TABLE, (4, 5))], ids=["markdown", "html"])
+def test_check_docs_header_table_checks_inn_and_ogrn_by_column(tmp_path, capsys, table, lines):
+    text = table % (INN10_BAD, OGRN13_BAD)
+    code, issues = check(capsys, [], "--public", write(tmp_path, "p.md", text), answers=None)
+    assert code == 1
+    assert numbers(issues) == [("inn_checksum", INN10_BAD, lines[0], True), ("ogrn_checksum", OGRN13_BAD, lines[1], True)]
+    code, issues = check(capsys, [write(tmp_path, "d.md", text)], answers=None)
+    assert code == 0 and [i["blocking"] for i in issues] == [False, False]
+
+
+@pytest.mark.parametrize("text", [
+    "| ОГРН | ИНН |\n|:---|---:|\n| %s | %s |\n" % (OGRN13_OK[0], INN10_BAD),
+    "| Наименование | **ИНН** | КПП | ОГРН | Телефон |\n|---|---|---|---|---|\n"
+    "| ООО «Тест-Компания» | %s | 770701001 | %s | 8800555353 |\n" % (INN10_BAD, OGRN13_OK[0]),
+    "<table><tr><th>Наименование</th><th>ИНН/КПП</th><th>ОГРН</th><th>Телефон</th></tr>\n"
+    "<tr><td>ООО «Тест-Компания»</td><td>%s/770701001</td><td>%s</td><td>8800555353</td></tr></table>\n"
+    % (INN10_BAD, OGRN13_OK[0]),
+])
+def test_check_docs_header_table_reads_the_labelled_columns_only(tmp_path, capsys, text):
+    _, issues = check(capsys, [write(tmp_path, "t.md", text)], answers=None)
+    assert [(i["kind"], i["value"], i["line"]) for i in issues] == [("inn_checksum", INN10_BAD, 3 if text.startswith("|") else 2)]
+
+
+def test_check_docs_header_table_with_one_row_is_compared_with_answers(tmp_path, capsys):
+    own = "| Наименование | ИНН | ОГРН |\n|---|---|---|\n| ООО «Тест-Компания» | %s | %s |\n" % (INN10_OK[0], OGRN13_OK[0])
+    assert check(capsys, [], "--public", write(tmp_path, "own.md", own))[1] == []
+    other = own.replace(INN10_OK[0], INN10_OK[1])
+    _, issues = check(capsys, [], "--public", write(tmp_path, "other.md", other))
+    assert [(i["kind"], i.get("field"), i["value"], i["line"]) for i in issues] == [("mismatch", "inn", INN10_OK[1], 3)]
+
+
+def test_check_docs_header_table_with_many_rows_is_a_list_not_the_owner(tmp_path, capsys):
+    rows = "".join("| ООО «Получатель %d» | %s | %s |\n" % (n, inn, OGRN13_OK[n % 2]) for n, inn in enumerate(INN10_OK))
+    text = "| Получатель | ИНН | ОГРН |\n|---|---|---|\n" + rows
+    assert check(capsys, [], "--public", write(tmp_path, "list.md", text))[1] == []
+    bad = text.replace(INN10_OK[2], INN10_BAD)
+    _, issues = check(capsys, [], "--public", write(tmp_path, "bad.md", bad))
+    assert numbers(issues) == [("inn_checksum", INN10_BAD, 5, True)]
+
+
+def test_check_docs_header_table_foreign_owner_has_no_ogrn(tmp_path, capsys):
+    answers = json.loads(ANSWERS.read_text(encoding="utf-8"))
+    answers["owner"].update(status="foreign", inn=None, ogrn=None, country="DE", name="Test GmbH")
+    path = tmp_path / "answers.json"
+    path.write_text(json.dumps(answers, ensure_ascii=False), encoding="utf-8")
+    one = "<table><tr><th>Name</th><th>OGRN</th></tr><tr><td>Test GmbH</td><td>%s</td></tr></table>\n" % OGRN13_OK[0]
+    _, issues = check(capsys, [], "--public", write(tmp_path, "one.html", one), answers=path)
+    assert [(i["kind"], i.get("field"), i["value"]) for i in issues] == [("mismatch", "ogrn", OGRN13_OK[0])]
+    many = one.replace("</table>", "<tr><td>Test GmbH 2</td><td>%s</td></tr></table>" % OGRN13_OK[1])
+    assert check(capsys, [], "--public", write(tmp_path, "many.html", many), answers=path)[1] == []
+
+
+@pytest.mark.parametrize("text", [
+    MD_TABLE % ("—", ""),
+    MD_TABLE % ("-", "  "),
+    HTML_TABLE % ("&nbsp;", "—"),
+    "| ИНН | ОГРН |\n|---|---|\n| ИНН | %s |\n" % INN10_OK[0],  # the label pass already read this number
+    "| ИНН | ОГРН |\n|---|---|\n| 10 цифр | 13 цифр |\n",
+])
+def test_check_docs_header_table_skips_empty_cells_and_reads_a_number_once(tmp_path, capsys, text):
+    assert check(capsys, [], "--public", write(tmp_path, "e.md", text), answers=None)[1] == []
+
+
+@pytest.mark.parametrize("kind", ["markdown", "html"])
+def test_check_docs_header_table_of_one_megabyte_stays_fast(tmp_path, capsys, kind):
+    if kind == "markdown":
+        text = "| ИНН | ОГРН | Комментарий |\n|---|---|---|\n" + "| %s | %s | x |\n" % (INN10_OK[0], OGRN13_OK[0]) * 30000
+    else:
+        text = "<table><tr><th>ИНН</th><th>ОГРН</th></tr>" + "<tr><td>%s</td><td>%s</td></tr>\n" % (
+            INN10_OK[0], OGRN13_OK[0]) * 25000 + "</table>"
+    assert len(text.encode("utf-8")) > 1_000_000
+    started = time.monotonic()
+    _, issues = check(capsys, [write(tmp_path, "big.md", text)], answers=None)
+    assert time.monotonic() - started < 2 and issues == []
+
+
+# Review fixes: escaped bars, upper-case HTML tags, a nested table in a value cell.
+
+@pytest.mark.parametrize("text,expected", [
+    ("| ИНН | ОГРН |\n|---|---|\n| %s | %s |\na \\| b\n" % (INN10_BAD, OGRN13_BAD),
+     [("inn_checksum", INN10_BAD, 3), ("ogrn_checksum", OGRN13_BAD, 3)]),
+    ("a \\| b\n|---|---|\n| x | y |\n", []),
+    ("| ИНН |\n|---|\n\\|\\|\n| %s |\n" % INN10_BAD, []),
+], ids=["ends-a-table", "not-a-header", "not-a-row"])
+def test_check_docs_line_with_only_escaped_bars_is_not_a_table_row(tmp_path, capsys, text, expected):
+    _, issues = check(capsys, [write(tmp_path, "e.md", text)], answers=None)
+    assert [(i["kind"], i["value"], i["line"]) for i in issues] == expected
+
+
+UPPER_TABLE = ("<TABLE><THEAD><TR><TH>ИНН</TH><TH>ОГРН</TH></TR></THEAD><TBODY>\n"
+               "<TR><TD>%s</TD>\n<TD>%s</TD></TR></TBODY></TABLE>" % (INN10_BAD, OGRN13_BAD))
+
+
+@pytest.mark.parametrize("text", [UPPER_TABLE, UPPER_TABLE.replace("TR>", "Tr>")], ids=["upper", "mixed"])
+def test_check_docs_header_table_with_upper_case_tags(tmp_path, capsys, text):
+    _, issues = check(capsys, [write(tmp_path, "u.html", text)], answers=None)
+    assert [(i["kind"], i["value"], i["line"]) for i in issues] == [
+        ("inn_checksum", INN10_BAD, 2), ("ogrn_checksum", OGRN13_BAD, 3)]
+
+
+def test_check_docs_column_decides_the_kind_over_a_label_from_another_row(monkeypatch):
+    # A label pass that crosses a row boundary (as the case-sensitive </tr> stop did in 0.2.3) must not win.
+    module = load("check_docs")
+    loose = module._SEP.replace("<(?!/?", "<(?!/?$")  # a row stop that never matches
+    monkeypatch.setattr(module, "OGRN_RE", module.re.compile(r"(?<!\w)" + module._OGRN_LABEL + loose + module._NUMBER))
+    inns, ogrns, _ = module.find_numbers(UPPER_TABLE)
+    assert [value for _, value in inns] == [INN10_BAD] and [value for _, value in ogrns] == [OGRN13_BAD]
+
+
+def test_check_docs_header_table_reads_a_number_in_a_nested_table(tmp_path, capsys):
+    text = ("<table><tr><th>ИНН</th></tr>\n<tr><td><table><tr><td>%s</td></tr></table></td></tr></table>\n"
+            % INN10_BAD)
+    _, issues = check(capsys, [write(tmp_path, "n.html", text)], answers=None)
+    assert [(i["kind"], i["value"], i["line"]) for i in issues] == [("inn_checksum", INN10_BAD, 2)]
+
+
+def test_check_docs_unclosed_nested_tables_stay_fast(tmp_path, capsys):
+    text = "<table><tr><th>ИНН</th></tr><tr><td>" + "<table><tr><td>" * 60000
+    started = time.monotonic()
+    _, issues = check(capsys, [write(tmp_path, "nest.html", text)], answers=None)
+    assert time.monotonic() - started < 2 and issues == []
